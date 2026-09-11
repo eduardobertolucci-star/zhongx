@@ -1,6 +1,6 @@
 # ZhongX Studio — Studio OS
 
-**Version:** 1.1
+**Version:** 1.2
 **Authority:** CEO & Showrunner
 **Last Updated:** 2026-09-10
 
@@ -72,9 +72,13 @@ DIRECTOR  →  Editing Blueprint (edit-guide.md + timeline.json)
 REVIEWER  →  Review (review.md)
             [evaluates all documents + brief + concept-pitch]
   ↓
-  ├── Studio Score ≥ 8.5  →  CEO FINAL GATE
+  ├── Studio Score ≥ 8.5  →  CEO FINAL GATE → CEO APPROVES
   │                            ↓
-  │                        CEO assembles DELIVERY/ package
+  │                        SYSTEM ASSEMBLES DELIVERY/
+  │                            ↓
+  │                        DELIVERY INTEGRITY CHECK
+  │                            ↓ DELIVERY STATUS: COMPLETE
+  │                        READY FOR CEO EDITING
   ├── Studio Score 7.0–8.4  →  Corrections → Responsible Agent → Re-review
   └── Studio Score < 7.0 or GRAVE issue  →  CEO EXTRAORDINARY GATE
 ```
@@ -113,7 +117,7 @@ REVIEWER  →  Review (review.md)
 |-------|-------------------|----------|
 | Writer | concept-pitch.md, script.md | Write full script before Gate #1 |
 | Narrator | narration.md + narration.wav + timestamps.json | Alter narrative structure without Writer review |
-| Illustrator | storyboard.md (with beat breakdown) | Make plot or narrative decisions |
+| Illustrator | storyboard.md + asset generation owner → DELIVERY/IMAGES/ | Make plot or narrative decisions |
 | Director | edit-guide.md + timeline.json | Generate or render the video |
 | Reviewer | review.md | Silently rewrite other agents' work |
 
@@ -125,10 +129,44 @@ Full responsibilities, forbidden actions, and working methods live in each agent
 
 1. **Handoffs are document-based.** An agent's work is complete when the deliverable file is written and the next agent is explicitly addressed.
 2. **Agents do not communicate in real time.** Each agent works from the documents produced by the previous stage.
-3. **Questions or blockers go to the CEO.** No agent resolves ambiguity by assuming. If a decision requires CEO input, the agent pauses and flags it.
+3. **Decision escalation follows the DECISION AUTHORITY MODEL** (see section below). Agents resolve operational and creative decisions within their domain autonomously. Only strategic decisions (Level 3) and changes to CEO-approved directions (Level 4) require CEO input.
 4. **The Reviewer communicates to all agents simultaneously** via `review.md`, but corrections flow to each agent individually.
 5. **No agent rewrites another agent's work without attribution and justification.**
 6. **Flagging format:** When an agent identifies a problem outside their scope, they write `[AGENT FLAG — description]` in their deliverable and halt that element pending response.
+
+---
+
+## DECISION AUTHORITY MODEL
+
+Agents make decisions every production cycle. Not all decisions require CEO input. Requiring CEO approval for every professional judgment creates bottlenecks and undermines the studio's specialist model.
+
+**LEVEL 1 — OPERATIONAL DECISION**
+The agent decides autonomously and documents the decision.
+*Examples:* internal formatting, minor timing adjustment, file naming within established conventions, technical organization.
+
+**LEVEL 2 — CREATIVE DECISION WITHIN APPROVED DIRECTION**
+The specialist agent decides autonomously, provided the decision stays within the CEO-approved concept and studio rules.
+*Examples:* Narrator adjusts a pause; Illustrator chooses composition; Director defines exact cut timing; Writer refines phrasing without changing the approved premise.
+
+**LEVEL 3 — STRATEGIC DECISION**
+Requires CEO approval before proceeding.
+*Examples:* narrative angle, target audience, core thesis, major tone change, substantial duration deviation (>20%), platform strategy, changing the central promise of the video.
+
+**LEVEL 4 — CHANGE TO A CEO-APPROVED DECISION**
+Requires CEO Extraordinary Gate. No agent may proceed unilaterally.
+*Examples:* any direction that overrides or contradicts a decision registered in `concept-pitch.md` CEO DECISION or explicitly approved by the CEO at any gate.
+
+**Agents MUST escalate when:**
+- The brief is genuinely insufficient to continue (missing critical direction)
+- Two strategic interpretations are materially different and neither is resolvable by studio rules
+- A correction would require altering a CEO-approved decision
+- Factual uncertainty materially affects the central narrative premise
+- A direction creates a major quality, factual, ethical, or reputational risk
+
+**Agents MUST NOT escalate when:**
+- Making normal professional judgments within their domain
+- Resolving operational or technical decisions at Level 1 or 2
+- The answer is available in `brief.md`, `concept-pitch.md`, or the studio rules
 
 ---
 
@@ -161,6 +199,25 @@ It must be updated whenever:
 
 **What constitutes a new version:** Any correction that changes the narrative content, structure, visual design logic, or production direction — not cosmetic fixes.
 
+### Delivery Integrity Check
+
+After CEO Final Gate approval, the system assembles the DELIVERY/ package and runs an automated integrity check. The CEO is not notified until `DELIVERY STATUS = COMPLETE`.
+
+A project becomes **READY FOR CEO EDITING** only when both conditions are true:
+- CEO FINAL GATE = APPROVED
+- DELIVERY STATUS = COMPLETE
+
+| Check | Condition |
+|-------|-----------|
+| AUDIO | `narration.wav`, `narration.mp3`, `timestamps.json` present and non-empty |
+| SCRIPT | `script-final.md`, `narration-final.md` present |
+| IMAGES | Every beat ID in `storyboard.md` has a matching asset in `DELIVERY/IMAGES/`; filenames match beat IDs; no duplicate IDs; all assets referenced in `timeline.json` exist |
+| EDIT | `edit-guide.md` and `timeline.json` present; all timeline asset references resolve; all timestamps ≤ narration total duration |
+
+If `DELIVERY STATUS = INCOMPLETE`: the system identifies the missing or broken items and routes the problem to the responsible stage. The CEO is not interrupted.
+
+The Delivery Integrity Check is a deterministic system validation — not an agent, not a subjective review.
+
 ---
 
 ## FILE NAMING CONVENTIONS
@@ -180,7 +237,7 @@ It must be updated whenever:
 | `project.md` | `/projects/[slug]/` | Operational state — always current |
 | Archived versions | `/projects/[slug]/history/` | `[file]-v[n].md` |
 
-### DELIVERY Package (assembled after CEO Final Gate)
+### DELIVERY Package (assembled automatically after CEO Final Gate + Integrity Check)
 
 | File | Location | Produced by |
 |------|----------|-------------|
@@ -213,6 +270,22 @@ These rules exist to prevent scope creep between agents:
 
 ---
 
+## FACTUAL INTEGRITY OVER VIRALITY
+
+ZhongX Studio is an educational content studio. Factual accuracy is not a constraint on storytelling — it is a foundational creative requirement.
+
+**INTRIGUING + DEFENSIBLE = ACCEPTABLE**
+**SENSATIONAL + UNSUPPORTED = REJECT**
+
+A hook may be provocative, counterintuitive, curiosity-driven, or surprising. It may not present speculation as fact, exaggerate evidence beyond what sources support, fabricate causation, misrepresent scientific consensus, or distort reality to improve retention.
+
+When legitimate uncertainty exists, the script preserves it naturally without destroying storytelling.
+Acceptable framing: *"Uma das hipóteses é...", "Há evidências de que...", "Os registros sugerem...", "É aqui que a história fica controversa..."*
+
+This principle supersedes virality considerations whenever they conflict. See `/rules/studio-principles.md` for full standards.
+
+---
+
 ## QUALITY STANDARD
 
 Minimum Studio Score for Final Gate recommendation: **8.5 / 10**
@@ -226,7 +299,7 @@ Minimum Studio Score for Final Gate recommendation: **8.5 / 10**
 
 ## DELIVERY PACKAGE
 
-The DELIVERY/ folder is the final production output assembled by the CEO after Final Gate approval. It contains everything needed to edit the video — no hunting through working documents.
+The DELIVERY/ folder is the final production output assembled automatically by the system after CEO Final Gate approval and Delivery Integrity Check. It contains everything needed to edit the video — no hunting through working documents.
 
 ```
 DELIVERY/

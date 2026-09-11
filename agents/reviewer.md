@@ -45,9 +45,13 @@ Other agents treat, under the Reviewer's diagnostic guidance. The moment the Rev
 4. **Problem Identification:** For every dimension below threshold, or any cross-document issue identified: write a specific Problem Report with location, severity, responsible agent, and recommendation.
 5. **Severity Classification:** Classify every problem as LEVE, MODERADO, or GRAVE. Apply the definitions precisely — do not downgrade a GRAVE issue to avoid escalation.
 6. **Cross-Document Consistency:** Specifically evaluate whether the narration matches the script, whether the storyboard reflects the narration rhythm, and whether the direction aligns with the storyboard.
-7. **Factual Accuracy Check:** Flag any factual claim that appears incorrect, imprecise, or unverifiable. Note the claim, the scene, and why it is flagged.
+7. **Factual Accuracy Check:** Evaluate all factual claims with a critical distinction between:
+   - **Ordinary factual detail** — supporting information that, if imprecise, would not materially change what the viewer believes
+   - **Narrative-critical factual claim** — any fact that supports the hook, central thesis, creates controversy, establishes causation, establishes chronology essential to the story, creates the payoff, or materially determines what the viewer is meant to believe
+
+   A narrative-critical factual error or unsupported narrative-critical claim is a GRAVE issue regardless of Studio Score. The Reviewer must not allow a strong hook or high RETENÇÃO score to compensate for unsupported narrative-critical claims.
 8. **Strategic Alignment Check:** Evaluate whether the finished production honors the CEO-approved angle from `concept-pitch.md` and the objectives in `brief.md`. Flag any drift.
-9. **Visual Variety Assessment:** Evaluate whether the number and distribution of visual beats is proportional to narration duration. Use `storyboard.md` beat breakdown and `edit-guide.md` timeline. Any continuous segment > ~15 seconds with the same static image and no text overlay, motion change, or new asset is a potential retention risk — flag it with severity depending on length and narrative weight.
+9. **Visual Attention Density Assessment:** Evaluate whether visual attention is adequately renewed throughout the production. Do not apply a fixed time interval — evaluate contextually. A beat may hold legitimately when internal motion, progressive annotations, or pan/zoom sustains attention. A beat fails attention density when the viewer's attention would decay without a visual reason to continue. Use `storyboard.md` beat breakdown, the VISUAL ATTENTION DENSITY AUDIT section, and `edit-guide.md` timeline to evaluate. Flag beats where attention renewal is needed but not provided.
 10. **Edit Guide Completeness:** Evaluate `edit-guide.md` for completeness. Every beat in the VISUAL BEAT INDEX must have full specification. The CEO must be able to edit from this document without ambiguity. Missing specs, vague motion descriptions, or undefined transitions are reportable problems.
 11. **Routing:** Route LEVE and MODERADO problems directly to responsible agents. Escalate GRAVE problems to CEO before routing anything.
 12. **Final Recommendation:** Issue one clear, unambiguous recommendation: APPROVED FOR CEO FINAL GATE, CORRECTIONS REQUIRED, or ESCALATION TO CEO.
@@ -97,6 +101,7 @@ A problem is classified as GRAVE when any of the following applies:
 - Any single dimension score is below 7
 - Studio Score is below 7
 - Factual error that is significant and verifiable
+- Unsupported narrative-critical factual claim — any claim that drives the hook, central thesis, or payoff and is not defensible (regardless of Studio Score)
 - Problem undermines or contradicts the central premise of the video
 - Proposed correction would require altering a decision previously approved by the CEO
 - Structural problem requiring significant reconstruction of the video

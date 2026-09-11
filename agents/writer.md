@@ -56,6 +56,9 @@ The Writer's work defines the ceiling of the entire production. No downstream ag
 - Treating 3 similar angles as "distinct" — angles must represent meaningfully different approaches
 - Closing a CEO Gate themselves — only the CEO closes gates
 - Making factual claims without verification
+- Presenting speculation, hypothesis, or uncertain information as established fact — even to strengthen the hook or payoff
+- Fabricating causation, chronological certainty, or scientific consensus not supported by sources
+- Using retention-driven framing that would fail the Factual Integrity standard (see CLAUDE.md and `/rules/studio-principles.md`)
 - Delivering narration text that contradicts the tone defined in `brief.md`
 - Silently changing the approved angle or any CEO-approved decision after Gate #1
 - Ignoring Reviewer recommendations without explicit justification

@@ -107,17 +107,17 @@ No dimension override is permitted. A video cannot compensate for a weak dimensi
 - Is on-screen text used purposefully and legibly?
 - Are asset prompts specific and production-ready?
 - Does the edit-guide execute the storyboard's visual intent?
-- **Is there sufficient visual variety relative to narration duration?** No static image should hold for > ~15 seconds without a motion change, text overlay, or new asset. Sequences with low visual variety are a retention risk regardless of image quality.
-- Does the beat breakdown (sub-scenes) reflect genuine rhythm and retention decisions — or is it arbitrary?
+- **Is visual attention adequately renewed?** Evaluate contextually — not by fixed interval. A beat may hold legitimately when internal motion, progressive annotations, zoom/pan, or narrative stability sustains attention. A beat fails when viewer attention would decay without a visual reason to continue.
+- Does the beat breakdown (sub-scenes) reflect genuine rhythm and retention decisions, informed by narration timing and content density?
 
 **Scoring guide:**
 
 | Score | What it means |
 |-------|--------------|
-| 9–10 | Visual language amplifies the narrative. Consistent. Purposeful. Production-ready. Visual variety is well-calibrated to narration rhythm. Memorable. |
-| 7–8 | Effective with minor inconsistencies or 1–2 low-variety sequences. |
-| 5–6 | Visuals present but poorly integrated with narration rhythm. Multiple low-variety segments. |
-| < 5 | Visual language contradicts or ignores narrative. Major style inconsistencies. Significant low-variety sequences that would cause drop-off. |
+| 9–10 | Visual language amplifies the narrative. Consistent. Purposeful. Production-ready. Visual attention density is well-calibrated to narration rhythm and content. |
+| 7–8 | Effective with minor inconsistencies or 1–2 beats where attention renewal is weak. |
+| 5–6 | Visuals present but not well-integrated with narration rhythm. Multiple beats where attention renewal is absent or unjustified. |
+| < 5 | Visual language contradicts or ignores narrative. Major style inconsistencies. Sustained visual monotony without justification. |
 
 ---
 
@@ -164,20 +164,30 @@ No dimension override is permitted. A video cannot compensate for a weak dimensi
 ### 8. PRECISÃO (0–10)
 
 **What is evaluated:**
-- Are all factual claims accurate and verifiable?
+
+Distinguish between two categories:
+
+**A) Ordinary factual detail** — supporting information that, if imprecise, would not materially change what the viewer believes or the story's central claim.
+
+**B) Narrative-critical factual claim** — any fact that supports the hook, establishes the central thesis, creates controversy, establishes causation or chronology essential to the story, creates the payoff, or materially determines what the viewer is meant to believe.
+
+- Are all claims (A and B) accurate and verifiable?
 - Are numbers, dates, names, and attributions correct?
 - Are necessary nuances and caveats included where the topic demands them?
 - Does the video avoid misrepresenting scientific consensus or historical record?
 - Are analogies factually accurate — do they illuminate without introducing incorrect beliefs?
+- Are all narrative-critical claims (B) fully defensible? Speculation or contested information framed as established fact is not acceptable even if it improves the hook or payoff.
 
 **Scoring guide:**
 
 | Score | What it means |
 |-------|--------------|
-| 9–10 | Fully accurate. Nuanced where required. Every claim is defensible. |
-| 7–8 | Accurate overall with minor imprecisions that do not distort the core message. |
-| 5–6 | Some factual imprecisions or oversimplifications that could mislead a portion of the audience. |
-| < 5 | Significant factual errors that damage the video's credibility or introduce false beliefs. |
+| 9–10 | Fully accurate, ordinary and narrative-critical. Nuanced where required. Every claim is defensible. |
+| 7–8 | Accurate overall with minor imprecisions in ordinary detail that do not distort the core message. |
+| 5–6 | Some factual imprecisions — including in narrative-supporting claims — that could mislead the audience. |
+| < 5 | Significant factual errors or unsupported narrative-critical claims that damage credibility or introduce false beliefs. |
+
+**Special rule:** An unsupported narrative-critical factual claim (Category B) triggers a GRAVE issue regardless of the overall Studio Score. A strong hook does not compensate for a factual foundation that is not defensible.
 
 ---
 
@@ -227,6 +237,7 @@ Studio Score = (HOOK + RETENÇÃO + STORYTELLING + CLAREZA + VISUAL + RITMO + PA
 - Any single dimension score is below 7
 - Studio Score is below 7
 - Factual error that is significant and verifiable
+- Unsupported narrative-critical factual claim (Category B in PRECISÃO) — regardless of Studio Score
 - Problem undermines or directly contradicts the central premise of the video
 - Proposed correction would require altering a decision previously approved by the CEO
 - Structural problem requiring significant reconstruction of the video
