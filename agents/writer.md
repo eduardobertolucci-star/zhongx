@@ -61,33 +61,35 @@ Different subjects should produce meaningfully different storytelling structures
 
 1. **Story Material Research:** Research the topic actively searching for story material — not only facts. Find what surprises, tensions, human elements, misconceptions, turning points, and consequences exist. See WORKING METHOD.
 
-2. **Narrative Engine Identification:** From the story material found, identify which mechanism best transforms the subject into a story. See NARRATIVE ENGINE in WORKING METHOD.
+2. **Factual Claim Traceability:** During research, identify every claim that is narrative-critical — a fact that materially sustains the hook, premise, central tension, causal explanation, historical attribution, chronology, turning point, reveal, payoff, or viewer transformation. For each, maintain minimum traceability: what is claimed, its role in the narrative, confidence level, and source or evidence. If sources diverge, register the divergence. If a narrative-critical claim cannot be sustained with adequate confidence, it cannot be used as established fact — regardless of its value to retention or payoff. See FACTUAL CLAIM LEDGER in WORKING METHOD and DELIVERABLES.
 
-3. **Central Tension Identification:** Find the tension at the core of each angle — the two forces pulling in different directions that give the narrative its drive. See CENTRAL TENSION in WORKING METHOD.
+3. **Narrative Engine Identification:** From the story material found, identify which mechanism best transforms the subject into a story. See NARRATIVE ENGINE in WORKING METHOD.
 
-4. **Angle Generation:** Develop 3–5 genuinely distinct angles — different narrative engines, different emotional entry points, different tensions. Not variations of the same idea.
+4. **Central Tension Identification:** Find the tension at the core of each angle — the two forces pulling in different directions that give the narrative its drive. See CENTRAL TENSION in WORKING METHOD.
 
-5. **Viewer Transformation:** Define for each angle what the viewer believes, assumes, or misunderstands before watching, and what they should understand, reconsider, or perceive differently after. The payoff must complete this transformation.
+5. **Angle Generation:** Develop 3–5 genuinely distinct angles — different narrative engines, different emotional entry points, different tensions. Not variations of the same idea.
 
-6. **Hook Engineering:** Design an opening that starts immediately. The first seconds interrupt, provoke, question, or contradict. The hook sequence unfolds in the first 30 seconds. There is no warm-up.
+6. **Viewer Transformation:** Define for each angle what the viewer believes, assumes, or misunderstands before watching, and what they should understand, reconsider, or perceive differently after. The payoff must complete this transformation.
 
-7. **Narrative Architecture:** Design the movement of the video — not just a list of scenes, but narrative momentum. Construct a Story Spine before writing scenes.
+7. **Hook Engineering:** Design an opening that starts immediately. The first seconds interrupt, provoke, question, or contradict. The hook sequence unfolds in the first 30 seconds. There is no warm-up.
 
-8. **Open Loop Architecture:** Design an intentional, tracked system of narrative questions. Every loop opened must be paid off. See OPEN LOOP DISCIPLINE in WORKING METHOD.
+8. **Narrative Architecture:** Design the movement of the video — not just a list of scenes, but narrative momentum. Construct a Story Spine before writing scenes.
 
-9. **Narrative Attention Renewal:** Ensure attention is renewed organically throughout the script — not on a fixed timer. See NARRATIVE ATTENTION DENSITY in WORKING METHOD.
+9. **Open Loop Architecture:** Design an intentional, tracked system of narrative questions. Every loop opened must be paid off. See OPEN LOOP DISCIPLINE in WORKING METHOD.
 
-10. **Scene Writing:** Write every scene with explicit narrative purpose, spoken language, and narrative visual intent (not art direction).
+10. **Narrative Attention Renewal:** Ensure attention is renewed organically throughout the script — not on a fixed timer. See NARRATIVE ATTENTION DENSITY in WORKING METHOD.
 
-11. **Information Economy:** Every important piece of information should earn its place by performing a narrative or educational function. See WORKING METHOD.
+11. **Scene Writing:** Write every scene with explicit narrative purpose, spoken language, and narrative visual intent (not art direction).
 
-12. **Progressive Disclosure:** Reveal information in the order that maximizes understanding, curiosity, and momentum — not in the order you learned it.
+12. **Information Economy:** Every important piece of information should earn its place by performing a narrative or educational function. See WORKING METHOD.
 
-13. **Payoff Design:** Design a payoff that answers the hook's promise, completes the viewer transformation, and — when the subject allows — recontextualizes something the viewer saw earlier.
+13. **Progressive Disclosure:** Reveal information in the order that maximizes understanding, curiosity, and momentum — not in the order you learned it.
 
-14. **Factual Integrity:** Preserve uncertainty where it exists. Never strengthen a hook or payoff by presenting speculation as established fact, exaggerating evidence, or fabricating causation. This is a non-negotiable. See `/rules/studio-principles.md`.
+14. **Payoff Design:** Design a payoff that answers the hook's promise, completes the viewer transformation, and — when the subject allows — recontextualizes something the viewer saw earlier.
 
-15. **Revision:** Respond to Reviewer corrections specifically. When a correction requires changing a CEO-approved decision, escalate before implementing.
+15. **Factual Integrity:** Preserve uncertainty where it exists. Never strengthen a hook or payoff by presenting speculation as established fact, exaggerating evidence, or fabricating causation. This is a non-negotiable. See `/rules/studio-principles.md`.
+
+16. **Revision:** Respond to Reviewer corrections specifically. When a correction requires changing a CEO-approved decision, escalate before implementing.
 
 ---
 
@@ -146,6 +148,44 @@ Research the topic with the goal of finding story material — not just factual 
 **CONNECTION** — What unexpected relationship exists between two apparently unrelated things?
 
 After research, ask: *"Which of these elements can become a narrative engine?"*
+
+---
+
+**RESEARCH LOG vs. FACTUAL CLAIM LEDGER**
+
+These are related but distinct functions:
+
+**RESEARCH LOG** — the discovery of narrative material. Its purpose is to surface what surprises, tensions, human elements, and story-worthy moments exist in the topic. Not every item in the Research Log becomes a narrative-critical claim. The Research Log is informal and exploratory.
+
+**FACTUAL CLAIM LEDGER** — the traceability record for claims that will materially sustain the narrative. Populated during research and updated as angles develop and the script is written. Its purpose is to allow the CEO and Reviewer to audit the factual foundation of the narrative. It is formal and selective.
+
+A claim requires a Ledger entry when it is narrative-critical — when it materially sustains any of: hook, premise, central tension, causal explanation, historical attribution, chronology critical to the story, turning point, reveal, payoff, or viewer transformation. Also required for any claim that is: controversial, historically uncertain, scientifically disputed, quantitatively important (specific numbers, dates, magnitudes), surprising enough to drive retention, or capable of altering the central interpretation of the video.
+
+The Ledger is **not** required for ordinary supporting facts that, if imprecise, would not materially change what the viewer believes or the story's central claim.
+
+**Ledger entry format:**
+
+```
+CLAIM [ID]
+
+Claim: [The specific factual assertion]
+
+Role in Narrative: [HOOK / PREMISE / CENTRAL TENSION / CURIOSITY GAP / TURNING POINT /
+REVEAL / CAUSAL EXPLANATION / HISTORICAL ATTRIBUTION / CHRONOLOGY / PAYOFF / VIEWER TRANSFORMATION]
+
+Confidence: HIGH / MEDIUM / LOW
+  HIGH   — primary sources or well-established scholarly consensus
+  MEDIUM — credible sources with some dispute, interpretive variation, or evidence gaps
+  LOW    — indirect evidence, single sources, minority positions, or reasonable inference
+
+Source / Evidence: [Specific source, document, study, or evidence base]
+
+Important Nuance or Dispute: [If sources diverge or caveats apply. If none: "None identified."]
+```
+
+A MEDIUM or LOW confidence claim used in a narrative-critical role must be preserved as uncertain in the narration. Acceptable framing: *"Uma das hipóteses é...", "Há evidências de que...", "Os registros sugerem...", "É aqui que a história fica controversa..."*
+
+A LOW confidence claim cannot be presented as established fact in any narrative-critical position — regardless of its value to retention.
 
 ---
 
@@ -335,6 +375,8 @@ Review every claim, especially narrative-critical claims — those that support 
 
 See Factual Integrity standards in `CLAUDE.md` and `/rules/studio-principles.md`.
 
+Cross-check the script against the FACTUAL CLAIM LEDGER. Verify that every Ledger entry is reflected in the script with the appropriate confidence level — no MEDIUM or LOW confidence claim should appear as established fact in a narrative-critical position. If the script has introduced new narrative-critical claims not yet in the Ledger, add them now before handoff.
+
 ---
 
 ### Phase 14 — Self Review & Handoff
@@ -407,6 +449,28 @@ End of angles. Then:
 **MAIN RISK:** [The biggest genuine weakness of this angle]
 
 **WHY NOT THE RUNNER-UP:** [Why the second-best angle loses — what this one does better]
+
+---
+
+## FACTUAL CLAIM LEDGER
+
+*(Covers all narrative-critical claims across the angles above. Required for claims that materially sustain: hook, premise, central tension, causal explanation, historical attribution, chronology, turning point, reveal, payoff, viewer transformation — and for any claim that is controversial, historically uncertain, scientifically disputed, quantitatively important, or surprising enough to drive retention. Not required for ordinary supporting facts.)*
+
+---
+CLAIM [ID]
+
+Claim: [The specific factual assertion]
+
+Role in Narrative: [HOOK / PREMISE / CENTRAL TENSION / CURIOSITY GAP / TURNING POINT / REVEAL / CAUSAL EXPLANATION / HISTORICAL ATTRIBUTION / CHRONOLOGY / PAYOFF / VIEWER TRANSFORMATION]
+
+Confidence: HIGH / MEDIUM / LOW
+
+Source / Evidence: [Specific source, document, study, or evidence base]
+
+Important Nuance or Dispute: [If sources diverge or caveats apply — or "None identified."]
+
+---
+*(Additional entries as required)*
 
 ---
 
@@ -523,6 +587,10 @@ These are diagnostic questions, not a production checklist. Not every question a
 - [ ] Does "WHY THIS ANGLE COULD FAIL" reflect the real risk — not a token weakness?
 - [ ] Does WRITER RECOMMENDATION compare the best options rather than simply declare a favorite?
 - [ ] Does the recommendation explain why the runner-up loses?
+- [ ] Does the FACTUAL CLAIM LEDGER include every narrative-critical claim across all angles?
+- [ ] Does the Ledger include any claim that is controversial, historically uncertain, quantitatively important, or capable of altering the central interpretation?
+- [ ] Are all MEDIUM and LOW confidence claims flagged — and is uncertainty preserved in the angle description?
+- [ ] Is there any narrative-critical claim in the pitch with no Ledger entry?
 
 ### Script
 
@@ -543,6 +611,8 @@ These are diagnostic questions, not a production checklist. Not every question a
 - [ ] Does the payoff recontextualize something from earlier — if the subject supports it?
 - [ ] Is factual uncertainty preserved where it genuinely exists?
 - [ ] Has any tension been exaggerated beyond what the evidence supports?
+- [ ] Has the Factual Claim Ledger been updated with any new narrative-critical claims introduced in the script?
+- [ ] Do all MEDIUM and LOW confidence Ledger entries appear in the narration with appropriate uncertainty framing?
 - [ ] Are visual notes narrative intents rather than Illustrator-level direction?
 - [ ] Is there any warm-up language at the start that should be removed?
 
@@ -550,6 +620,6 @@ These are diagnostic questions, not a production checklist. Not every question a
 
 ## DEFINITION OF DONE
 
-**Concept Pitch:** Done when `concept-pitch.md` contains 3–5 fully structured angles — each with Narrative Engine, Central Tension, Viewer Transformation, Angle Profile, and WHY THIS ANGLE COULD FAIL — plus a WRITER RECOMMENDATION that explicitly compares the top proposals. Ready for CEO Gate #1.
+**Concept Pitch:** Done when `concept-pitch.md` contains 3–5 fully structured angles — each with Narrative Engine, Central Tension, Viewer Transformation, Angle Profile, and WHY THIS ANGLE COULD FAIL — plus a WRITER RECOMMENDATION that explicitly compares the top proposals, and a FACTUAL CLAIM LEDGER covering all narrative-critical claims across all angles. Ready for CEO Gate #1.
 
-**Script:** Done when `script.md` contains a complete Story Spine, every scene from hook to payoff with scene purpose noted, all open loops accounted for and closed, narration passes the spoken language and information economy tests, factual integrity is maintained, and SELF REVIEW passes.
+**Script:** Done when `script.md` contains a complete Story Spine, every scene from hook to payoff with scene purpose noted, all open loops accounted for and closed, narration passes the spoken language and information economy tests, factual integrity is maintained, the Factual Claim Ledger is updated with any new narrative-critical claims introduced in the script, and SELF REVIEW passes.
