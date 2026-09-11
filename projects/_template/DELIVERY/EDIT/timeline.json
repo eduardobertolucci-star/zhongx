@@ -1,0 +1,82 @@
+{
+  "_comment": "ZhongX Studio — Timeline JSON Template. Fill in all fields. See agents/director.md for schema documentation.",
+  "project": "[slug]",
+  "version": "1.0",
+  "total_duration_sec": 0,
+  "audio": {
+    "narration_wav": "DELIVERY/AUDIO/narration.wav",
+    "narration_mp3": "DELIVERY/AUDIO/narration.mp3",
+    "timestamps": "DELIVERY/AUDIO/timestamps.json"
+  },
+  "music": {
+    "arc_description": "[Overall music arc description]",
+    "segments": [
+      {
+        "label": "[segment name]",
+        "start_sec": 0,
+        "end_sec": 0,
+        "energy": "high | medium | low",
+        "direction": "[Music direction note]"
+      }
+    ]
+  },
+  "beats": [
+    {
+      "id": "beat-001",
+      "scene": "[scene label]",
+      "asset": "[filename]",
+      "asset_path": "DELIVERY/IMAGES/[filename]",
+      "start_sec": 0,
+      "end_sec": 0,
+      "duration_sec": 0,
+      "cut_in": {
+        "type": "hard_cut | fade | dissolve | wipe",
+        "duration_sec": 0,
+        "from": "black | previous_beat | [beat_id]"
+      },
+      "cut_out": {
+        "type": "hard_cut | fade | dissolve | wipe",
+        "duration_sec": 0,
+        "to": "[next_beat_id]"
+      },
+      "motion": {
+        "type": "static | ken_burns | zoom_in | zoom_out | pan | animation",
+        "direction": "[direction description]",
+        "intensity": "subtle | moderate | strong",
+        "notes": "[any additional motion notes]"
+      },
+      "text_overlays": [
+        {
+          "text": "[exact text]",
+          "position": "center | top | bottom | top-left | top-right | bottom-left | bottom-right",
+          "style": "[animation style description]",
+          "entry_sec": 0,
+          "exit_sec": 0,
+          "synced_to_cue": "[narration cue label or null]"
+        }
+      ],
+      "sfx": [
+        {
+          "sound": "[sound description]",
+          "timestamp_sec": 0,
+          "intensity": "low | medium | high",
+          "purpose": "[purpose description]"
+        }
+      ],
+      "narration_sync": [
+        {
+          "cue_type": "[cue type from timestamps.json]",
+          "cue_label": "[annotation label]",
+          "timestamp_sec": 0,
+          "visual_event": "[what happens visually at this cue]"
+        }
+      ],
+      "music_energy": "high | medium | low | ducked"
+    }
+  ],
+  "sfx_master": [],
+  "_future_render_engine": {
+    "schema_version": "1.0",
+    "note": "This file is designed to be consumed by a Render Engine in a future pipeline stage. Do not implement rendering logic against this schema without CEO authorization."
+  }
+}

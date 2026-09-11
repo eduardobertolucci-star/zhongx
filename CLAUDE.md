@@ -1,6 +1,6 @@
 # ZhongX Studio — Studio OS
 
-**Version:** 1.0
+**Version:** 1.1
 **Authority:** CEO & Showrunner
 **Last Updated:** 2026-09-10
 
@@ -60,19 +60,21 @@ CEO GATE #1  →  Angle selection + strategic direction
   ↓
 WRITER  →  Full Script (script.md)
   ↓
-NARRATOR  →  Narration (narration.md)
+NARRATOR  →  Narration (narration.md) + Audio (narration.wav) + Timestamps (timestamps.json)
             [input: script.md]
   ↓
-ILLUSTRATOR  →  Storyboard (storyboard.md)
-               [input: script.md + narration.md]
+ILLUSTRATOR  →  Storyboard with visual beat breakdown (storyboard.md)
+               [input: script.md + narration.md + timestamps.json]
   ↓
-DIRECTOR  →  Direction (direction.md)
-            [input: script.md + narration.md + storyboard.md]
+DIRECTOR  →  Editing Blueprint (edit-guide.md + timeline.json)
+            [input: script.md + narration.md + timestamps.json + storyboard.md]
   ↓
 REVIEWER  →  Review (review.md)
             [evaluates all documents + brief + concept-pitch]
   ↓
   ├── Studio Score ≥ 8.5  →  CEO FINAL GATE
+  │                            ↓
+  │                        CEO assembles DELIVERY/ package
   ├── Studio Score 7.0–8.4  →  Corrections → Responsible Agent → Re-review
   └── Studio Score < 7.0 or GRAVE issue  →  CEO EXTRAORDINARY GATE
 ```
@@ -110,9 +112,9 @@ REVIEWER  →  Review (review.md)
 | Agent | Primary Deliverable | Must Not |
 |-------|-------------------|----------|
 | Writer | concept-pitch.md, script.md | Write full script before Gate #1 |
-| Narrator | narration.md | Alter narrative structure without Writer review |
-| Illustrator | storyboard.md | Make plot or narrative decisions |
-| Director | direction.md | Override approved script or storyboard structure |
+| Narrator | narration.md + narration.wav + timestamps.json | Alter narrative structure without Writer review |
+| Illustrator | storyboard.md (with beat breakdown) | Make plot or narrative decisions |
+| Director | edit-guide.md + timeline.json | Generate or render the video |
 | Reviewer | review.md | Silently rewrite other agents' work |
 
 Full responsibilities, forbidden actions, and working methods live in each agent's file under `/agents/`.
@@ -151,10 +153,11 @@ It must be updated whenever:
 
 ### Versioning
 
-- Active documents use fixed names: `script.md`, `narration.md`, `storyboard.md`, `direction.md`
+- Active documents use fixed names: `script.md`, `narration.md`, `storyboard.md`, `edit-guide.md`, `timeline.json`
 - When a version is superseded by a significant rework, the previous version is archived to `/projects/[slug]/history/` as `script-v1.md`, `script-v2.md`, etc.
 - Small corrections (spelling, minor phrasing, annotation tweaks) do not create new versions in `/history/`
 - `/history/` is the audit trail, not the working space
+- Audio files in `DELIVERY/AUDIO/` are replaced in-place when regenerated — archive the timestamps file if timing changes significantly
 
 **What constitutes a new version:** Any correction that changes the narrative content, structure, visual design logic, or production direction — not cosmetic fixes.
 
@@ -162,20 +165,38 @@ It must be updated whenever:
 
 ## FILE NAMING CONVENTIONS
 
+### Working Documents (production phase)
+
 | File | Location | Notes |
 |------|----------|-------|
 | `brief.md` | `/projects/[slug]/` | Filled by CEO |
 | `concept-pitch.md` | `/projects/[slug]/` | Multiple angles + CEO Decision |
 | `script.md` | `/projects/[slug]/` | Post-Gate #1 |
 | `narration.md` | `/projects/[slug]/` | Narrator output |
-| `storyboard.md` | `/projects/[slug]/` | Illustrator output |
-| `direction.md` | `/projects/[slug]/` | Director output |
+| `storyboard.md` | `/projects/[slug]/` | Illustrator output — includes beat breakdown |
+| `edit-guide.md` | `/projects/[slug]/` | Director output — editing blueprint |
+| `timeline.json` | `/projects/[slug]/` | Director output — structured timeline data |
 | `review.md` | `/projects/[slug]/` | Reviewer output |
 | `project.md` | `/projects/[slug]/` | Operational state — always current |
 | Archived versions | `/projects/[slug]/history/` | `[file]-v[n].md` |
 
+### DELIVERY Package (assembled after CEO Final Gate)
+
+| File | Location | Produced by |
+|------|----------|-------------|
+| `narration.wav` | `/projects/[slug]/DELIVERY/AUDIO/` | Narrator |
+| `narration.mp3` | `/projects/[slug]/DELIVERY/AUDIO/` | Narrator |
+| `timestamps.json` | `/projects/[slug]/DELIVERY/AUDIO/` | Narrator |
+| `scene-NNN[A/B/C].jpg/.png` | `/projects/[slug]/DELIVERY/IMAGES/` | Assets generated from Illustrator prompts |
+| `script-final.md` | `/projects/[slug]/DELIVERY/SCRIPT/` | Copy of approved script.md |
+| `narration-final.md` | `/projects/[slug]/DELIVERY/SCRIPT/` | Copy of approved narration.md |
+| `edit-guide.md` | `/projects/[slug]/DELIVERY/EDIT/` | Copy of Director's edit-guide.md |
+| `timeline.json` | `/projects/[slug]/DELIVERY/EDIT/` | Copy of Director's timeline.json |
+
 **Project slugs:** lowercase, hyphenated, descriptive.
 Examples: `origem-universo`, `por-que-dormimos`, `black-holes-explicados`
+
+**Asset naming convention:** All image assets use the beat ID from storyboard.md: `scene-001.jpg`, `scene-005A.jpg`, `scene-005B.jpg`. Numbers are zero-padded to 3 digits.
 
 ---
 
@@ -200,6 +221,48 @@ Minimum Studio Score for Final Gate recommendation: **8.5 / 10**
 - Viral retention principles: `/rules/viral-retention.md`
 - Visual language standards: `/rules/visual-language.md`
 - Core studio principles: `/rules/studio-principles.md`
+
+---
+
+## DELIVERY PACKAGE
+
+The DELIVERY/ folder is the final production output assembled by the CEO after Final Gate approval. It contains everything needed to edit the video — no hunting through working documents.
+
+```
+DELIVERY/
+  AUDIO/
+    narration.wav        ← Primary audio (high quality)
+    narration.mp3        ← Compressed backup
+    timestamps.json      ← Timing reference for all assets
+  IMAGES/
+    scene-001.jpg        ← Numbered by beat ID from storyboard
+    scene-002A.jpg
+    scene-002B.jpg
+    scene-003.jpg
+    ...
+  SCRIPT/
+    script-final.md      ← Approved script
+    narration-final.md   ← Approved narration with annotations
+  EDIT/
+    edit-guide.md        ← Complete editing blueprint (human-readable)
+    timeline.json        ← Structured timeline data
+```
+
+The CEO opens `DELIVERY/EDIT/edit-guide.md` and edits from top to bottom.
+
+---
+
+## FUTURE SCOPE
+
+**Render Engine:** In a future pipeline stage, the Director may be augmented with an automated Render Engine that consumes `timeline.json` and generates the video without manual editing. This is explicitly **out of scope** for the current pipeline.
+
+Architecture requirements for future compatibility:
+- `timeline.json` schema must remain clean and forward-compatible (do not add ad-hoc fields)
+- `_future_render_engine` key in `timeline.json` documents the schema version
+- Asset file naming conventions are fixed — no changes without CEO authorization
+- The DELIVERY/ folder structure is the assumed input format for the Render Engine
+
+No agent should implement, simulate, or anticipate the Render Engine in current deliverables. The pipeline ends with the DELIVERY/ package ready for CEO editing.
 
 ---
 

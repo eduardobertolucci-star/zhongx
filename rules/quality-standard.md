@@ -106,16 +106,18 @@ No dimension override is permitted. A video cannot compensate for a weak dimensi
 - Do visuals add meaning, or merely decorate?
 - Is on-screen text used purposefully and legibly?
 - Are asset prompts specific and production-ready?
-- Does the direction execute the storyboard's visual intent?
+- Does the edit-guide execute the storyboard's visual intent?
+- **Is there sufficient visual variety relative to narration duration?** No static image should hold for > ~15 seconds without a motion change, text overlay, or new asset. Sequences with low visual variety are a retention risk regardless of image quality.
+- Does the beat breakdown (sub-scenes) reflect genuine rhythm and retention decisions — or is it arbitrary?
 
 **Scoring guide:**
 
 | Score | What it means |
 |-------|--------------|
-| 9–10 | Visual language amplifies the narrative. Consistent. Purposeful. Production-ready. Memorable. |
-| 7–8 | Effective with minor inconsistencies or scenes with visual ambiguity. |
-| 5–6 | Visuals present but not well integrated with narrative rhythm or narration. |
-| < 5 | Visual language contradicts, confuses, or ignores the narrative. Style inconsistencies throughout. |
+| 9–10 | Visual language amplifies the narrative. Consistent. Purposeful. Production-ready. Visual variety is well-calibrated to narration rhythm. Memorable. |
+| 7–8 | Effective with minor inconsistencies or 1–2 low-variety sequences. |
+| 5–6 | Visuals present but poorly integrated with narration rhythm. Multiple low-variety segments. |
+| < 5 | Visual language contradicts or ignores narrative. Major style inconsistencies. Significant low-variety sequences that would cause drop-off. |
 
 ---
 
