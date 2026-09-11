@@ -1,10 +1,26 @@
+import { useState } from 'react'
+import Sidebar from './components/Sidebar'
+import Dashboard from './pages/Dashboard'
+import NewProduction from './pages/NewProduction'
+import Studio from './pages/Studio'
+
 export default function App() {
+  const [page, setPage] = useState('dashboard')
+  const [production, setProduction] = useState(null)
+
+  const handleStartProduction = (data) => {
+    setProduction(data)
+    setPage('studio')
+  }
+
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-widest text-white mb-2">ZhongX</h1>
-        <p className="text-gray-400 text-sm tracking-wide">AUDIOVISUAL STUDIO</p>
-      </div>
+    <div className="min-h-screen bg-zinc-950 text-white flex">
+      <Sidebar currentPage={page} onNavigate={setPage} />
+      <main className="flex-1 overflow-auto">
+        {page === 'dashboard' && <Dashboard onNavigate={setPage} />}
+        {page === 'new' && <NewProduction onStart={handleStartProduction} />}
+        {page === 'studio' && <Studio production={production} />}
+      </main>
     </div>
   )
 }
