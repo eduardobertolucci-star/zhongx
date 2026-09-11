@@ -75,7 +75,9 @@ Payoff       → Closes Loop A (maximum reward — proportional to full setup)
 
 The hook gets viewers in. Re-hooks keep them in.
 
-A re-hook is any moment — approximately every 60–90 seconds — that creates a new reason to keep watching. Without re-hooks, open loops alone are insufficient for long-form retention.
+A re-hook is any moment that creates a new reason to keep watching. Without deliberate attention renewal, open loops alone are insufficient for long-form retention.
+
+Re-hooks should occur whenever the narrative begins to stabilize too much — when the viewer might feel they already know where the story is going. This is a narrative judgment, not a timer. A strong passage may sustain attention through its own momentum; a weak passage may need renewal sooner.
 
 **Re-hook techniques:**
 - **Future tease:** "But the most surprising part is still ahead."
@@ -83,11 +85,10 @@ A re-hook is any moment — approximately every 60–90 seconds — that creates
 - **New loop opening:** Just as one loop closes, another opens.
 - **Partial payoff:** Deliver a smaller reward that makes the bigger payoff feel imminent.
 - **Pattern interrupt:** An unexpected shift in tone, perspective, or visual style.
+- **New question:** A complication, contradiction, or unexpected evidence that reframes what the viewer thought they understood.
 
 **Re-hook placement:**
-- First re-hook: no later than 90 seconds after the hook
-- Subsequent re-hooks: every 60–90 seconds
-- A video longer than 5 minutes without a re-hook at the midpoint will lose significant audience
+Place re-hooks when the narrative needs them — not on a schedule. A video longer than 5 minutes without any major attention renewal will lose significant audience, but the solution is narrative design, not interval counting.
 
 ---
 
@@ -106,7 +107,7 @@ CTA:           Brief, clear, after the payoff has fully landed
 ```
 
 **Warning signs of bad pacing:**
-- More than 90 seconds without a new hook, reveal, or emotional beat
+- Extended passages where the viewer could stop watching without missing anything
 - All scenes at the same energy level — no contrast
 - Payoff delivered at the same density as development — no deceleration for impact
 - CTA placed before the viewer has had time to feel satisfied by the payoff
@@ -164,7 +165,7 @@ A video that informs without creating this journey is a lecture. A video that cr
 
 **YouTube (long-form):**
 - Hook must work within the first 30 seconds of actual playback
-- Re-hooks are critical every 60–90 seconds
+- Re-hooks are critical — place them wherever the narrative needs attention renewal
 - Payoff can be placed at 80–85% of total runtime, leaving time for CTA
 - Thumbnail and title are pre-hook elements — they must promise something the video delivers
 
