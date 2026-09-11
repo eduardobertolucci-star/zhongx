@@ -9,7 +9,7 @@
 **PLATFORM:** YouTube
 **TARGET DURATION:** 6–8 min
 **CREATED:** 2026-09-10
-**LAST UPDATE:** 2026-09-10
+**LAST UPDATE:** 2026-09-10 (Factual Claim Ledger added retroactively)
 
 ---
 

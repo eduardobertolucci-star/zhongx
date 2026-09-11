@@ -247,6 +247,256 @@ FACTUAL RISK: MEDIUM — o risco é escorregar de "não sabemos o que ele fez" p
 
 ---
 
+## FACTUAL CLAIM LEDGER
+
+*Retroactively applied — Writer Pilot / 2026-09-10*
+*Covers narrative-critical claims across all four angles and the Research Log.*
+*Not required for ordinary supporting facts. Sources used are registered per entry.*
+
+---
+
+**CLAIM F01**
+
+**Claim:** O tablet Plimpton 322 data de aproximadamente 1800 a.C. (Período Babilônico Antigo).
+
+**Role in Narrative:** CHRONOLOGY / HISTORICAL ATTRIBUTION — fundação cronológica de todos os quatro ângulos; sustenta o claim de que o conhecimento matemático precede Pitágoras em ~1.200 anos.
+
+**Confidence:** HIGH — datação por contexto arqueológico e análise paleográfica do cuneiforme é amplamente aceita na literatura especializada. A margem de incerteza (~1900–1600 a.C. para o Período Babilônico Antigo como um todo) não afeta materialmente o claim de que o tablet precede Pitágoras em mais de um milênio.
+
+**Source / Evidence:** Neugebauer, O. & Sachs, A. (1945). *Mathematical Cuneiform Texts*. American Oriental Society. // Robson, E. (2002). "Words and Pictures: New Light on Plimpton 322." *American Mathematical Monthly*, 109(2), 105–120.
+
+**Important Nuance or Dispute:** Nenhuma que afete o uso narrativo. A data amplamente citada "c. 1800 a.C." é uma estimativa consensual dentro de um período de ~300 anos.
+
+---
+
+**CLAIM F02**
+
+**Claim:** O Plimpton 322 contém 15 linhas de triplas pitagóricas — grupos de três inteiros que satisfazem a² + b² = c² — calculados com alta precisão.
+
+**Role in Narrative:** HOOK (Angle 3) / PREMISE (Angles 1, 2, 3) / HISTORICAL ATTRIBUTION — evidência central de que a relação matemática entre os lados de triângulos retângulos era conhecida e trabalhada na Babilônia ~1800 a.C.
+
+**Confidence:** HIGH — identificado por Neugebauer & Sachs (1945); confirmado por múltiplos estudos subsequentes; os números no tablet verificam matematicamente.
+
+**Source / Evidence:** Neugebauer & Sachs (1945), ibid. // Robson (2002), ibid. // Buck, R.C. (1980). "Sherlock Holmes in Babylon." *American Mathematical Monthly*, 87(5), 335–345.
+
+**Important Nuance or Dispute:** O conteúdo matemático (triplas pitagóricas) é HIGH confidence. O que os babilônios entendiam *por que* essas triplas funcionam — i.e., se possuíam um enunciado geral ou demonstração — não pode ser inferido do tablet. A distinção entre *usar* a relação e *provar* a relação é narrativamente crítica para o Ângulo 2 e não deve ser colapsada.
+
+---
+
+**CLAIM F03**
+
+**Claim:** O Plimpton 322 foi adquirido pelo colecionador George Arthur Plimpton por volta de 1922 (vendido pelo negociante Edgar J. Banks) e está atualmente na Rare Book & Manuscript Library da Universidade Columbia, em Nova York.
+
+**Role in Narrative:** HOOK (Angle 3) — ancora a narrativa em um objeto físico verificável e com localização atual conhecida.
+
+**Confidence:** HIGH para localização atual (Columbia). MEDIUM para data exata de aquisição — documentação da transação Banks→Plimpton é imprecisa; fontes citam datas entre 1900 e 1923.
+
+**Source / Evidence:** Columbia University Libraries catalog entry. // Robson (2002), ibid.
+
+**Important Nuance or Dispute:** A data exata da compra varia entre fontes. Para o roteiro, "adquirido por Plimpton no início do século XX" é a formulação mais defensável. "Por volta de 1922" é aceitável como aproximação.
+
+---
+
+**CLAIM F04**
+
+**Claim:** A importância matemática do Plimpton 322 foi analisada em detalhe por Otto Neugebauer e Abraham Sachs em 1945, identificando seu conteúdo pitagórico.
+
+**Role in Narrative:** REVEAL (Angle 3) — momento narrativo em que o objeto físico é reconhecido como matematicamente significativo.
+
+**Confidence:** HIGH — publicação acadêmica documentada e amplamente citada.
+
+**Source / Evidence:** Neugebauer & Sachs (1945), ibid.
+
+**Important Nuance or Dispute:** Anteriormente a 1945, a coleção Plimpton havia sido brevemente descrita por outros, mas sem identificar o conteúdo matemático específico. A análise sistemática de 1945 é o momento de reconhecimento. Isso sustenta a narrativa do Ângulo 3.
+
+---
+
+**CLAIM F05**
+
+**Claim:** O Plimpton 322 precede Pitágoras em aproximadamente 1.200 anos. O tablet tem ~3.800 anos (como de 2026).
+
+**Role in Narrative:** HOOK (Angles 1, 2, 3) / CHRONOLOGY / VIEWER TRANSFORMATION — claim central de amplitude temporal que sustenta o objetivo do brief.
+
+**Confidence:** HIGH — aritmética com datas amplamente aceitas: c. 1800 a.C. vs. c. 570 a.C. (nascimento de Pitágoras) = ~1.230 anos; c. 1800 a.C. até 2026 = ~3.826 anos.
+
+**Source / Evidence:** Derivado de F01 + F12.
+
+**Important Nuance or Dispute:** Nenhuma que afete o uso narrativo. "~1.200 anos" e "~3.800 anos" são arredondamentos defensáveis.
+
+---
+
+**CLAIM F06**
+
+**Claim:** O Baudhayana Sulbasutra (Índia) data de aproximadamente 800–600 a.C. e contém um enunciado verbal explícito do Teorema de Pitágoras, precedendo Pitágoras.
+
+**Role in Narrative:** CHRONOLOGY / HISTORICAL ATTRIBUTION (Angle 1) — parte da cadeia de evidências pré-pitagóricas na investigação.
+
+**Confidence:** MEDIUM — a datação dos Sulbasutras é significativamente disputada na literatura especializada. Estimativas variam de c. 800 a.C. até c. 500 a.C. ou mais tarde.
+
+**Source / Evidence:** Plofker, K. (2009). *Mathematics in India*. Princeton University Press. // Datta, B. (1932). *The Science of the Sulbas*. University of Calcutta.
+
+**Important Nuance or Dispute:** ⚠️ DISPUTA CRONOLÓGICA — Se a datação mais conservadora (~500 a.C.) for aceita, o Baudhayana Sulbasutra seria contemporâneo ou posterior a Pitágoras (c. 570–495 a.C.). A afirmação de que "precede Pitágoras" NÃO deve ser apresentada como fato estabelecido no roteiro. Formulação defensável: "textos indianos do mesmo período ou possivelmente anteriores a Pitágoras, cujas datas exatas são debatidas." O Research Log já usa "datas disputadas" — essa cautela deve ser mantida rigorosamente no script.
+
+---
+
+**CLAIM F07**
+
+**Claim:** O enunciado no Baudhayana Sulbasutra — "A diagonal de um retângulo produz por si só ambas as áreas que os dois lados do retângulo produzem separadamente" — é matematicamente equivalente ao Teorema de Pitágoras.
+
+**Role in Narrative:** HISTORICAL ATTRIBUTION / CENTRAL TENSION (Angles 1, 2) — evidência de que a relação era articulada verbalmente em múltiplas culturas.
+
+**Confidence:** HIGH — o texto existe em sânscrito; a equivalência matemática é amplamente reconhecida.
+
+**Source / Evidence:** Plofker (2009), ibid. // van der Waerden, B.L. (1983). *Geometry and Algebra in Ancient Civilizations*. Springer.
+
+**Important Nuance or Dispute:** O enunciado descreve a relação mas não constitui uma demonstração formal no sentido grego. Esta distinção é narrativamente central para o Ângulo 2 e deve ser preservada.
+
+---
+
+**CLAIM F08**
+
+**Claim:** O texto matemático chinês Zhou Bi Suan Jing (周髀算經) data de aproximadamente 1000 a.C. e contém o Teorema de Pitágoras (chamado teorema Gougu, 勾股定理), precedendo Pitágoras.
+
+**Role in Narrative:** CHRONOLOGY / HISTORICAL ATTRIBUTION (Angle 1) — parte da linha do tempo de evidências pré-pitagóricas no Research Log e no ESCALA.
+
+**Confidence:** LOW — a datação do Zhou Bi Suan Jing é altamente disputada. A maioria dos historiadores modernos da matemática chinesa data a compilação como recebida de c. 100 a.C. a 200 d.C., com possíveis camadas de conteúdo anterior não identificáveis com precisão. A data "~1000 a.C." citada no Research Log não tem suporte no consenso especializado atual.
+
+**Source / Evidence:** Cullen, C. (1996). *Astronomy and Mathematics in Ancient China: The Zhou Bi Suan Jing*. Cambridge University Press. // Chemla, K. (ed.) (2004). *History of Science, History of Text*. Springer.
+
+**Important Nuance or Dispute:** ⚠️ PROBLEMA — A data "~1000 a.C." registrada na linha do tempo do Research Log (ESCALA) não é sustentável. Se o Ângulo 1 for aprovado, a referência à China deve ser apresentada com incerteza cronológica explícita. Formulação defensável: "A tradição matemática chinesa também desenvolveu o teorema — chamado de teorema Gougu — embora a datação precisa dos textos que o contêm seja debatida por historiadores." O claim de que precede Pitágoras é LOW confidence e não deve ser feito sem preservação de incerteza.
+
+---
+
+**CLAIM F09**
+
+**Claim:** Os Elementos de Euclides datam de aproximadamente 300 a.C. O Livro I, Proposição 47 enuncia e demonstra o Teorema de Pitágoras.
+
+**Role in Narrative:** HISTORICAL ATTRIBUTION / CHRONOLOGY / TURNING POINT (Angles 1, 2) — âncora cronológica da primeira prova formal sobrevivente.
+
+**Confidence:** HIGH — Euclides é datado da época de Ptolomeu I Soter (323–283 a.C.); o conteúdo dos Elementos é amplamente documentado.
+
+**Source / Evidence:** Euclid. *Elements*. Trans. Heath, T.L. (1908). Cambridge University Press. // Boyer, C.B. (1991). *A History of Mathematics*. Wiley.
+
+**Important Nuance or Dispute:** Euclides provavelmente coletou e sistematizou resultados de outros; a Proposição 47 pode não ser uma prova de autoria original de Euclides. Isso não afeta o claim narrativo.
+
+---
+
+**CLAIM F10**
+
+**Claim:** Euclides não atribui o Teorema de Pitágoras a Pitágoras em nenhum ponto dos Elementos.
+
+**Role in Narrative:** KEY REVEAL (Angle 1) / CENTRAL TENSION — evidência de que a obra matemática mais rigorosa da Antiguidade grega não faz a atribuição que o nome do teorema implica.
+
+**Confidence:** HIGH — o texto dos Elementos não contém referências a Pitágoras em conexão com a Proposição 47.
+
+**Source / Evidence:** Heath (1908), ibid.
+
+**Important Nuance or Dispute:** Euclides raramente nomeia fontes para proposições específicas; o silêncio sobre Pitágoras não implica que ele desconhecia a tradição atributiva. A ausência é narrativamente significativa mas não deve ser interpretada como evidência negativa definitiva.
+
+---
+
+**CLAIM F11**
+
+**Claim:** A primeira prova formal do Teorema de Pitágoras que sobreviveu até hoje está nos Elementos de Euclides (~300 a.C.).
+
+**Role in Narrative:** HISTORICAL ATTRIBUTION / PAYOFF (Angles 1, 2) — estabelece que a prova mais antiga documentada não pode ser atribuída diretamente a Pitágoras.
+
+**Confidence:** HIGH — não existe prova formal anterior documentada ou sobrevivente; este é o consenso na história da matemática.
+
+**Source / Evidence:** Heath (1908), ibid. // Maor, E. (2007). *The Pythagorean Theorem: A 4,000-Year History*. Princeton University Press.
+
+**Important Nuance or Dispute:** Pode ter existido uma prova pitagórica anterior que não sobreviveu; a afirmação correta é "primeira prova formal *sobrevivente*", não "primeira prova formal". O Research Log e os ângulos já usam "sobrevivente" — essa precisão deve ser mantida no script.
+
+---
+
+**CLAIM F12**
+
+**Claim:** Pitágoras viveu por volta de 570–495 a.C. e não deixou nenhum escrito.
+
+**Role in Narrative:** PREMISE / HISTORICAL ATTRIBUTION (Angles 1, 4) — fundamenta a dificuldade estrutural de qualquer atribuição a Pitágoras.
+
+**Confidence:** MEDIUM — as datas são aproximações consensuais, não precisas. A ausência de escritos é o consenso acadêmico, mas tecnicamente não pode ser verificada com certeza absoluta.
+
+**Source / Evidence:** Burkert, W. (1972). *Lore and Science in Ancient Pythagoreanism*. Harvard University Press. // Kahn, C.H. (2001). *Pythagoras and the Pythagoreans: A Brief History*. Hackett.
+
+**Important Nuance or Dispute:** Burkert (1972) é a análise crítica de referência e é significativamente mais cético sobre atribuições a Pitágoras do que a literatura popular. Tudo que sabemos sobre Pitágoras vem de fontes secundárias escritas décadas a séculos depois de sua morte.
+
+---
+
+**CLAIM F13**
+
+**Claim:** As fontes antigas que atribuem o Teorema de Pitágoras especificamente a Pitágoras incluem: Vitrúvio (*De Architectura*, Livro IX, Prefácio, ~25 a.C.), Diógenes Laércio (*Vidas dos Filósofos*, Livro VIII, ~séc. III d.C.), e Proclo (*Comentário sobre os Elementos de Euclides*, ~450 d.C.). A mais citada por historiadores da matemática é Proclo.
+
+**Role in Narrative:** HISTORICAL ATTRIBUTION / PAYOFF (Angles 1, 4) — estabelece quais são as fontes, quando foram escritas, e o grau de proximidade temporal com Pitágoras.
+
+**Confidence:** HIGH — estas fontes existem e contêm as afirmações mencionadas.
+
+**Source / Evidence:** Vitruvius. *De Architectura*, IX, Praef. // Diogenes Laërtius. *Lives of Eminent Philosophers*, VIII. Trans. Hicks, R.D. (1925). Loeb Classical Library. // Proclus. *Commentary on the First Book of Euclid's Elements*. Trans. Morrow, G.R. (1970). Princeton University Press.
+
+**Important Nuance or Dispute:** ⚠️ PROBLEMA CRÍTICO — O Research Log (seção SURPRISE) afirma: "A primeira fonte escrita que atribui o teorema a Pitágoras é Proclo." Isso é INCORRETO. Vitrúvio (~25 a.C.) atribui o teorema a Pitágoras explicitamente e é anterior a Proclo em ~475 anos. Diógenes Laércio (~séc. III d.C.) também o faz antes de Proclo. // O Ângulo 4 agrava o problema: o hook afirma "a única fonte que conecta o nome dele ao teorema que leva seu nome foi escrita cerca de mil anos depois da sua morte" — DUAS imprecisões: (1) não é "única fonte"; (2) "cerca de mil anos" só se aplica a Proclo; Vitrúvio escreveu ~480 anos após a morte de Pitágoras. // O Ângulo 4 Viewer Transformation repete o erro: "A atribuição do teorema a ele vem de uma única fonte escrita milênio depois." // SE O ÂNGULO 4 FOR APROVADO: o hook e o Viewer Transformation requerem correção antes do script. // Formulação defensável para o script: "As fontes mais antigas que atribuem este teorema a Pitágoras foram escritas centenas de anos após sua morte — a mais frequentemente citada por historiadores da matemática, Proclo, escreveu cerca de mil anos depois."
+
+---
+
+**CLAIM F14**
+
+**Claim:** Proclo, ao atribuir o teorema a Pitágoras, usa linguagem de segunda mão — ele reporta o que outros dizem, não afirma diretamente.
+
+**Role in Narrative:** KEY REVEAL (Angle 1) / PAYOFF (Angle 4) — qualifica o peso epistêmico da atribuição mais citada.
+
+**Confidence:** HIGH — o texto de Proclo usa formas que indicam distância: "se escutarmos aqueles que desejam contar a história antiga, encontraremos alguns deles referindo este teorema a Pitágoras..."
+
+**Source / Evidence:** Proclus. *Commentary*, Trans. Morrow (1970), ibid.
+
+**Important Nuance or Dispute:** A tradução de Morrow preserva a distância epistêmica do original grego. Este claim é defensável e sustenta a narrativa de forma honesta.
+
+---
+
+**CLAIM F15**
+
+**Claim:** Em 2017, Daniel Mansfield e Norman Wildberger (UNSW Sydney) propuseram que o Plimpton 322 é uma tabela trigonométrica babilônica — baseada em um sistema diferente do moderno.
+
+**Role in Narrative:** TURNING POINT / REVEAL (Angle 3) — adiciona uma camada de reinterpretação contemporânea ao tablet, funcionando como re-hook de meio de vídeo.
+
+**Confidence:** MEDIUM — a publicação em revista peer-reviewed é real. A interpretação em si é contestada por especialistas em matemática mesopotâmica.
+
+**Source / Evidence:** Mansfield, D.F. & Wildberger, N.J. (2017). "Plimpton 322 is Babylonian exact sexagesimal trigonometry." *Historia Mathematica*, 44(4), 395–419.
+
+**Important Nuance or Dispute:** ⚠️ DISPUTA ACADÊMICA — A interpretação de Mansfield & Wildberger é contestada por Eleanor Robson (a principal especialista contemporânea no tablet) e outros historiadores da matemática mesopotâmica. A crítica principal é que projetar o conceito de "trigonometria" sobre um contexto babilônico é anacrônico. O Ângulo 3 já apresenta este claim como hipótese contestada — essa cautela é correta e deve ser mantida no roteiro com linguagem explicitamente hipotética.
+
+---
+
+**CLAIM F16**
+
+**Claim:** A escola pitagórica era uma irmandade filosófico-religiosa que mantinha suas descobertas em segredo.
+
+**Role in Narrative:** CAUSAL EXPLANATION (Angles 1, 4) — explicação plausível de por que não sobrevivem registros diretos da contribuição pitagórica.
+
+**Confidence:** MEDIUM — relatado consistentemente em fontes antigas (Jâmblico, Porfírio); mas essas fontes foram escritas ~800 anos após Pitágoras e têm caráter parcialmente hagiográfico.
+
+**Source / Evidence:** Iamblichus. *On the Pythagorean Life*. Trans. Clark, G. (1989). Liverpool University Press. // Burkert (1972), ibid.
+
+**Important Nuance or Dispute:** O grau de secretismo da escola e a autenticidade dos relatos de Jâmblico e Porfírio são debatidos. Burkert é cético sobre muitos elementos da tradição pitagórica tardia. Deve ser apresentado no roteiro com ressalva: "segundo relatos antigos" ou "a tradição descreve uma escola que...".
+
+---
+
+**CLAIM F17**
+
+**Claim:** Existe uma distinção historicamente significativa entre *saber* que uma relação matemática funciona empiricamente (conhecimento prático) e *provar* que ela é universalmente verdadeira por demonstração dedutiva (prova formal). A matemática grega — culminando nos Elementos de Euclides — é o primeiro registro sobrevivente de demonstração formal sistemática.
+
+**Role in Narrative:** CENTRAL TENSION / PAYOFF (Angle 2) — argumento intelectual central do ângulo mais filosófico; também contextualiza o que a tradição pitagórica *pode* ter contribuído de forma defensável.
+
+**Confidence:** HIGH — a distinção entre conhecimento empírico e demonstração dedutiva é amplamente reconhecida na filosofia da matemática e na história da ciência.
+
+**Source / Evidence:** Kline, M. (1972). *Mathematical Thought from Ancient to Modern Times*. Oxford University Press. // Netz, R. (1999). *The Shaping of Deduction in Greek Mathematics*. Cambridge University Press.
+
+**Important Nuance or Dispute:** Atribuir especificamente a *Pitágoras* a introdução da prova formal é especulativo — a prova pitagórica (se existiu) não sobreviveu. O que pode ser afirmado com HIGH confidence: a tradição grega, culminando em Euclides, é o primeiro registro sobrevivente de demonstração dedutiva sistemática. O Ângulo 2 deve articular a contribuição como sendo da *tradição matemática grega em geral*, não especificamente de Pitágoras. Esta distinção preserva a factual integrity sem enfraquecer o argumento central do ângulo.
+
+---
+
+*Fim do Factual Claim Ledger. 17 claims auditados.*
+
+---
+
 ## CEO DECISION
 
 *(Preenchido pelo CEO após revisão dos ângulos)*
