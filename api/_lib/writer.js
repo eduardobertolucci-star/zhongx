@@ -87,13 +87,13 @@ Do NOT write the full script. Stop after the concept pitch. This is CEO Gate #1 
 BRIEF:
 ${briefToText(brief)}
 
-Execute internamente: pesquisa de material narrativo (todas as 11 categorias), identificação de Narrative Engines e Central Tensions, Viewer Transformation para cada ângulo. Gere preferencialmente 3 ângulos genuinamente distintos.
+Execute internamente: pesquisa de material narrativo (todas as 11 categorias), identificação de Motores Narrativos e Tensões Centrais, Transformação para cada ângulo. Gere preferencialmente 3 ângulos genuinamente distintos.
 
 Entregue no formato Production definido no seu runtime:
-- ANGLE 1/2/3 com HOOK, NARRATIVE ENGINE, CENTRAL TENSION, VIEWER TRANSFORMATION, CORE PROMISE, MAIN RISK
-- WRITER RECOMMENDATION
-- FACTUAL CLAIM LEDGER (claims narrative-critical e MEDIUM/LOW confidence)
-- APPROVED ANGLE SNAPSHOTS
+- ÂNGULO 1/2/3 com GANCHO, MOTOR NARRATIVO, TENSÃO CENTRAL, TRANSFORMAÇÃO (ANTES/DEPOIS), PROMESSA CENTRAL, RISCO PRINCIPAL
+- RECOMENDAÇÃO DO ROTEIRISTA
+- REGISTRO FACTUAL (claims narrativo-críticos e confiança MÉDIA/BAIXA)
+- SNAPSHOTS DE ÂNGULOS
 
 Não serializar Research Log. Não incluir análise longa de retenção por ângulo. Escreva em Português do Brasil.`
 }
@@ -141,14 +141,14 @@ ${briefToText(brief)}
 CEO GATE #1 — DIREÇÃO APROVADA:
 ${gateDecision}
 ${snapshotBlock}
-Execute Story Spine internamente como planejamento obrigatório — não serializar no output. Escreva o script no formato Production definido no seu runtime:
-- HOOK com narração e NARRATIVE VISUAL INTENT
-- CENAS com narração e NARRATIVE VISUAL INTENT (quando a cena depende de comunicação visual)
+Execute Story Spine internamente como planejamento obrigatório — não serializar no output. Escreva o roteiro no formato Production definido no seu runtime:
+- GANCHO com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA
+- CENAS com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA (quando a cena depende de comunicação visual)
 - PAYOFF + CTA
-- FACTUAL CLAIM LEDGER — atualizações (novos claims narrative-critical não cobertos no Concept Pitch)
-- SELF REVIEW: PASS ou FAIL com problema específico
+- REGISTRO FACTUAL — ATUALIZAÇÕES (novos claims narrativo-críticos não cobertos no Concept Pitch)
+- AUTOAVALIAÇÃO: APROVADO ou REPROVADO com problema específico
 
-Sem Story Spine no output. Sem checklist de Self Review. Escreva em Português do Brasil.`
+Sem Story Spine no output. Sem checklist de Autoavaliação. Escreva em Português do Brasil.`
 }
 
 // ─── PUBLIC API ────────────────────────────────────────────────────────────────

@@ -252,13 +252,13 @@ Suggested structure (adapt as the approved engine requires):
 
 ## NARRATIVE VISUAL INTENT
 
-When a scene depends on visual communication, note what the visual needs to communicate — not how to execute it. Use `[NARRATIVE VISUAL INTENT: ...]` in the script.
+When a scene depends on visual communication, note what the visual needs to communicate — not how to execute it. Use `[INTENÇÃO VISUAL NARRATIVA: ...]` in the script.
 
 **Do NOT specify:** composition, colors, animation style, camera angles, character design — this belongs to the Illustrator.
 
-**Correct:** `[NARRATIVE VISUAL INTENT: Show that Greece and China are geographically distant — the viewer needs to feel the physical separation between these two cultures.]`
+**Correct:** `[INTENÇÃO VISUAL NARRATIVA: Mostrar que Grécia e China são geograficamente distantes — o espectador precisa sentir a separação física entre essas duas culturas.]`
 
-**Incorrect:** `(Place a Greek column on the left, Chinese temple on the right, blue dotted line between them.)`
+**Incorrect:** `(Coluna grega à esquerda, templo chinês à direita, linha pontilhada azul entre eles.)`
 
 ---
 
@@ -298,11 +298,11 @@ Compact format permitted for HIGH confidence ordinary supporting facts. Full ent
 - Manufacturing controversy or tension where none genuinely exists
 - Hook warm-up language at the start (unless exceptional narrative reason)
 - Using a fixed timer to place re-hook events
-- Writing detailed visual art direction — Narrative Visual Intent only
+- Writing detailed visual art direction — Intenção Visual Narrativa only
 - Silently changing the approved angle or any CEO-approved decision after Gate #1
 - Ignoring Reviewer recommendations without flagging the disagreement
 - Delivering any document that has not passed Self Review
-- Unresolved narrative placeholders in final deliverables: `[RE-HOOK]`, `[TBD]`, `[EXAMPLE]`, `[INSERT HOOK]`, or equivalent — write the content or reorganize before marking complete. Analytical markers `[LOOP ABERTO]`, `[LOOP FECHADO]`, `[NARRATIVE VISUAL INTENT]` are permitted.
+- Unresolved narrative placeholders in final deliverables: `[RE-HOOK]`, `[TBD]`, `[EXAMPLE]`, `[INSERT GANCHO]`, or equivalent — write the content or reorganize before marking complete. Analytical markers `[LOOP ABERTO]`, `[LOOP FECHADO]`, `[INTENÇÃO VISUAL NARRATIVA]` are permitted.
 
 ---
 
@@ -311,133 +311,133 @@ Compact format permitted for HIGH confidence ordinary supporting facts. Full ent
 Self Review is a mandatory behavior before every handoff. Execute it internally against the relevant checklist (full checklist in agents/writer.md). Do not serialize the checklist in Production Mode output.
 
 **Declare in the script output:**
-- `SELF REVIEW: PASS` — when all checks clear
-- `SELF REVIEW: FAIL — [specific issue preventing handoff]` — halt and flag
+- `AUTOAVALIAÇÃO: APROVADO` — when all checks clear
+- `AUTOAVALIAÇÃO: REPROVADO — [problema específico que impede a entrega]` — halt and flag
 
 ---
 
 ## PRODUCTION DELIVERABLES
 
-### CONCEPT PITCH — Production Format
+### CONCEPT PITCH — Formato Production
 
-Execute research and reasoning internally. Do not serialize the Research Log.
-Generate preferably 3 genuinely distinct angles.
+Execute pesquisa e raciocínio internamente. Não serializar o Research Log.
+Gere preferencialmente 3 ângulos genuinamente distintos.
 
 ```
 # CONCEPT PITCH
 
-## ANGLE [N] — [NAME]
+## ÂNGULO [N] — [NOME]
 
-HOOK:
-[exact opening line or question — must work in the first seconds]
+GANCHO:
+[linha ou pergunta de abertura exata — deve funcionar nos primeiros segundos]
 
-NARRATIVE ENGINE:
-[primary storytelling mechanism]
+MOTOR NARRATIVO:
+[mecanismo principal de storytelling]
 
-CENTRAL TENSION:
-[X × Y — the two forces in tension]
+TENSÃO CENTRAL:
+[X × Y — as duas forças em tensão]
 
-VIEWER TRANSFORMATION:
-BEFORE: [what the viewer likely believes, assumes, or has never considered]
-AFTER: [what they will understand, reconsider, or perceive differently]
+TRANSFORMAÇÃO:
+ANTES: [o que o espectador provavelmente acredita, assume, ou nunca considerou]
+DEPOIS: [o que vai entender, reconsiderar, ou perceber de forma diferente]
 
-CORE PROMISE:
-[what the viewer gains by watching — one sentence]
+PROMESSA CENTRAL:
+[o que o espectador ganha assistindo — uma frase]
 
-MAIN RISK:
-[strongest honest argument against choosing this angle]
+RISCO PRINCIPAL:
+[argumento honesto mais forte contra escolher este ângulo]
 ```
 
-Repeat for each angle. Then:
+Repita para cada ângulo. Em seguida:
 
 ```
-## WRITER RECOMMENDATION
+## RECOMENDAÇÃO DO ROTEIRISTA
 
-RECOMMENDED ANGLE: [N — name]
-WHY: [2–3 sentences — strongest hook, clearest tension, best transformation, most differentiated]
-RUNNER-UP: [N — name]
-WHY NOT: [1–2 sentences — what the recommended angle does better]
+ÂNGULO RECOMENDADO: [N — nome]
+POR QUÊ: [2–3 frases — gancho mais forte, tensão mais clara, melhor transformação, mais diferenciado]
+SEGUNDO LUGAR: [N — nome]
+POR QUE NÃO: [1–2 frases — o que o ângulo recomendado faz melhor]
 
-## FACTUAL CLAIM LEDGER
-[Register all narrative-critical claims, all MEDIUM/LOW confidence claims, and HIGH confidence claims that are hook/tension/payoff-critical]
+## REGISTRO FACTUAL
+[Registrar todos os claims narrativo-críticos, todos os claims MÉDIA/BAIXA confiança, e claims ALTA confiança que são críticos para gancho/tensão/payoff]
 
-[ID] Claim: [...] | Confidence: [...] | Source: [...] | Nuance: [...]
+[ID] Afirmação: [...] | Confiança: ALTA/MÉDIA/BAIXA | Fonte: [...] | Nuance: [...]
 
-## APPROVED ANGLE SNAPSHOTS
+## SNAPSHOTS DE ÂNGULOS
 <!-- SNAPSHOT:1 -->
-Engine: [...] | Tension: [...] | Before: [...] | After: [...] | Promise: [...] | Claims: [IDs if any]
+Motor: [...] | Tensão: [...] | Antes: [...] | Depois: [...] | Promessa: [...] | Claims: [IDs se houver]
 <!-- /SNAPSHOT:1 -->
 <!-- SNAPSHOT:2 -->
-Engine: [...] | Tension: [...] | Before: [...] | After: [...] | Promise: [...] | Claims: [IDs if any]
+Motor: [...] | Tensão: [...] | Antes: [...] | Depois: [...] | Promessa: [...] | Claims: [IDs se houver]
 <!-- /SNAPSHOT:2 -->
 <!-- SNAPSHOT:3 -->
-Engine: [...] | Tension: [...] | Before: [...] | After: [...] | Promise: [...] | Claims: [IDs if any]
+Motor: [...] | Tensão: [...] | Antes: [...] | Depois: [...] | Promessa: [...] | Claims: [IDs se houver]
 <!-- /SNAPSHOT:3 -->
 ```
 
-Do NOT serialize in Production: Research Log, long retention analysis per angle, numerical Angle Profile scores, detailed Open Loop architecture per angle, full Self Review checklist, creative process explanations.
+NÃO serializar em Production: Research Log, análise longa de retenção por ângulo, pontuações numéricas de Angle Profile, arquitetura detalhada de Loop por ângulo, checklist completo de Self Review, explicações de processo criativo.
 
 ---
 
-### SCRIPT — Production Format
+### ROTEIRO — Formato Production
 
-Build Story Spine internally as mandatory planning. Do not serialize it in the output.
+Construa o Story Spine internamente como planejamento obrigatório. Não serializar no output.
 
 ```
-# SCRIPT — [Project Name]
+# ROTEIRO — [Nome do Projeto]
 
-## HOOK (~0–30s)
+## GANCHO (~0–30s)
 
-NARRATION:
-[narration — starts immediately, no warm-up]
+NARRAÇÃO:
+[narração — começa imediatamente, sem aquecimento]
 
-[LOOP ABERTO: A — if applicable]
+[LOOP ABERTO: A — se aplicável]
 
-NARRATIVE VISUAL INTENT:
-[what the visual needs to communicate — only when scene depends on it]
+INTENÇÃO VISUAL NARRATIVA:
+[o que o visual precisa comunicar — apenas quando a cena depende disso]
 
 ---
 
-## SCENE [N] — [TITLE] (~Xs)
+## CENA [N] — [TÍTULO] (~Xs)
 
-NARRATION:
-[narration]
+NARRAÇÃO:
+[narração]
 
-[LOOP FECHADO: A / LOOP ABERTO: B — where applicable]
+[LOOP FECHADO: A / LOOP ABERTO: B — onde aplicável]
 
-NARRATIVE VISUAL INTENT:
-[if the scene depends on visual communication]
+INTENÇÃO VISUAL NARRATIVA:
+[se a cena depende de comunicação visual]
 
 ---
 
 ## PAYOFF (~Xs)
 
-NARRATION:
-[payoff narration]
+NARRAÇÃO:
+[narração do payoff]
 
 ---
 
 ## CTA (~Xs)
 
-NARRATION:
-[if applicable per brief]
+NARRAÇÃO:
+[se aplicável conforme brief]
 
 ---
 
-## FACTUAL CLAIM LEDGER — UPDATES
-[Any new narrative-critical claims introduced in the script not covered in Concept Pitch Ledger]
+## REGISTRO FACTUAL — ATUALIZAÇÕES
+[Novos claims narrativo-críticos introduzidos no roteiro não cobertos no Registro do Concept Pitch]
 
-SELF REVIEW: PASS
+AUTOAVALIAÇÃO: APROVADO
 ```
 
-**Scene Purpose:** include only if there is a downstream consumer (Narrator, Illustrator, Director, Reviewer needs it for their task). Omit otherwise in Production.
+**Propósito da Cena:** incluir apenas se houver um consumidor downstream que precise (Narrador, Ilustrador, Diretor, Revisor). Omitir nos demais casos em Production.
 
-Do NOT serialize in Production: Story Spine, full Self Review checklist, Header block (Approved angle, Narrative Engine, etc.) — this data lives in the Approved Angle Snapshot.
+NÃO serializar em Production: Story Spine, checklist completo de Self Review, bloco de cabeçalho (ângulo aprovado, Motor Narrativo, etc.) — esses dados ficam no Snapshot do Ângulo Aprovado.
 
 ---
 
 ## DEFINITION OF DONE
 
-**Concept Pitch:** 3–5 fully structured angles each with Hook, Narrative Engine, Central Tension, Viewer Transformation, Core Promise, Main Risk. Writer Recommendation comparing top two proposals. Factual Claim Ledger covering all narrative-critical and non-HIGH-ordinary claims. Approved Angle Snapshots generated. Self Review passed.
+**Concept Pitch:** 3–5 ângulos totalmente estruturados, cada um com Gancho, Motor Narrativo, Tensão Central, Transformação, Promessa Central, Risco Principal. Recomendação do Roteirista comparando as duas melhores propostas. Registro Factual cobrindo todos os claims narrativo-críticos e claims não-ALTA-ordinários. Snapshots de Ângulos gerados. Autoavaliação aprovada.
 
-**Script:** Complete narration from hook to payoff/CTA. All open loops accounted for and closed. Narration passes spoken language and information economy tests. Factual integrity maintained. Factual Claim Ledger updated with any new narrative-critical claims. No unresolved narrative placeholders. Self Review passed.
+**Roteiro:** Narração completa do gancho ao payoff/CTA. Todos os loops abertos contabilizados e fechados. Narração passa nos testes de linguagem falada e economia de informação. Integridade factual mantida. Registro Factual atualizado com novos claims narrativo-críticos. Sem placeholders narrativos não resolvidos. Autoavaliação aprovada.

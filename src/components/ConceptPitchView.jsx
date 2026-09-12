@@ -7,18 +7,18 @@ import { useState, useMemo } from 'react'
 
 function extractField(text, label) {
   const esc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  // Capture content from LABEL: until the next ALL-CAPS field, ## section, or end
-  const rx = new RegExp(`${esc}:\\s*([\\s\\S]*?)(?=\\n[A-Z][A-Z /→×]+:|\\n##|$)`, 'i')
+  // Capture content from LABEL: until the next ALL-CAPS field (including accented), ## section, or end
+  const rx = new RegExp(`${esc}:\\s*([\\s\\S]*?)(?=\\n[A-ZÁÉÍÓÚÀÂÊÔÃÕÜÇÑ][A-ZÁÉÍÓÚÀÂÊÔÃÕÜÇÑ /→×]+:|\\n##|$)`, 'i')
   const m  = text.match(rx)
   return m ? m[1].trim() : ''
 }
 
 function parseViewerTransformation(body) {
-  const vtm = body.match(/VIEWER TRANSFORMATION:\s*([\s\S]*?)(?=\n[A-Z][A-Z ]+:|$)/i)
+  const vtm = body.match(/TRANSFORMAÇÃO:\s*([\s\S]*?)(?=\n[A-ZÁÉÍÓÚÀÂÊÔÃÕÜÇÑ][A-ZÁÉÍÓÚÀÂÊÔÃÕÜÇÑ ]+:|$)/i)
   if (!vtm) return { before: '', after: '' }
   const vc     = vtm[1]
-  const before = vc.match(/BEFORE:\s*([\s\S]*?)(?=\nAFTER:|$)/i)
-  const after  = vc.match(/AFTER:\s*([\s\S]*?)$/i)
+  const before = vc.match(/ANTES:\s*([\s\S]*?)(?=\nDEPOIS:|$)/i)
+  const after  = vc.match(/DEPOIS:\s*([\s\S]*?)$/i)
   return {
     before: before ? before[1].trim() : '',
     after : after  ? after[1].trim()  : '',
@@ -39,32 +39,32 @@ function parseConceptPitch(text) {
   const sections = text.split(/(?=^## )/m)
 
   for (const sec of sections) {
-    const am = sec.match(/^## ANGLE\s+(\d+)\s*[—–\-]+\s*(.+)/im)
+    const am = sec.match(/^## ÂNGULO\s+(\d+)\s*[—–\-]+\s*(.+)/im)
     if (!am) continue
     const n    = +am[1]
     const body = sec.slice(am.index + am[0].length)
     angles.push({
       number          : n,
       title           : am[2].trim(),
-      hook            : extractField(body, 'HOOK'),
-      narrativeEngine : extractField(body, 'NARRATIVE ENGINE'),
-      centralTension  : extractField(body, 'CENTRAL TENSION'),
+      hook            : extractField(body, 'GANCHO'),
+      narrativeEngine : extractField(body, 'MOTOR NARRATIVO'),
+      centralTension  : extractField(body, 'TENSÃO CENTRAL'),
       viewerTransform : parseViewerTransformation(body),
-      corePromise     : extractField(body, 'CORE PROMISE'),
-      mainRisk        : extractField(body, 'MAIN RISK'),
+      corePromise     : extractField(body, 'PROMESSA CENTRAL'),
+      mainRisk        : extractField(body, 'RISCO PRINCIPAL'),
       snapshot        : snapshots[n] || '',
     })
   }
 
   // ── Recommendation ──
   let rec = null
-  const recSec = sections.find(s => /^## WRITER RECOMMENDATION/im.test(s))
+  const recSec = sections.find(s => /^## RECOMENDAÇÃO DO ROTEIRISTA/im.test(s))
   if (recSec) {
-    const rb  = recSec.replace(/^## WRITER RECOMMENDATION\s*/im, '')
-    const rn  = rb.match(/RECOMMENDED ANGLE:\s*(\d+)/i)
-    const why = rb.match(/^WHY:\s*([\s\S]*?)(?=\nRUNNER-UP:|$)/im)
-    const rup = rb.match(/RUNNER-UP:\s*(\d+)/i)
-    const wno = rb.match(/^WHY NOT:\s*([\s\S]*?)(?=\n##|$)/im)
+    const rb  = recSec.replace(/^## RECOMENDAÇÃO DO ROTEIRISTA\s*/im, '')
+    const rn  = rb.match(/ÂNGULO RECOMENDADO:\s*(\d+)/i)
+    const why = rb.match(/^POR QUÊ:\s*([\s\S]*?)(?=\nSEGUNDO LUGAR:|$)/im)
+    const rup = rb.match(/SEGUNDO LUGAR:\s*(\d+)/i)
+    const wno = rb.match(/^POR QUE NÃO:\s*([\s\S]*?)(?=\n##|$)/im)
     rec = {
       recommendedNumber : rn  ? +rn[1]        : null,
       why               : why ? why[1].trim()  : '',
@@ -75,10 +75,10 @@ function parseConceptPitch(text) {
 
   // ── Factual Claims ──
   const claims = []
-  const ldSec = sections.find(s => /^## FACTUAL CLAIM LEDGER/im.test(s))
+  const ldSec = sections.find(s => /^## REGISTRO FACTUAL/im.test(s))
   if (ldSec) {
-    const ldBody = ldSec.replace(/^## FACTUAL CLAIM LEDGER[^\n]*\n/im, '')
-    const rx = /\[([^\]]+)\]\s*Claim:\s*([^|]+)\|\s*Confidence:\s*(HIGH|MEDIUM|LOW)\s*\|\s*Source:\s*([^|]+)(?:\|\s*Nuance:\s*(.+))?/gi
+    const ldBody = ldSec.replace(/^## REGISTRO FACTUAL[^\n]*\n/im, '')
+    const rx = /\[([^\]]+)\]\s*Afirmação:\s*([^|]+)\|\s*Confiança:\s*(ALTA|MÉDIA|BAIXA)\s*\|\s*Fonte:\s*([^|]+)(?:\|\s*Nuance:\s*(.+))?/gi
     let cm
     while ((cm = rx.exec(ldBody)) !== null) {
       claims.push({
@@ -106,9 +106,9 @@ function parseConceptPitch(text) {
 
 function ConfidenceBadge({ level }) {
   const style = {
-    HIGH   : 'bg-zinc-700/60 text-zinc-400 border-zinc-600',
-    MEDIUM : 'bg-amber-950/60 text-amber-400 border-amber-700/50',
-    LOW    : 'bg-red-950/60 text-red-400 border-red-700/50',
+    ALTA  : 'bg-zinc-700/60 text-zinc-400 border-zinc-600',
+    MÉDIA : 'bg-amber-950/60 text-amber-400 border-amber-700/50',
+    BAIXA : 'bg-red-950/60 text-red-400 border-red-700/50',
   }[level] || 'bg-zinc-700/60 text-zinc-400 border-zinc-600'
 
   return (
@@ -124,7 +124,7 @@ function FactualAudit({ claims }) {
   const [open, setOpen] = useState(false)
   if (claims.length === 0) return null
 
-  const flagged = claims.filter(c => c.confidence !== 'HIGH').length
+  const flagged = claims.filter(c => c.confidence !== 'ALTA').length
 
   return (
     <div className="border-t border-zinc-800 pt-4 mt-4">
@@ -149,9 +149,9 @@ function FactualAudit({ claims }) {
             <div
               key={c.id}
               className={`rounded-lg p-3 border text-xs ${
-                c.confidence === 'LOW'
+                c.confidence === 'BAIXA'
                   ? 'bg-red-950/20 border-red-800/30'
-                  : c.confidence === 'MEDIUM'
+                  : c.confidence === 'MÉDIA'
                   ? 'bg-amber-950/20 border-amber-800/30'
                   : 'bg-zinc-800/40 border-zinc-700/30'
               }`}
@@ -184,7 +184,7 @@ function AngleDetails({ angle }) {
     <div className="mt-3 pt-3 border-t border-zinc-700/40 space-y-3">
       {angle.narrativeEngine && (
         <div>
-          <p className="text-zinc-600 text-xs uppercase tracking-wider font-semibold mb-0.5">Narrative Engine</p>
+          <p className="text-zinc-600 text-xs uppercase tracking-wider font-semibold mb-0.5">Motor Narrativo</p>
           <p className="text-zinc-300 text-sm">{angle.narrativeEngine}</p>
         </div>
       )}
