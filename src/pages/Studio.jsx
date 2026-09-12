@@ -2,6 +2,24 @@ import { useState, useEffect, useRef } from 'react'
 import ConceptPitchView from '../components/ConceptPitchView.jsx'
 
 const API_URL = ''
+const OUTPUTS_KEY = 'zhongx_outputs'
+
+function saveConceptPitchOutput(productionId, rawText, structured) {
+  try {
+    const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
+    all[productionId] = { rawText, structured }
+    localStorage.setItem(OUTPUTS_KEY, JSON.stringify(all))
+  } catch {}
+}
+
+function loadConceptPitchOutput(productionId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
+    return all[productionId] || null
+  } catch {
+    return null
+  }
+}
 
 const STAGE = {
   CONCEPT_PITCH: 'concept_pitch',
@@ -63,7 +81,7 @@ function BriefingScreen({ production, onStart }) {
         </div>
         <div className="border-t border-zinc-800 pt-5">
           <p className="text-zinc-500 text-xs mb-4">
-            O output anterior não foi salvo. Clique abaixo para gerar um novo Concept Pitch.
+            Nenhum Concept Pitch gerado ainda. Clique abaixo para iniciar.
           </p>
           <button
             onClick={onStart}
@@ -92,7 +110,18 @@ export default function Studio({ production }) {
 
   useEffect(() => {
     if (!production) return
-    if (production._autoStart) runConceptPitch()
+    if (production._autoStart) {
+      runConceptPitch()
+      return
+    }
+    // Reabrir produção existente: restaurar Concept Pitch salvo se disponível
+    const saved = loadConceptPitchOutput(production.id)
+    if (saved) {
+      outputText.current = saved.rawText
+      setOutput(saved.rawText)
+      setConceptPitchData(saved.structured ?? null)
+      setStage(STAGE.GATE_1)
+    }
   }, [])
 
   async function runConceptPitch() {
@@ -108,6 +137,8 @@ export default function Studio({ production }) {
         body: JSON.stringify(production),
       })
       await readStream(res, (structured) => {
+        const rawText = outputText.current
+        saveConceptPitchOutput(production.id, rawText, structured ?? null)
         setConceptPitchData(structured ?? null)
         setStage(STAGE.GATE_1)
       })
