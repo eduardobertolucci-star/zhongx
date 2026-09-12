@@ -2,6 +2,17 @@ import { useState, useEffect, useRef } from 'react'
 
 const API_URL = ''
 
+// Extrai a seção APPROVED ANGLE SNAPSHOTS do output do Concept Pitch.
+// Essa seção é gerada pelo Writer em Production Mode e contém dados
+// estruturados (Engine, Tension, Transformation) para cada ângulo.
+// É enviada na chamada de script para garantir continuidade narrativa
+// sem depender de o CEO copiar as informações manualmente.
+function extractAngleSnapshots(text) {
+  const idx = text.indexOf('## APPROVED ANGLE SNAPSHOTS')
+  if (idx === -1) return ''
+  return text.slice(idx).trim()
+}
+
 const STAGE = {
   CONCEPT_PITCH: 'concept_pitch',
   GATE_1: 'gate_1',
@@ -42,7 +53,8 @@ export default function Studio({ production }) {
   const [stage, setStage]               = useState(STAGE.CONCEPT_PITCH)
   const [output, setOutput]             = useState('')
   const [streaming, setStreaming]       = useState(false)
-  const [gateDecision, setGateDecision] = useState('')
+  const [gateDecision, setGateDecision]       = useState('')
+  const [angleSnapshots, setAngleSnapshots]   = useState('')
   const [gateError, setGateError]       = useState('')
   const [approving, setApproving]       = useState(false)
   const [error, setError]               = useState(null)
@@ -65,7 +77,10 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(production),
       })
-      await readStream(res, () => setStage(STAGE.GATE_1))
+      await readStream(res, () => {
+        setAngleSnapshots(extractAngleSnapshots(outputText.current))
+        setStage(STAGE.GATE_1)
+      })
     } catch (err) {
       setError(err.message)
       setStreaming(false)
@@ -88,7 +103,7 @@ export default function Studio({ production }) {
       const res = await fetch(`${API_URL}/api/writer/script`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brief: production, gateDecision }),
+        body: JSON.stringify({ brief: production, gateDecision, approvedAngleSnapshot: angleSnapshots }),
       })
       await readStream(res, () => setStage(STAGE.DONE))
     } catch (err) {
