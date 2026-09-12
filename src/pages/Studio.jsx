@@ -1,17 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
+import ConceptPitchView from '../components/ConceptPitchView.jsx'
 
 const API_URL = ''
-
-// Extrai a seção APPROVED ANGLE SNAPSHOTS do output do Concept Pitch.
-// Essa seção é gerada pelo Writer em Production Mode e contém dados
-// estruturados (Engine, Tension, Transformation) para cada ângulo.
-// É enviada na chamada de script para garantir continuidade narrativa
-// sem depender de o CEO copiar as informações manualmente.
-function extractAngleSnapshots(text) {
-  const idx = text.indexOf('## APPROVED ANGLE SNAPSHOTS')
-  if (idx === -1) return ''
-  return text.slice(idx).trim()
-}
 
 const STAGE = {
   CONCEPT_PITCH: 'concept_pitch',
@@ -50,14 +40,10 @@ const statusConfig = {
 }
 
 export default function Studio({ production }) {
-  const [stage, setStage]               = useState(STAGE.CONCEPT_PITCH)
-  const [output, setOutput]             = useState('')
-  const [streaming, setStreaming]       = useState(false)
-  const [gateDecision, setGateDecision]       = useState('')
-  const [angleSnapshots, setAngleSnapshots]   = useState('')
-  const [gateError, setGateError]       = useState('')
-  const [approving, setApproving]       = useState(false)
-  const [error, setError]               = useState(null)
+  const [stage, setStage]   = useState(STAGE.CONCEPT_PITCH)
+  const [output, setOutput] = useState('')
+  const [streaming, setStreaming] = useState(false)
+  const [error, setError]   = useState(null)
   const outputRef  = useRef(null)
   const outputText = useRef('')
 
@@ -77,23 +63,14 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(production),
       })
-      await readStream(res, () => {
-        setAngleSnapshots(extractAngleSnapshots(outputText.current))
-        setStage(STAGE.GATE_1)
-      })
+      await readStream(res, () => setStage(STAGE.GATE_1))
     } catch (err) {
       setError(err.message)
       setStreaming(false)
     }
   }
 
-  async function runScript() {
-    if (!gateDecision.trim()) {
-      setGateError('Registre a decisão antes de continuar.')
-      return
-    }
-    setGateError('')
-    setApproving(false)
+  async function runScript(decision, snapshot) {
     setStage(STAGE.SCRIPT)
     setStreaming(true)
     setOutput('')
@@ -103,7 +80,7 @@ export default function Studio({ production }) {
       const res = await fetch(`${API_URL}/api/writer/script`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brief: production, gateDecision, approvedAngleSnapshot: angleSnapshots }),
+        body: JSON.stringify({ brief: production, gateDecision: decision, approvedAngleSnapshot: snapshot || '' }),
       })
       await readStream(res, () => setStage(STAGE.DONE))
     } catch (err) {
@@ -222,44 +199,6 @@ export default function Studio({ production }) {
                 </div>
                 <p className="text-xs text-zinc-500">{agent.role}</p>
                 <p className={`text-xs font-medium mt-2 ${cfg.text}`}>{cfg.label}</p>
-
-                {/* CEO Gate #1 — botão e formulário inline */}
-                {showGate && !approving && (
-                  <button
-                    onClick={() => setApproving(true)}
-                    className="mt-3 w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs py-2 rounded-lg transition-colors"
-                  >
-                    APROVAR
-                  </button>
-                )}
-
-                {showGate && approving && (
-                  <div className="mt-3 space-y-2">
-                    <textarea
-                      value={gateDecision}
-                      onChange={(e) => setGateDecision(e.target.value)}
-                      rows={4}
-                      placeholder="Ângulo aprovado e ajustes do CEO..."
-                      className="w-full bg-zinc-900 border border-zinc-600 focus:border-amber-500 text-white rounded-lg px-3 py-2 text-xs resize-none placeholder:text-zinc-600 outline-none transition-colors"
-                      autoFocus
-                    />
-                    {gateError && <p className="text-red-400 text-xs">{gateError}</p>}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={runScript}
-                        className="flex-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs py-2 rounded-lg transition-colors"
-                      >
-                        Confirmar
-                      </button>
-                      <button
-                        onClick={() => { setApproving(false); setGateError('') }}
-                        className="px-3 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-xs py-2 rounded-lg transition-colors"
-                      >
-                        Cancelar
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             )
           })}
@@ -267,40 +206,6 @@ export default function Studio({ production }) {
 
         {/* Main content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-
-          {/* CEO Gate #1 panel */}
-          {stage === STAGE.GATE_1 && (
-            <div className="shrink-0 bg-amber-950/30 border-b border-amber-800/40 px-6 py-5">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <p className="text-sm font-bold text-amber-400 uppercase tracking-widest">Aprovação do CEO — Gate #1</p>
-                </div>
-                <p className="text-white font-semibold text-base mb-1">
-                  Concept Pitch entregue — decisão pendente
-                </p>
-                <p className="text-zinc-400 text-xs mb-4">
-                  Revise os ângulos acima. Registre o ângulo aprovado e os ajustes antes de gerar o script.
-                </p>
-                <textarea
-                  value={gateDecision}
-                  onChange={(e) => setGateDecision(e.target.value)}
-                  rows={5}
-                  placeholder={`Ex:\nAngulo aprovado: Angle 1 — O Rastro\nNarrative Engine: INVESTIGATION\nAjustes: Duração 9–11 min. Hook mais forte. Integrar questão do Angle 2 organicamente no payoff.`}
-                  className="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 text-white rounded-lg px-4 py-3 text-sm transition-colors resize-none placeholder:text-zinc-600 outline-none"
-                />
-                {gateError && (
-                  <p className="text-red-400 text-xs mt-2">{gateError}</p>
-                )}
-                <button
-                  onClick={runScript}
-                  className="mt-3 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-colors"
-                >
-                  Confirmar Aprovação — Gerar Roteiro
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Output header */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-zinc-800 shrink-0">
@@ -327,10 +232,18 @@ export default function Studio({ production }) {
           )}
 
           <div ref={outputRef} className="flex-1 overflow-auto p-6">
-            <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
-              {output || (isStreaming ? '▌ Conectando ao Roteirista...' : '')}
-              {isStreaming && output && <span className="animate-pulse">▌</span>}
-            </pre>
+            {stage === STAGE.GATE_1 ? (
+              <ConceptPitchView
+                rawOutput={output}
+                onApprove={runScript}
+                onRequestNewAngles={runConceptPitch}
+              />
+            ) : (
+              <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
+                {output || (isStreaming ? '▌ Conectando ao Roteirista...' : '')}
+                {isStreaming && output && <span className="animate-pulse">▌</span>}
+              </pre>
+            )}
           </div>
         </div>
       </div>
