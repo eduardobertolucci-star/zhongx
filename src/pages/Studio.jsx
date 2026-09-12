@@ -40,10 +40,11 @@ const statusConfig = {
 }
 
 export default function Studio({ production }) {
-  const [stage, setStage]   = useState(STAGE.CONCEPT_PITCH)
-  const [output, setOutput] = useState('')
-  const [streaming, setStreaming] = useState(false)
-  const [error, setError]   = useState(null)
+  const [stage, setStage]             = useState(STAGE.CONCEPT_PITCH)
+  const [output, setOutput]           = useState('')
+  const [streaming, setStreaming]     = useState(false)
+  const [conceptPitchData, setConceptPitchData] = useState(null)
+  const [error, setError]             = useState(null)
   const outputRef  = useRef(null)
   const outputText = useRef('')
 
@@ -55,6 +56,7 @@ export default function Studio({ production }) {
   async function runConceptPitch() {
     setStreaming(true)
     setOutput('')
+    setConceptPitchData(null)
     outputText.current = ''
 
     try {
@@ -63,7 +65,10 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(production),
       })
-      await readStream(res, () => setStage(STAGE.GATE_1))
+      await readStream(res, (structured) => {
+        setConceptPitchData(structured ?? null)
+        setStage(STAGE.GATE_1)
+      })
     } catch (err) {
       setError(err.message)
       setStreaming(false)
@@ -103,7 +108,7 @@ export default function Studio({ production }) {
         try {
           const data = JSON.parse(line.slice(6))
           if (data.error) { setError(data.error); setStreaming(false); return }
-          if (data.done)  { setStreaming(false); onDone(); return }
+          if (data.done)  { setStreaming(false); onDone(data.structured ?? null); return }
           if (data.text)  {
             outputText.current += data.text
             setOutput(outputText.current)
@@ -234,6 +239,7 @@ export default function Studio({ production }) {
           <div ref={outputRef} className="flex-1 overflow-auto p-6">
             {stage === STAGE.GATE_1 ? (
               <ConceptPitchView
+                structured={conceptPitchData}
                 rawOutput={output}
                 onApprove={runScript}
                 onRequestNewAngles={runConceptPitch}
