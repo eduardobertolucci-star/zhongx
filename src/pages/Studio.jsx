@@ -10,18 +10,18 @@ const STAGE = {
 }
 
 const stageLabel = {
-  [STAGE.CONCEPT_PITCH]: 'Concept Pitch',
-  [STAGE.GATE_1]:        'CEO Gate #1',
-  [STAGE.SCRIPT]:        'Script',
-  [STAGE.DONE]:          'Script Completo',
+  [STAGE.CONCEPT_PITCH]: 'Proposta de Ângulos',
+  [STAGE.GATE_1]:        'Aprovação do CEO',
+  [STAGE.SCRIPT]:        'Roteiro',
+  [STAGE.DONE]:          'Roteiro Completo',
 }
 
 const agents = [
-  { id: 'writer',     name: 'Writer',     role: 'Head Writer / Roteirista' },
-  { id: 'narrator',   name: 'Narrator',   role: 'Narrador' },
-  { id: 'illustrator',name: 'Illustrator',role: 'Ilustrador' },
-  { id: 'director',   name: 'Director',   role: 'Diretor' },
-  { id: 'reviewer',   name: 'Reviewer',   role: 'Revisor' },
+  { id: 'writer',     name: 'Roteirista',  role: 'Head Writer' },
+  { id: 'narrator',   name: 'Narrador',    role: 'Diretor de Voz' },
+  { id: 'illustrator',name: 'Ilustrador',  role: 'Designer Visual' },
+  { id: 'director',   name: 'Diretor',     role: 'Editor / Montagem' },
+  { id: 'reviewer',   name: 'Revisor',     role: 'Controle de Qualidade' },
 ]
 
 function agentStatus(stage, id) {
@@ -32,10 +32,10 @@ function agentStatus(stage, id) {
 }
 
 const statusConfig = {
-  active:    { label: 'Em andamento', dot: 'bg-blue-400 animate-pulse',    text: 'text-blue-400' },
-  reviewing: { label: 'Aguardando CEO', dot: 'bg-amber-400',                text: 'text-amber-400' },
-  waiting:   { label: 'Aguardando',   dot: 'bg-zinc-600',                  text: 'text-zinc-500' },
-  done:      { label: 'Concluído',    dot: 'bg-emerald-500',               text: 'text-emerald-400' },
+  active:    { label: 'Em andamento',   dot: 'bg-blue-400 animate-pulse', text: 'text-blue-400' },
+  reviewing: { label: 'Aguardando CEO', dot: 'bg-amber-400',              text: 'text-amber-400' },
+  waiting:   { label: 'Aguardando',     dot: 'bg-zinc-600',               text: 'text-zinc-500' },
+  done:      { label: 'Concluído',      dot: 'bg-emerald-500',            text: 'text-emerald-400' },
 }
 
 export default function Studio({ production }) {
@@ -162,7 +162,7 @@ export default function Studio({ production }) {
               {production?.tema || 'Sem tema'}
             </h1>
             <p className="text-zinc-500 text-xs mt-0.5">
-              {production?.duracao} min · YouTube · Writer Pilot
+              {production?.duracao} min · YouTube · Piloto Roteirista
             </p>
           </div>
           {isStreaming && (
@@ -178,7 +178,7 @@ export default function Studio({ production }) {
       <div className="flex flex-1 overflow-hidden">
         {/* Agent sidebar */}
         <div className="w-64 bg-zinc-900/50 border-r border-zinc-800 p-4 space-y-3 overflow-y-auto shrink-0">
-          <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest px-1 mb-4">Agentes</p>
+          <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest px-1 mb-4">Equipe</p>
           {agents.map((agent) => {
             const status = agentStatus(stage, agent.id)
             const cfg    = statusConfig[status]
@@ -212,7 +212,7 @@ export default function Studio({ production }) {
               <div className="max-w-2xl">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  <p className="text-sm font-bold text-amber-400 uppercase tracking-widest">CEO Gate #1</p>
+                  <p className="text-sm font-bold text-amber-400 uppercase tracking-widest">Aprovação do CEO — Gate #1</p>
                 </div>
                 <p className="text-white font-semibold text-base mb-1">
                   Concept Pitch entregue — decisão pendente
@@ -234,7 +234,7 @@ export default function Studio({ production }) {
                   onClick={runScript}
                   className="mt-3 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-colors"
                 >
-                  Confirmar Gate #1 — Gerar Script
+                  Confirmar Aprovação — Gerar Roteiro
                 </button>
               </div>
             </div>
@@ -244,16 +244,16 @@ export default function Studio({ production }) {
           <div className="flex items-center justify-between px-6 py-3 border-b border-zinc-800 shrink-0">
             <div>
               <h2 className="text-sm font-semibold text-white">
-                {stage === STAGE.CONCEPT_PITCH && 'Concept Pitch — Writer'}
-                {stage === STAGE.GATE_1        && 'Concept Pitch — Completo'}
-                {stage === STAGE.SCRIPT        && 'Script — Writer'}
-                {stage === STAGE.DONE          && 'Script — Completo'}
+                {stage === STAGE.CONCEPT_PITCH && 'Proposta de Ângulos — Roteirista'}
+                {stage === STAGE.GATE_1        && 'Proposta de Ângulos — Concluída'}
+                {stage === STAGE.SCRIPT        && 'Roteiro — Roteirista'}
+                {stage === STAGE.DONE          && 'Roteiro — Concluído'}
               </h2>
               <p className="text-xs text-zinc-500 mt-0.5">
-                {stage === STAGE.CONCEPT_PITCH && 'Gerando Research Log + Ângulos + Factual Claim Ledger'}
+                {stage === STAGE.CONCEPT_PITCH && 'Gerando Registro de Pesquisa + Ângulos + Registro de Claims Factuais'}
                 {stage === STAGE.GATE_1        && 'Aguardando decisão do CEO para prosseguir'}
-                {stage === STAGE.SCRIPT        && 'Gerando Story Spine + Cenas + Passes de revisão'}
-                {stage === STAGE.DONE          && 'Script pronto para revisão do CEO'}
+                {stage === STAGE.SCRIPT        && 'Gerando Estrutura Narrativa + Cenas + Passes de revisão'}
+                {stage === STAGE.DONE          && 'Roteiro pronto para revisão do CEO'}
               </p>
             </div>
           </div>
@@ -266,7 +266,7 @@ export default function Studio({ production }) {
 
           <div ref={outputRef} className="flex-1 overflow-auto p-6">
             <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
-              {output || (isStreaming ? '▌ Conectando ao Writer...' : '')}
+              {output || (isStreaming ? '▌ Conectando ao Roteirista...' : '')}
               {isStreaming && output && <span className="animate-pulse">▌</span>}
             </pre>
           </div>

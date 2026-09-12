@@ -37,11 +37,13 @@ function briefToText(brief) {
 export async function gerarConceptPitch(brief, res) {
   const systemPrompt = loadSystemPrompt()
 
-  const userPrompt = `You are the Writer (Head Writer / Roteirista) of ZhongX Studio.
+  const userPrompt = `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio.
 
-The CEO has delivered the following brief. Execute Phases 1–7 of your working method:
-read the brief, conduct Story Material Research, identify Narrative Engines and Central Tensions,
-generate 3–5 genuinely distinct angles, and deliver the complete concept-pitch.md.
+IMPORTANTE: Escreva todo o output em Português do Brasil. Nenhuma seção, título, label ou conteúdo deve aparecer em inglês — incluindo termos técnicos do pipeline que tenham equivalente natural em português.
+
+O CEO entregou o seguinte brief. Execute as Fases 1–7 do seu método de trabalho:
+leia o brief, conduza a Pesquisa de Material Narrativo, identifique Narrative Engines e Central Tensions,
+gere 3–5 ângulos genuinamente distintos e entregue o concept-pitch.md completo.
 
 BRIEF:
 ${briefToText(brief)}
@@ -62,11 +64,13 @@ Do NOT write the full script. Stop after the concept pitch. This is CEO Gate #1 
 export async function gerarScript(brief, gateDecision, res) {
   const systemPrompt = loadSystemPrompt()
 
-  const userPrompt = `You are the Writer (Head Writer / Roteirista) of ZhongX Studio.
+  const userPrompt = `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio.
 
-CEO Gate #1 has been approved. Execute Phases 8–14 of your working method:
-construct the Story Spine, write the complete script scene by scene, then run all passes
-(Information Economy, Spoken Language, Narrative Attention Density, Factual Integrity, Self Review).
+IMPORTANTE: Escreva todo o output em Português do Brasil. Nenhuma seção, título, label ou conteúdo deve aparecer em inglês.
+
+O CEO Gate #1 foi aprovado. Execute as Fases 8–14 do seu método de trabalho:
+construa o Story Spine, escreva o script completo cena a cena, e execute todos os passes
+(Economia de Informação, Linguagem Falada, Densidade de Atenção Narrativa, Integridade Factual, Self Review).
 
 BRIEF:
 ${briefToText(brief)}
