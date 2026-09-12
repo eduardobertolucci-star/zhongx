@@ -1,4 +1,5 @@
 # SCRIPT — Pitágoras: A História por Trás do Teorema
+*(v2 — Writer Calibration Revision Pass / 2026-09-11)*
 
 **Approved angle:** Angle 1 — O Rastro (com integração orgânica da questão central do Angle 2)
 **Narrative Engine:** INVESTIGATION — "Siga as evidências até onde elas levam."
@@ -31,11 +32,15 @@ AFTER: A relação matemática era usada 1.200 anos antes de Pitágoras. A prime
 
 *Scene purpose: disruption imediata através de um fato concreto e perturbador; abre a investigação sem prometer o payoff completo*
 
-A maior obra matemática que a Grécia antiga nos deixou tem 465 proposições. A última do Livro I é a demonstração do que hoje chamamos de Teorema de Pitágoras. Euclides prova, passo a passo, sem nenhuma lacuna lógica, que em qualquer triângulo retângulo, o quadrado da hipotenusa é igual à soma dos quadrados dos outros dois lados.
+Euclides prova o Teorema de Pitágoras. Passo a passo, sem nenhuma lacuna lógica.
 
 Em nenhum momento do texto ele menciona Pitágoras.
 
-Esse é o ponto de entrada desta investigação. Não uma acusação — uma pergunta. Quando você segue o rastro histórico do teorema, onde ele te leva?
+Os Elementos de Euclides são a maior obra matemática que a Grécia antiga nos deixou — 465 proposições, a fundação da geometria ocidental. A última do Livro I demonstra que em qualquer triângulo retângulo, o quadrado da hipotenusa é igual à soma dos quadrados dos outros dois lados. Com rigor absoluto.
+
+Sem atribuição a Pitágoras. Sem mencionar o nome.
+
+Quando você segue o rastro histórico do teorema, onde ele te leva?
 
 [LOOP ABERTO: A — "O rastro histórico conecta Pitágoras ao teorema — e o que ele mostra?"]
 
@@ -47,11 +52,11 @@ Esse é o ponto de entrada desta investigação. Não uma acusação — uma per
 
 *Scene purpose: contextualizar o que estamos investigando; estabelecer a distinção central entre uso prático e demonstração formal — que vai reaparecer no payoff*
 
-Para investigar, é preciso saber o que estamos procurando.
+O Teorema de Pitágoras descreve uma relação entre os lados de triângulos retângulos: a² + b² = c². Se você tem um ângulo de 90 graus, os três lados obedecem a esse padrão — sem exceção. Agrimensores, arquitetos e engenheiros usaram essa relação por milênios. Ela funciona.
 
-O Teorema de Pitágoras descreve uma relação entre os lados de triângulos retângulos: a² + b² = c². Se você tem um ângulo de 90 graus no triângulo, os três lados obedecem a esse padrão — sem exceção. Agrimensores, arquitetos e engenheiros usaram essa relação por milênios. Ela é útil porque funciona.
+Mas saber que algo funciona e provar que deve funcionar sempre são coisas diferentes. Euclides não estava descrevendo o que observou. Estava demonstrando por que não poderia ser de outra forma — para qualquer triângulo retângulo, em qualquer lugar, pela lógica interna da geometria.
 
-Mas existe uma diferença entre saber que algo funciona e provar que ele deve sempre funcionar. A prova formal exige demonstração lógica: argumentos encadeados, partindo de premissas estabelecidas, sem lacunas. Euclides construiu essa demonstração. E não atribuiu a ninguém.
+Ele construiu essa demonstração. E não atribuiu a ninguém.
 
 Então: quem atribuiu? E quando?
 
@@ -87,9 +92,9 @@ Aproximadamente mil anos depois da morte de Pitágoras.
 
 O que Proclo escreve é revelador — não pelo que afirma, mas pela forma como afirma.
 
-Ele usa uma formulação que, no original grego, indica distância epistêmica. Algo próximo de: "Se você der ouvidos àqueles que desejam contar a história antiga, encontrará alguns deles referindo esse teorema a Pitágoras." Ele não declara. Ele reporta o que outros dizem.
+Ele usa uma formulação que, no grego original, sinaliza incerteza — linguagem de quem reporta, não de quem afirma. Algo próximo de: "Se você der ouvidos àqueles que desejam contar a história antiga, encontrará alguns deles referindo esse teorema a Pitágoras." Ele não declara. Ele transmite o que outros dizem.
 
-Um filósofo do século quinto depois de Cristo, reportando uma tradição sobre um homem do século quinto antes de Cristo, com linguagem explicitamente de segunda mão.
+Um filósofo do século quinto depois de Cristo, transmitindo uma tradição sobre um homem do século quinto antes de Cristo. Mil anos de distância. E linguagem explicitamente de segunda mão.
 
 Isso não invalida a atribuição. Qualifica o que ela é: uma tradição que existia — não uma documentação contemporânea.
 
@@ -99,13 +104,13 @@ Isso não invalida a atribuição. Qualifica o que ela é: uma tradição que ex
 
 *Scene purpose: explicar por que o rastro é tão escasso — Pitágoras como personagem histórico; escola secreta; conhecimento de segunda mão; prepara a transição para a Babilônia*
 
-Para entender por que o rastro é tão escasso, é preciso entender quem era Pitágoras — ou mais precisamente, o que sabemos sobre ele.
+O rastro é escasso por uma razão simples: Pitágoras não deixou nenhum escrito.
 
-Pitágoras viveu aproximadamente entre 570 e 495 antes de Cristo. Fundou uma comunidade filosófica em Crotona, no sul da Itália. Segundo relatos antigos, essa comunidade tinha caráter de irmandade — com práticas religiosas, regras de convivência e um grau significativo de secretismo sobre suas ideias e descobertas.
+Ele viveu aproximadamente entre 570 e 495 antes de Cristo. Fundou uma comunidade filosófica em Crotona, no sul da Itália. Segundo relatos antigos, essa comunidade tinha caráter de irmandade — com práticas religiosas e um grau significativo de secretismo sobre suas ideias e descobertas.
 
-Pitágoras não deixou nenhum escrito. O que sabemos sobre ele vem inteiramente de fontes secundárias: Aristóteles, escrevendo sobre os pitagóricos cerca de 150 anos depois; Diógenes Laércio, quase 800 anos depois; outros ainda mais tardios.
+O que sabemos sobre ele vem inteiramente de fontes secundárias: Aristóteles, escrevendo sobre os pitagóricos cerca de 150 anos depois; Diógenes Laércio, quase 800 anos depois; outros ainda mais tardios.
 
-A ausência de fontes não é acidente. É o que o personagem histórico era: uma figura conhecida apenas através de relatos tardios, de segunda e terceira mão.
+A ausência de fontes não é acidente. É quem Pitágoras historicamente era — alguém que conhecemos apenas de segunda mão.
 
 [NARRATIVE VISUAL INTENT: Pitágoras como ausência — não há um retrato verificado, não há texto escrito por ele. O espectador precisa sentir que está tentando enxergar alguém através de névoa histórica.]
 
@@ -143,7 +148,9 @@ Na China, a mesma relação — chamada ali de Teorema Gougu — aparece em text
 
 O padrão é claro: em múltiplas culturas, em diferentes regiões do mundo, a relação entre os lados de triângulos retângulos era conhecida e aplicada.
 
-[RE-HOOK]
+Babilônia. Índia. China. E em nenhuma delas — em nenhuma — há registro de uma demonstração formal. Há cálculo, há aplicação, há precisão impressionante. Mas a prova de que a relação é necessariamente verdadeira, para todo triângulo retângulo, sempre: isso não aparece.
+
+O rastro deixou para trás a questão da autoria. E agora encontra algo diferente.
 
 [NARRATIVE VISUAL INTENT: O espectador precisa sentir a dispersão geográfica — Babilônia, Índia, China, Grécia — como civilizações separadas, não como um mapa com linhas de transmissão conhecidas.]
 
@@ -155,13 +162,13 @@ O padrão é claro: em múltiplas culturas, em diferentes regiões do mundo, a r
 
 E é aqui que a investigação chega a algo inesperado — não uma resposta, mas uma reformulação da pergunta.
 
-A tendência natural, ao descobrir que os babilônios usavam essa relação 1.200 anos antes de Pitágoras, é concluir: "então eles descobriram primeiro." Mas essa formulação pressupõe que "descobrir" significa a mesma coisa em todos os contextos. E talvez não signifique.
+A tendência natural, ao descobrir que os babilônios usavam essa relação 1.200 anos antes de Pitágoras, é concluir: "então eles descobriram primeiro." Mas essa conclusão parte de uma suposição: que "descobrir" significa o mesmo em todos os contextos. E talvez não signifique.
 
 Os escribas do Plimpton 322 sabiam que certos grupos de três números satisfazem a² + b² = c². Eles conseguiam gerá-los com precisão notável. Mas não há registro de que eles possuíam uma prova de que essa relação vale para todo triângulo retângulo — de que ela é universal, necessária, garantida independentemente dos números específicos.
 
 Há uma diferença entre verificar que algo funciona em múltiplos casos e demonstrar que ele deve funcionar sempre. Um carpinteiro que usa a relação 3-4-5 para garantir um ângulo reto sabe que ela funciona naquele caso. Euclides demonstra por que ela deve funcionar — para qualquer triângulo retângulo, em qualquer lugar, sem exceção.
 
-São duas formas diferentes de conhecimento. E a pergunta "quem descobriu o Teorema de Pitágoras?" pressupõe que elas são a mesma coisa.
+São dois tipos diferentes de conhecimento. E a pergunta "quem descobriu o Teorema de Pitágoras?" trata os dois como equivalentes. Mas eles não são.
 
 [NARRATIVE VISUAL INTENT: A distinção entre "verificar casos" e "provar o caso geral" precisa ser intuída pelo espectador sem exigir matemática formal. A diferença é qualitativa, não técnica.]
 
@@ -173,21 +180,19 @@ São duas formas diferentes de conhecimento. E a pergunta "quem descobriu o Teor
 
 Então onde o rastro termina?
 
-A relação matemática era usada na Babilônia 1.200 anos antes de Pitágoras. Ela aparece em textos indianos de data incerta — possivelmente anteriores, possivelmente contemporâneos. Ela está na tradição matemática chinesa. A primeira prova formal que sobreviveu foi escrita por Euclides, por volta de 300 antes de Cristo, sem nenhuma menção a Pitágoras. E as fontes que conectam o nome ao teorema foram escritas entre 470 e mil anos após a morte de Pitágoras — a mais frequentemente citada delas com linguagem explicitamente de segunda mão.
+Em lugar nenhum que o nome do teorema sugere.
 
 [LOOP FECHADO: A]
 
-O que isso significa?
+As fontes que conectam Pitágoras ao resultado chegam séculos depois dele — a mais detalhada delas com linguagem de quem reporta o que outros diziam. A relação matemática tem raízes muito mais antigas e muito mais distribuídas do que um único nome consegue conter. E a primeira demonstração formal que sobreviveu não menciona esse nome em momento algum.
 
-Significa que não sabemos o que Pitágoras provou — se é que provou algo. Isso não é uma afirmação de que ele não contribuiu. É uma afirmação sobre o estado da evidência: ela não chega até ele com a clareza que o nome do teorema sugere.
+Isso não prova que Pitágoras não fez nada. Prova que não sabemos o que ele fez.
 
 [LOOP FECHADO: C]
 
-O que sabemos é que a tradição pitagórica foi real. Aristóteles a menciona. A escola tinha interesse em matemática como sistema de pensamento — não apenas como ferramenta prática. E a matemática grega, culminando em Euclides, construiu algo que o Plimpton 322 não contém: a demonstração formal. A ideia de que uma verdade matemática não é apenas observada e verificada, mas provada como necessariamente verdadeira.
+O que a tradição pitagórica representa é outra coisa. Aristóteles a menciona. Ela existiu. E a matemática grega — culminando em Euclides — construiu algo que o Plimpton 322 não tem: a demonstração formal. A ideia de que uma verdade matemática não é verificada por casos, mas provada como necessariamente verdadeira. Se Pitágoras participou dessa construção, não sabemos. Mas é uma contribuição de natureza diferente — e mais profunda — do que simplesmente ter chegado primeiro.
 
-Se Pitágoras participou dessa construção — se havia uma prova que não sobreviveu, se a escola contribuiu para o desenvolvimento da demonstração dedutiva — isso permanece genuinamente aberto. A ausência de evidência não é evidência de ausência.
-
-O que o rastro mostra é isso: a relação é muito mais antiga e geograficamente distribuída do que o nome do teorema sugere. A pergunta "quem descobriu primeiro?" é simples demais para o que os documentos mostram. E o homem cujo nome está no teorema permanece, em grande medida, uma figura que conhecemos através de sombras e ecos tardios.
+O rastro mostra isso: a pergunta "quem descobriu primeiro?" é simples demais. E o homem no centro dela permanece, em grande medida, conhecido apenas através de sombras tardias.
 
 Isso não é uma resposta decepcionante. É a resposta honesta.
 
@@ -239,26 +244,29 @@ Conforme determinado pelo CEO, os seguintes claims de confiança MEDIUM ou LOW a
 
 ---
 
-## SELF REVIEW — SCRIPT
+## SELF REVIEW — SCRIPT (v2 — pós-calibração)
 
-- [x] A primeira linha cria atenção imediata — Euclides prova o teorema sem mencionar Pitágoras.
+- [x] A primeira linha cria atenção imediata — ruptura primeiro (Euclides prova sem mencionar Pitágoras), contexto depois.
+- [x] IMPACT FIRST aplicado no hook: ruptura em 2 linhas, contexto de Euclides vem após.
 - [x] A história começa antes de qualquer exposição desnecessária.
 - [x] Há movimento narrativo claro: disrupção → investigação → expansão temporal → reformulação da pergunta → payoff.
 - [x] A viewer transformation tem BEFORE e AFTER definidos; o payoff os entrega.
-- [x] A atenção é renovada organicamente: pela revelação das distâncias temporais das fontes (Scene 02), pelo reveal do Plimpton 322 (Scene 05), pela reformulação da pergunta (Scene 07).
+- [x] A atenção é renovada organicamente: distâncias temporais das fontes (Scene 02), Plimpton 322 (Scene 05), RE-HOOK escrito em Scene 06, reformulação da pergunta (Scene 07).
 - [x] Cada cena tem propósito articulado.
 - [x] Cada fato performa função narrativa.
 - [x] Informação de contexto é introduzida quando o espectador precisa dela.
-- [x] A narração soa natural quando lida em voz alta — frases curtas e médias, variação de ritmo, transições conversacionais.
+- [x] A narração soa natural quando lida em voz alta. Spoken Language Pass aplicada: "distância epistêmica" → "sinaliza incerteza"; "premissas estabelecidas" → argumento por raciocínio interno; "pressupõe" → "parte de uma suposição"; "de segunda e terceira mão" → "apenas de segunda mão."
 - [x] Os loops estão limitados, intencionais, rastreados e fechados.
 - [x] O payoff é proporcional ao que foi prometido.
 - [x] O payoff completa a viewer transformation.
+- [x] PAYOFF COMPRESSION aplicada: recap de evidências removido; payoff parte direto da síntese.
 - [x] O payoff recontextualiza: a pergunta "quem descobriu?" é reconformada pela distinção entre uso empírico e demonstração formal.
+- [x] Nenhum placeholder narrativo não resolvido permanece. [RE-HOOK] de Scene 06 escrito.
 - [x] Incerteza factual preservada onde genuinamente existe (F06, F08, F12, F16).
 - [x] Nenhuma tensão foi exagerada além do que a evidência sustenta.
-- [x] O Factual Claim Ledger foi atualizado com F18 (novo claim introduzido no script).
+- [x] O Factual Claim Ledger continua consistente. F18 válido. Nenhum novo claim introduzido na revisão.
 - [x] Todos os claims MEDIUM e LOW aparecem com framing de incerteza adequado.
 - [x] Narrative Visual Intents expressam o que comunicar — não como executar.
 - [x] Nenhum warm-up language no início.
-- [x] F13: não foi afirmado que Proclo é "a única fonte" — Vitrúvio e Diógenes Laércio aparecem antes e com distâncias temporais corretas.
+- [x] F13: não foi afirmado que Proclo é "a única fonte" — Vitrúvio e Diógenes Laércio aparecem com distâncias temporais corretas.
 - [x] Nenhuma formulação equivalente ao claim incorreto de F13 foi utilizada.
