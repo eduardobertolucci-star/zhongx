@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import Anthropic from '@anthropic-ai/sdk'
 import fs from 'fs'
 import path from 'path'
@@ -5,7 +6,6 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '../..')
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 function loadSystemPrompt() {
   const claudeMd      = fs.readFileSync(path.join(ROOT, 'CLAUDE.md'), 'utf-8')
@@ -91,6 +91,8 @@ Do not execute any other agent. Stop after script.md is complete.`
 }
 
 async function stream(systemPrompt, userPrompt, res) {
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
   res.setHeader('Content-Type', 'text/event-stream')
   res.setHeader('Cache-Control', 'no-cache')
   res.setHeader('Connection', 'keep-alive')
