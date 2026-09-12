@@ -36,12 +36,12 @@ export default function App() {
     setProductions(updated)
     saveProductions(updated)
 
-    setProduction(record)
+    setProduction({ ...record, _autoStart: true })
     setPage('studio')
   }
 
   function handleOpenProduction(record) {
-    setProduction(record)
+    setProduction({ ...record, _autoStart: false })
     setPage('studio')
   }
 
