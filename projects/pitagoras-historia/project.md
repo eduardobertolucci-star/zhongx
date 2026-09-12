@@ -7,9 +7,9 @@
 **PROJECT NAME:** Pitágoras: A História por Trás do Teorema
 **PROJECT SLUG:** pitagoras-historia
 **PLATFORM:** YouTube
-**TARGET DURATION:** 6–8 min
+**TARGET DURATION:** 9–11 min
 **CREATED:** 2026-09-10
-**LAST UPDATE:** 2026-09-10 (Factual Claim Ledger added retroactively)
+**LAST UPDATE:** 2026-09-11 (CEO Gate #1 approved; script.md delivered)
 
 ---
 
@@ -17,11 +17,11 @@
 
 **MODE:** WRITER PILOT
 
-**CURRENT STAGE:** CONCEPT PITCH
+**CURRENT STAGE:** SCRIPT COMPLETE
 
-**CURRENT RESPONSIBLE AGENT:** CEO (awaiting Gate #1 decision)
+**CURRENT RESPONSIBLE AGENT:** WRITER
 
-**STATUS:** WAITING FOR CEO
+**STATUS:** SCRIPT DELIVERED — AWAITING CEO REVIEW
 
 **STUDIO SCORE:** N/A
 
@@ -31,7 +31,7 @@
 
 | Gate | Status | Date | Notes |
 |------|--------|------|-------|
-| Gate #1 — Concept Approval | PENDING | — | 4 ângulos entregues. Writer recomenda Ângulo 1 — O Rastro. |
+| Gate #1 — Concept Approval | APPROVED | 2026-09-11 | Angle 1 aprovado. Integração orgânica da questão central do Angle 2. Duração atualizada para 9–11 min. Hook reescrito. Ledger respeitado integralmente. |
 | Extraordinary Gate (if triggered) | N/A | — | — |
 | Final Gate — Release Authorization | PENDING | — | — |
 
@@ -43,12 +43,12 @@
 |-------|--------|-------------|-----------|-------|
 | Brief | COMPLETE | CEO | 2026-09-10 | — |
 | Concept Pitch | COMPLETE | Writer | 2026-09-10 | 4 ângulos + Writer Recommendation entregues |
-| CEO Gate #1 | PENDING | CEO | — | AWAITING CEO GATE #1 |
-| Script | PENDING | Writer | — | — |
-| Narration + Audio | PENDING | Narrator | — | — |
-| Storyboard + Assets | PENDING | Illustrator | — | — |
-| Editing Blueprint | PENDING | Director | — | — |
-| Review | PENDING | Reviewer | — | — |
+| CEO Gate #1 | APPROVED | CEO | 2026-09-11 | Angle 1 + integração Angle 2. Duração 9–11 min. Hook reescrito. |
+| Script | COMPLETE | Writer | 2026-09-11 | script.md entregue. 8 cenas + hook + CTA. 18 claims no Ledger. |
+| Narration + Audio | WAITING | Narrator | — | — |
+| Storyboard + Assets | WAITING | Illustrator | — | — |
+| Editing Blueprint | WAITING | Director | — | — |
+| Review | WAITING | Reviewer | — | — |
 | CEO Final Gate | PENDING | CEO | — | — |
 | Delivery Assembly | PENDING | System | — | — |
 | Delivery Integrity Check | PENDING | System | — | — |
@@ -57,7 +57,14 @@
 
 ## APPROVED DECISIONS
 
-*(Nenhuma decisão aprovada ainda — aguardando CEO Gate #1)*
+| Decisão | Aprovada em | Notas |
+|---------|-------------|-------|
+| Narrative Engine: INVESTIGATION | Gate #1 / 2026-09-11 | Angle 1 — O Rastro |
+| Narrative Engine secundário: integração questão Angle 2 | Gate #1 / 2026-09-11 | "O que significa descobrir em matemática?" como recontextualização progressiva, não substitui o engine principal |
+| Duração alvo: 9–11 min | Gate #1 / 2026-09-11 | Target ~10 min de narração natural |
+| Hook reescrito: começa com silêncio de Euclides sobre Pitágoras | Script / 2026-09-11 | Novo hook — não reutiliza hooks dos ângulos existentes |
+| F08: data ~1000 a.C. do Zhou Bi Suan Jing não utilizada | Script / 2026-09-11 | Incerteza cronológica preservada — "tradição existe, datação debatida" |
+| F13: múltiplas fontes apresentadas (Vitrúvio, Diógenes, Proclo) | Script / 2026-09-11 | Nenhuma formulação de "única fonte" utilizada |
 
 ---
 
@@ -84,7 +91,13 @@
 ## NEXT ACTION
 
 **Who:** CEO
-**Action:** Revisar concept-pitch.md (4 ângulos) e registrar CEO DECISION — ângulo aprovado e ajustes solicitados.
-**Waiting for:** CEO Gate #1 — aprovação de ângulo antes de qualquer escrita de script.
+**Action:** Revisar script.md e registrar decisão — aprovação para Narrator ou ajustes solicitados ao Writer.
+**Waiting for:** CEO review do script completo.
 
-**FINAL STATUS: AWAITING CEO GATE #1**
+**SCRIPT:** COMPLETE
+**NARRATION:** WAITING
+**STORYBOARD:** WAITING
+**DIRECTION:** WAITING
+**REVIEW:** WAITING
+
+**FINAL STATUS: AWAITING CEO REVIEW OF WRITER SCRIPT**
