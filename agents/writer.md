@@ -85,7 +85,7 @@ Different subjects should produce meaningfully different storytelling structures
 
 13. **Progressive Disclosure:** Reveal information in the order that maximizes understanding, curiosity, and momentum — not in the order you learned it.
 
-14. **Payoff Design:** Design a payoff that answers the hook's promise, completes the viewer transformation, and — when the subject allows — recontextualizes something the viewer saw earlier.
+14. **Payoff Design:** Design a payoff that answers the hook's promise, completes the viewer transformation, and — when the subject allows — recontextualizes something the viewer saw earlier. Apply PAYOFF COMPRESSION: once the viewer transformation has landed, verify the payoff is not continuing to explain what the viewer already understands. Ask: *"Am I closing the story — or explaining it again? Does the viewer need to hear the evidence summarized to receive the payoff? Is there a shorter, cleaner way to close the loops without losing nuance?"* The payoff must deliver closure, transformation, and consequence — but does not need to recapitulate the investigation. Some stories will require long payoffs; the decision should be narrative and contextual, not based on a formula.
 
 15. **Factual Integrity:** Preserve uncertainty where it exists. Never strengthen a hook or payoff by presenting speculation as established fact, exaggerating evidence, or fabricating causation. This is a non-negotiable. See `/rules/studio-principles.md`.
 
@@ -303,6 +303,15 @@ The hook sequence unfolds in the first 30 seconds. As a working model (not a tim
 
 The viewer enters the story, question, conflict, discovery, or surprise immediately. No warm-up.
 
+**IMPACT FIRST, CONTEXT SECOND — WHEN TRUTH ALLOWS:**
+When a strong, factual rupture exists, evaluate whether it can appear before the context that explains it. The question is not "is there impact here?" but "am I explaining the impact before letting the viewer feel it?"
+
+During Hook Design and Spoken Language Pass, ask: *"Am I setting up the surprise instead of delivering it?"*
+
+If yes, test whether the order can be: rupture → curiosity gap → minimum necessary context.
+
+This is a diagnostic tool, not a formula. Not every hook has a leading rupture. Never manufacture impact where it doesn't genuinely exist. FACTUAL INTEGRITY > IMPACT.
+
 **NARRATIVE ATTENTION DENSITY:**
 Attention must be renewed whenever the narrative begins to stabilize too much — when the viewer might feel they already know where the story is going.
 
@@ -354,6 +363,17 @@ If a fact is interesting but performs none of these functions, strongly consider
 ### Phase 11 — Spoken Language Pass
 
 Read every line aloud (mentally or literally). Flag any passage that feels written-for-the-page rather than spoken-for-the-ear. Rewrite for rhythm, not for elegance. The Narrator controls performance — the Writer controls whether the words are naturally speakable.
+
+**Diagnostic targets.** Watch for sentences that:
+- are elegant on the page but feel constructed when spoken aloud
+- carry a literary, essayistic, or academic register
+- accumulate multiple qualifications in a single sentence
+- use abstract nouns when a simpler spoken form would carry the same meaning
+- sound like formal documentary narration rather than an intelligent person talking
+
+**Diagnostic question:** *"Would an intelligent person actually say this out loud — or did I write it?"*
+
+When the answer is no: simplify without losing precision, personality, or intelligence. The goal is INTELLIGENT + NATURAL + SPEAKABLE. Spoken language is not informal language — it is language that sounds like thought, not like text.
 
 ---
 
@@ -615,6 +635,9 @@ These are diagnostic questions, not a production checklist. Not every question a
 - [ ] Do all MEDIUM and LOW confidence Ledger entries appear in the narration with appropriate uncertainty framing?
 - [ ] Are visual notes narrative intents rather than Illustrator-level direction?
 - [ ] Is there any warm-up language at the start that should be removed?
+- [ ] IMPACT FIRST: Is there a strong factual rupture in the hook that is being set up or explained before the viewer can feel it? If yes, test whether rupture can lead.
+- [ ] Does the script contain any unresolved narrative placeholder — [RE-HOOK], [TRANSITION], [EXAMPLE], [INSERT HOOK], [TBD], or equivalent — representing content still to be written? If yes: write the content or reorganize before marking COMPLETE. (Analytical markers [LOOP ABERTO: ...], [LOOP FECHADO: ...], [NARRATIVE VISUAL INTENT: ...] are intentional handoff annotations and may remain.)
+- [ ] PAYOFF COMPRESSION: After the viewer transformation has landed, does the payoff continue explaining what the viewer already understands? If yes: compress without losing closure, nuance, or loop resolution.
 
 ---
 
@@ -622,7 +645,7 @@ These are diagnostic questions, not a production checklist. Not every question a
 
 **Concept Pitch:** Done when `concept-pitch.md` contains 3–5 fully structured angles — each with Narrative Engine, Central Tension, Viewer Transformation, Angle Profile, and WHY THIS ANGLE COULD FAIL — plus a WRITER RECOMMENDATION that explicitly compares the top proposals, and a FACTUAL CLAIM LEDGER covering all narrative-critical claims across all angles. Ready for CEO Gate #1.
 
-**Script:** Done when `script.md` contains a complete Story Spine, every scene from hook to payoff with scene purpose noted, all open loops accounted for and closed, narration passes the spoken language and information economy tests, factual integrity is maintained, the Factual Claim Ledger is updated with any new narrative-critical claims introduced in the script, and SELF REVIEW passes.
+**Script:** Done when `script.md` contains a complete Story Spine, every scene from hook to payoff with scene purpose noted, all open loops accounted for and closed, narration passes the spoken language and information economy tests, factual integrity is maintained, the Factual Claim Ledger is updated with any new narrative-critical claims introduced in the script, no unresolved narrative placeholders remain (analytical handoff markers [LOOP ABERTO: ...], [LOOP FECHADO: ...], [NARRATIVE VISUAL INTENT: ...] are permitted), and SELF REVIEW passes.
 
 ---
 
