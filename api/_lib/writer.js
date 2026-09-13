@@ -633,7 +633,260 @@ export async function gerarScript(brief, gateDecision, approvedAngleSnapshot = '
     : loadProductionPrompt(writerMode, audienceMode)
   const userPrompt   = scriptPrompt(brief, gateDecision, approvedAngleSnapshot, mode)
   const maxTokens    = MAX_TOKENS[mode]?.script ?? MAX_TOKENS.production.script
-  await stream(systemPrompt, userPrompt, maxTokens, mode, res)
+  const parseOutput  = mode === 'production'
+    ? (text) => parseScriptToScenes(text, brief)
+    : null
+  await stream(systemPrompt, userPrompt, maxTokens, mode, res, parseOutput)
+}
+
+// ─── SCRIPT PARSER ─────────────────────────────────────────────────────────────
+//
+// Converts the Writer's Markdown script output into structured scene objects.
+// Sections matching SCRIPT_SKIP patterns are excluded from the scene list.
+// Narration and visual intent are extracted from labeled bold sections.
+// The original Markdown is preserved as artifactMarkdown.
+
+const SCRIPT_SKIP_PATTERNS = [
+  /REGISTRO FACTUAL/i,
+  /AUTOAVALIAÇÃO/i,
+  /CONTINUITY LEDGER/i,
+  /NOTA DO ROTEIRISTA/i,
+]
+
+function isScriptSkipSection(title) {
+  return SCRIPT_SKIP_PATTERNS.some(p => p.test(title))
+}
+
+function parseSceneBody(body) {
+  const narRx = /\*{0,2}NARRAÇÃO\*{0,2}[^:\n]*:?[ \t]*\n/i
+  const visRx = /\*{0,2}INTENÇÃO VISUAL(?:\s+NARRATIVA)?\*{0,2}[^:\n]*:?[ \t]*\n/i
+
+  const narM = body.match(narRx)
+  const visM = body.match(visRx)
+
+  const narStart    = narM ? narM.index : -1
+  const narLabelEnd = narM ? narM.index + narM[0].length : -1
+  const visStart    = visM ? visM.index : -1
+  const visLabelEnd = visM ? visM.index + visM[0].length : -1
+
+  let narration = '', visualIntent = ''
+
+  if (narStart >= 0 && visStart > narStart) {
+    narration    = body.slice(narLabelEnd, visStart)
+    visualIntent = body.slice(visLabelEnd)
+  } else if (narStart >= 0 && visStart >= 0) {
+    visualIntent = body.slice(visLabelEnd, narStart)
+    narration    = body.slice(narLabelEnd)
+  } else if (narStart >= 0) {
+    narration = body.slice(narLabelEnd)
+  } else if (visStart >= 0) {
+    narration    = body.slice(0, visStart)
+    visualIntent = body.slice(visLabelEnd)
+  } else {
+    narration = body
+  }
+
+  return {
+    narration   : narration.trim().replace(/\*{1,2}/g, ''),
+    visualIntent: visualIntent.trim().replace(/\*{1,2}/g, ''),
+  }
+}
+
+export function parseScriptToScenes(text, brief = {}) {
+  if (!text || text.length < 50) return null
+
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const targetAge    = brief.targetAge    || ''
+
+  const sections = text.split(/(?=^## )/m)
+  const scenes   = []
+  let continuity = ''
+  let idx        = 1
+
+  for (const sec of sections) {
+    const hm = sec.match(/^## (.+)/m)
+    if (!hm) continue
+
+    const rawTitle = hm[1].replace(/\*{1,2}/g, '').trim()
+    if (isScriptSkipSection(rawTitle)) {
+      if (/CONTINUITY LEDGER/i.test(rawTitle)) {
+        continuity = sec.replace(/^##[^\n]+\n/m, '').replace(/\*{1,2}/g, '').trim()
+      }
+      continue
+    }
+
+    const body                  = sec.replace(/^##[^\n]+\n/m, '')
+    const { narration, visualIntent } = parseSceneBody(body)
+    if (!narration.trim()) continue
+
+    const dashM     = rawTitle.match(/^(.+?)\s*[—–]\s*(.+)$/)
+    const sceneType = (dashM ? dashM[1] : rawTitle).trim()
+    const subtitle  = dashM ? dashM[2].trim() : ''
+
+    scenes.push({
+      id          : `scene-${idx}`,
+      type        : sceneType,
+      title       : subtitle || sceneType,
+      fullTitle   : rawTitle,
+      narration,
+      visualIntent,
+    })
+    idx++
+  }
+
+  if (scenes.length === 0) return null
+
+  return {
+    scriptVersion : 1,
+    writerMode,
+    audienceMode,
+    ...(targetAge ? { targetAge } : {}),
+    status        : 'generated',
+    scenes,
+    continuity,
+    versions      : [],
+    artifactMarkdown: text,
+  }
+}
+
+// ─── REVISION FUNCTIONS ────────────────────────────────────────────────────────
+//
+// reviseScene   — targeted revision of a single scene (1 Anthropic call)
+// regenerateScene — alternative version of a scene (1 Anthropic call)
+// reviseScript  — global revision affecting multiple scenes (1 Anthropic call)
+//
+// All three return structured JSON via res.json().
+// No streaming — response is awaited and parsed as JSON.
+
+async function callWriter(brief, userPrompt, maxTokens = 2000) {
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const systemPrompt = loadProductionPrompt(writerMode, audienceMode)
+  const client       = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+  const msg = await client.messages.create({
+    model     : 'claude-sonnet-4-6',
+    max_tokens: maxTokens,
+    system    : [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
+    messages  : [{ role: 'user', content: userPrompt }],
+  })
+
+  const raw   = msg.content[0].text
+  const jsonM = raw.match(/\{[\s\S]*\}/)
+  if (!jsonM) throw new Error('Writer did not return valid JSON')
+  return JSON.parse(jsonM[0])
+}
+
+export async function reviseScene(brief, sceneCtx, instruction, res) {
+  const { scene, prevScene, nextScene, continuity } = sceneCtx
+  try {
+    const userPrompt = `Você é o Writer do ZhongX Studio. Uma cena do roteiro precisa de ajuste conforme instrução do CEO.
+
+BRIEF:
+${briefToText(brief)}
+
+CENA A REVISAR — ${scene.fullTitle}:
+NARRAÇÃO: ${scene.narration}
+${scene.visualIntent ? `INTENÇÃO VISUAL: ${scene.visualIntent}` : ''}
+
+${prevScene ? `CENA ANTERIOR — ${prevScene.fullTitle}:\nNARRAÇÃO: ${prevScene.narration}\n` : ''}
+${nextScene ? `CENA SEGUINTE — ${nextScene.fullTitle}:\nNARRAÇÃO: ${nextScene.narration}\n` : ''}
+${continuity ? `CONTINUIDADE (excerto):\n${continuity.slice(0, 800)}\n` : ''}
+
+INSTRUÇÃO DO CEO:
+${instruction}
+
+Revise APENAS esta cena. Preserve a continuidade com as cenas adjacentes.
+Se a revisão criar impacto em cenas adjacentes, informe explicitamente.
+
+Responda SOMENTE em JSON válido (sem texto fora do JSON):
+{
+  "revisedScene": { "narration": "...", "visualIntent": "..." },
+  "continuityImpact": { "hasImpact": false, "affectedScenes": [], "reason": "" }
+}
+
+Narração em Português do Brasil.`
+
+    const result = await callWriter(brief, userPrompt, 2000)
+    res.json({ ok: true, ...result })
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message })
+  }
+}
+
+export async function regenerateScene(brief, sceneCtx, res) {
+  const { scene, prevScene, nextScene, continuity } = sceneCtx
+  try {
+    const userPrompt = `Você é o Writer do ZhongX Studio. Gere uma versão ALTERNATIVA desta cena.
+
+BRIEF:
+${briefToText(brief)}
+
+CENA ATUAL — ${scene.fullTitle}:
+NARRAÇÃO: ${scene.narration}
+${scene.visualIntent ? `INTENÇÃO VISUAL: ${scene.visualIntent}` : ''}
+
+${prevScene ? `CENA ANTERIOR — ${prevScene.fullTitle}:\nNARRAÇÃO: ${prevScene.narration}\n` : ''}
+${nextScene ? `CENA SEGUINTE — ${nextScene.fullTitle}:\nNARRAÇÃO: ${nextScene.narration}\n` : ''}
+${continuity ? `CONTINUIDADE (excerto):\n${continuity.slice(0, 800)}\n` : ''}
+
+Crie uma versão genuinamente diferente desta cena que preserve:
+- propósito narrativo (${scene.type})
+- continuidade com cenas adjacentes
+- direção da história aprovada
+- tom, audiência e writerMode
+
+Responda SOMENTE em JSON válido (sem texto fora do JSON):
+{
+  "revisedScene": { "narration": "...", "visualIntent": "..." },
+  "continuityImpact": { "hasImpact": false, "affectedScenes": [], "reason": "" }
+}
+
+Narração em Português do Brasil.`
+
+    const result = await callWriter(brief, userPrompt, 2000)
+    res.json({ ok: true, ...result })
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message })
+  }
+}
+
+export async function reviseScript(brief, scenes, instruction, res) {
+  try {
+    const scenesText = scenes.map(s =>
+      `${s.fullTitle}:\n${s.narration}${s.visualIntent ? `\nINTENÇÃO VISUAL: ${s.visualIntent}` : ''}`
+    ).join('\n\n---\n\n')
+
+    const userPrompt = `Você é o Writer do ZhongX Studio. O CEO solicitou uma revisão global do roteiro.
+
+BRIEF:
+${briefToText(brief)}
+
+ROTEIRO ATUAL:
+${scenesText}
+
+INSTRUÇÃO DO CEO:
+${instruction}
+
+Revise o roteiro conforme a instrução. Modifique apenas as cenas necessárias.
+Preserve a estrutura narrativa das cenas não afetadas.
+
+Responda SOMENTE em JSON válido (sem texto fora do JSON):
+{
+  "summary": "Resumo conciso do que foi alterado",
+  "revisedScenes": [
+    { "id": "scene-1", "narration": "...", "visualIntent": "...", "changeNote": "O que mudou" }
+  ]
+}
+
+Inclua em revisedScenes APENAS as cenas modificadas. Narração em Português do Brasil.`
+
+    const result = await callWriter(brief, userPrompt, 8000)
+    res.json({ ok: true, ...result })
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message })
+  }
 }
 
 // ─── STREAM ────────────────────────────────────────────────────────────────────

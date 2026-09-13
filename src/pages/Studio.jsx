@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import ConceptPitchView from '../components/ConceptPitchView.jsx'
+import ScriptView from '../components/ScriptView.jsx'
 
 const API_URL = ''
 
@@ -108,6 +109,7 @@ export default function Studio({ production }) {
   const [output, setOutput]           = useState('')
   const [streaming, setStreaming]     = useState(false)
   const [conceptPitchData, setConceptPitchData] = useState(null)
+  const [scriptData, setScriptData]   = useState(null)
   const [error, setError]             = useState(null)
   const outputRef  = useRef(null)
   const outputText = useRef('')
@@ -124,6 +126,7 @@ export default function Studio({ production }) {
         outputText.current = saved.script.rawText
         setOutput(saved.script.rawText)
         setConceptPitchData(saved.conceptPitch?.structured ?? null)
+        setScriptData(saved.script.structured ?? null)
         setStage(STAGE.DONE)
       } else if (saved?.conceptPitch) {
         outputText.current = saved.conceptPitch.rawText
@@ -170,8 +173,10 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brief: production, gateDecision: decision, approvedAngleSnapshot: snapshot || '' }),
       })
-      await readStream(res, async () => {
-        await saveOutput(production.id, 'script', { rawText: outputText.current })
+      await readStream(res, async (structured) => {
+        const rawText = outputText.current
+        await saveOutput(production.id, 'script', { rawText, structured: structured ?? null })
+        setScriptData(structured ?? null)
         setStage(STAGE.DONE)
       })
     } catch (err) {
@@ -204,6 +209,11 @@ export default function Studio({ production }) {
         } catch {}
       }
     }
+  }
+
+  async function handleScriptUpdate(newScriptData) {
+    setScriptData(newScriptData)
+    await saveOutput(production.id, 'script', { rawText: output, structured: newScriptData })
   }
 
   const isStreaming = streaming
@@ -347,6 +357,12 @@ export default function Studio({ production }) {
               />
             ) : stage === STAGE.CONCEPT_PITCH && !isStreaming && !output ? (
               <BriefingScreen production={production} onStart={runConceptPitch} />
+            ) : isDone && scriptData ? (
+              <ScriptView
+                scriptData={scriptData}
+                brief={production}
+                onUpdate={handleScriptUpdate}
+              />
             ) : (
               <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
                 {output || (isStreaming ? '▌ Conectando ao Roteirista...' : '')}
