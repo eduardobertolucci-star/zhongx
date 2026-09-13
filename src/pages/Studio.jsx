@@ -4,18 +4,29 @@ import ConceptPitchView from '../components/ConceptPitchView.jsx'
 const API_URL = ''
 const OUTPUTS_KEY = 'zhongx_outputs'
 
-function saveConceptPitchOutput(productionId, rawText, structured) {
+function saveOutput(productionId, type, data) {
   try {
     const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
-    all[productionId] = { rawText, structured }
+    if (!all[productionId] || 'rawText' in all[productionId]) {
+      // migrate old flat shape
+      const old = all[productionId]
+      all[productionId] = old ? { conceptPitch: { rawText: old.rawText, structured: old.structured } } : {}
+    }
+    all[productionId][type] = data
     localStorage.setItem(OUTPUTS_KEY, JSON.stringify(all))
   } catch {}
 }
 
-function loadConceptPitchOutput(productionId) {
+function loadOutputs(productionId) {
   try {
     const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
-    return all[productionId] || null
+    const entry = all[productionId] || null
+    if (!entry) return null
+    // backward compat: old shape had rawText/structured at top level
+    if ('rawText' in entry) {
+      return { conceptPitch: { rawText: entry.rawText, structured: entry.structured } }
+    }
+    return entry
   } catch {
     return null
   }
@@ -114,12 +125,17 @@ export default function Studio({ production }) {
       runConceptPitch()
       return
     }
-    // Reabrir produção existente: restaurar Concept Pitch salvo se disponível
-    const saved = loadConceptPitchOutput(production.id)
-    if (saved) {
-      outputText.current = saved.rawText
-      setOutput(saved.rawText)
-      setConceptPitchData(saved.structured ?? null)
+    // Reabrir produção existente: restaurar estado salvo
+    const saved = loadOutputs(production.id)
+    if (saved?.script) {
+      outputText.current = saved.script.rawText
+      setOutput(saved.script.rawText)
+      setConceptPitchData(saved.conceptPitch?.structured ?? null)
+      setStage(STAGE.DONE)
+    } else if (saved?.conceptPitch) {
+      outputText.current = saved.conceptPitch.rawText
+      setOutput(saved.conceptPitch.rawText)
+      setConceptPitchData(saved.conceptPitch.structured ?? null)
       setStage(STAGE.GATE_1)
     }
   }, [])
@@ -138,7 +154,7 @@ export default function Studio({ production }) {
       })
       await readStream(res, (structured) => {
         const rawText = outputText.current
-        saveConceptPitchOutput(production.id, rawText, structured ?? null)
+        saveOutput(production.id, 'conceptPitch', { rawText, structured: structured ?? null })
         setConceptPitchData(structured ?? null)
         setStage(STAGE.GATE_1)
       })
@@ -160,7 +176,10 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brief: production, gateDecision: decision, approvedAngleSnapshot: snapshot || '' }),
       })
-      await readStream(res, () => setStage(STAGE.DONE))
+      await readStream(res, () => {
+        saveOutput(production.id, 'script', { rawText: outputText.current })
+        setStage(STAGE.DONE)
+      })
     } catch (err) {
       setError(err.message)
       setStreaming(false)
