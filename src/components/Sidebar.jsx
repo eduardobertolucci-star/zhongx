@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 const navItems = [
   {
     id: 'dashboard',
@@ -30,45 +32,70 @@ const navItems = [
 ]
 
 export default function Sidebar({ currentPage, onNavigate }) {
+  const [collapsed, setCollapsed] = useState(false)
+
   return (
-    <aside className="w-56 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+    <aside className={`${collapsed ? 'w-16' : 'w-56'} bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0 transition-all duration-200`}>
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-zinc-800">
-        <p className="text-white font-bold text-xl tracking-widest leading-none">ZhongX</p>
-        <p className="text-amber-400 text-xs tracking-widest mt-1 font-semibold">STUDIO</p>
+      <div className={`flex items-center border-b border-zinc-800 ${collapsed ? 'justify-center px-0 py-6' : 'px-6 py-6'}`}>
+        {!collapsed && (
+          <div className="flex-1">
+            <p className="text-white font-bold text-xl tracking-widest leading-none">ZhongX</p>
+            <p className="text-amber-400 text-xs tracking-widest mt-1 font-semibold">STUDIO</p>
+          </div>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-zinc-500 hover:text-white transition-colors p-1 rounded"
+          title={collapsed ? 'Expandir menu' : 'Minimizar menu'}
+        >
+          {collapsed ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          )}
+        </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-2 py-4 space-y-1">
         {navItems.map((item) => {
           const isActive = currentPage === item.id
           return (
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
+              title={collapsed ? item.label : undefined}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                collapsed ? 'justify-center' : ''
+              } ${
                 isActive
                   ? 'bg-zinc-800 text-amber-400'
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'
               }`}
             >
-              <span className={isActive ? 'text-amber-400' : 'text-zinc-500'}>{item.icon}</span>
-              {item.label}
+              <span className={`shrink-0 ${isActive ? 'text-amber-400' : 'text-zinc-500'}`}>{item.icon}</span>
+              {!collapsed && item.label}
             </button>
           )
         })}
       </nav>
 
       {/* Nova Produção */}
-      <div className="px-4 py-5 border-t border-zinc-800">
+      <div className="px-3 py-5 border-t border-zinc-800">
         <button
           onClick={() => onNavigate('new')}
-          className="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-sm py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+          title={collapsed ? 'Nova Produção' : undefined}
+          className={`w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-sm py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Nova Produção
+          {!collapsed && 'Nova Produção'}
         </button>
       </div>
     </aside>
