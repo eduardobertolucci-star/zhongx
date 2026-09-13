@@ -19,7 +19,15 @@ function formatDate(iso) {
   })
 }
 
-export default function Productions({ productions, onOpen, onNavigate }) {
+export default function Productions({ productions, loading, onOpen, onNavigate }) {
+  if (loading) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-full">
+        <p className="text-zinc-500 text-sm">Carregando produções...</p>
+      </div>
+    )
+  }
+
   if (productions.length === 0) {
     return (
       <div className="p-8 flex flex-col items-center justify-center min-h-full text-center gap-4">

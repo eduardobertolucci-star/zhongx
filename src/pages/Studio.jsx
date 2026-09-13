@@ -1,32 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 import ConceptPitchView from '../components/ConceptPitchView.jsx'
 
 const API_URL = ''
-const OUTPUTS_KEY = 'zhongx_outputs'
 
-function saveOutput(productionId, type, data) {
+async function saveOutput(productionId, type, data) {
   try {
-    const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
-    if (!all[productionId] || 'rawText' in all[productionId]) {
-      // migrate old flat shape
-      const old = all[productionId]
-      all[productionId] = old ? { conceptPitch: { rawText: old.rawText, structured: old.structured } } : {}
-    }
-    all[productionId][type] = data
-    localStorage.setItem(OUTPUTS_KEY, JSON.stringify(all))
-  } catch {}
+    const ref     = doc(db, 'outputs', productionId)
+    const snap    = await getDoc(ref)
+    const current = snap.exists() ? snap.data() : {}
+    await setDoc(ref, { ...current, [type]: data }, { merge: true })
+  } catch (err) {
+    console.error('Erro ao salvar output:', err)
+  }
 }
 
-function loadOutputs(productionId) {
+async function loadOutputs(productionId) {
   try {
-    const all = JSON.parse(localStorage.getItem(OUTPUTS_KEY) || '{}')
-    const entry = all[productionId] || null
-    if (!entry) return null
-    // backward compat: old shape had rawText/structured at top level
-    if ('rawText' in entry) {
-      return { conceptPitch: { rawText: entry.rawText, structured: entry.structured } }
-    }
-    return entry
+    const snap = await getDoc(doc(db, 'outputs', productionId))
+    return snap.exists() ? snap.data() : null
   } catch {
     return null
   }
@@ -125,19 +118,20 @@ export default function Studio({ production }) {
       runConceptPitch()
       return
     }
-    // Reabrir produção existente: restaurar estado salvo
-    const saved = loadOutputs(production.id)
-    if (saved?.script) {
-      outputText.current = saved.script.rawText
-      setOutput(saved.script.rawText)
-      setConceptPitchData(saved.conceptPitch?.structured ?? null)
-      setStage(STAGE.DONE)
-    } else if (saved?.conceptPitch) {
-      outputText.current = saved.conceptPitch.rawText
-      setOutput(saved.conceptPitch.rawText)
-      setConceptPitchData(saved.conceptPitch.structured ?? null)
-      setStage(STAGE.GATE_1)
-    }
+    // Reabrir produção existente: restaurar estado salvo do Firestore
+    loadOutputs(production.id).then(saved => {
+      if (saved?.script) {
+        outputText.current = saved.script.rawText
+        setOutput(saved.script.rawText)
+        setConceptPitchData(saved.conceptPitch?.structured ?? null)
+        setStage(STAGE.DONE)
+      } else if (saved?.conceptPitch) {
+        outputText.current = saved.conceptPitch.rawText
+        setOutput(saved.conceptPitch.rawText)
+        setConceptPitchData(saved.conceptPitch.structured ?? null)
+        setStage(STAGE.GATE_1)
+      }
+    })
   }, [])
 
   async function runConceptPitch() {
@@ -152,9 +146,9 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(production),
       })
-      await readStream(res, (structured) => {
+      await readStream(res, async (structured) => {
         const rawText = outputText.current
-        saveOutput(production.id, 'conceptPitch', { rawText, structured: structured ?? null })
+        await saveOutput(production.id, 'conceptPitch', { rawText, structured: structured ?? null })
         setConceptPitchData(structured ?? null)
         setStage(STAGE.GATE_1)
       })
@@ -176,8 +170,8 @@ export default function Studio({ production }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brief: production, gateDecision: decision, approvedAngleSnapshot: snapshot || '' }),
       })
-      await readStream(res, () => {
-        saveOutput(production.id, 'script', { rawText: outputText.current })
+      await readStream(res, async () => {
+        await saveOutput(production.id, 'script', { rawText: outputText.current })
         setStage(STAGE.DONE)
       })
     } catch (err) {

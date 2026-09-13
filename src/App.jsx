@@ -1,42 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { collection, addDoc, getDocs, orderBy, query } from 'firebase/firestore'
+import { db } from './firebase'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
 import NewProduction from './pages/NewProduction'
 import Productions from './pages/Productions'
 import Studio from './pages/Studio'
 
-const STORAGE_KEY = 'zhongx_productions'
-
-function loadProductions() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-  } catch {
-    return []
-  }
-}
-
-function saveProductions(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
-}
-
 export default function App() {
-  const [page, setPage]             = useState('dashboard')
-  const [production, setProduction] = useState(null)
-  const [productions, setProductions] = useState(loadProductions)
+  const [page, setPage]               = useState('dashboard')
+  const [production, setProduction]   = useState(null)
+  const [productions, setProductions] = useState([])
+  const [loading, setLoading]         = useState(true)
 
-  function handleStartProduction(data) {
+  useEffect(() => {
+    getDocs(query(collection(db, 'productions'), orderBy('createdAt', 'desc')))
+      .then(snap => {
+        setProductions(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
+
+  async function handleStartProduction(data) {
     const record = {
-      id        : Date.now().toString(),
       createdAt : new Date().toISOString(),
       stage     : 'concept_pitch',
       ...data,
     }
-
-    const updated = [record, ...productions]
-    setProductions(updated)
-    saveProductions(updated)
-
-    setProduction({ ...record, _autoStart: true })
+    const docRef = await addDoc(collection(db, 'productions'), record)
+    const full   = { ...record, id: docRef.id }
+    setProductions(prev => [full, ...prev])
+    setProduction({ ...full, _autoStart: true })
     setPage('studio')
   }
 
@@ -51,7 +46,14 @@ export default function App() {
       <main className="flex-1 overflow-auto">
         {page === 'dashboard'   && <Dashboard onNavigate={setPage} />}
         {page === 'new'         && <NewProduction onStart={handleStartProduction} />}
-        {page === 'productions' && <Productions productions={productions} onOpen={handleOpenProduction} onNavigate={setPage} />}
+        {page === 'productions' && (
+          <Productions
+            productions={productions}
+            loading={loading}
+            onOpen={handleOpenProduction}
+            onNavigate={setPage}
+          />
+        )}
         {page === 'studio'      && <Studio production={production} />}
       </main>
     </div>
