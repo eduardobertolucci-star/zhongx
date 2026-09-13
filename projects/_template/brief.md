@@ -6,6 +6,17 @@
 
 ---
 
+## TIPO DE PRODUÇÃO
+
+**writerMode:** factual
+
+*(Valores: "factual" | "fiction". Projetos sem este campo assumem "factual" por padrão.)*
+
+- **factual** — Conteúdo baseado em fatos, pesquisa e conhecimento real. O Writer aplica rigor factual, Factual Claim Ledger e distinção entre fato, interpretação e hipótese.
+- **fiction** — Histórias originais com personagens, conflito e arco narrativo. O Writer aplica Story Discovery, Narrative Elements Framework e Story Continuity Ledger.
+
+---
+
 ## TEMA
 
 [What is the topic of this video? Be specific — not "o universo", but "por que o universo existe em vez de nada".]

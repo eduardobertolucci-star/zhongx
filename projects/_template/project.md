@@ -6,6 +6,7 @@
 
 **PROJECT NAME:** [Full title or working title]
 **PROJECT SLUG:** [slug-do-projeto]
+**WRITER MODE:** factual
 **PLATFORM:** [YouTube / TikTok / Other]
 **TARGET DURATION:** [X] min
 **CREATED:** [Date]

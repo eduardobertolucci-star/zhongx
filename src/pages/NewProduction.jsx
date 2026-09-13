@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 export default function NewProduction({ onStart }) {
   const [tema, setTema] = useState('')
+  const [writerMode, setWriterMode] = useState('factual')
   const [duracao, setDuracao] = useState('10')
   const [estilo, setEstilo] = useState('Minimalista')
   const [voz, setVoz] = useState('Masculina Grave')
@@ -10,7 +11,7 @@ export default function NewProduction({ onStart }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!tema.trim()) return
-    onStart({ tema, duracao, estilo, voz, observacoes })
+    onStart({ tema, writerMode, duracao, estilo, voz, observacoes })
   }
 
   const selectClass =
@@ -28,17 +29,66 @@ export default function NewProduction({ onStart }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Tipo de Produção */}
+          <div>
+            <label className={labelClass}>
+              Tipo de produção
+              <span className="text-amber-500 ml-1">*</span>
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setWriterMode('factual')}
+                className={`rounded-xl border p-4 text-left transition-colors ${
+                  writerMode === 'factual'
+                    ? 'bg-amber-500/10 border-amber-500/60 text-white'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className={`w-2 h-2 rounded-full ${writerMode === 'factual' ? 'bg-amber-400' : 'bg-zinc-600'}`} />
+                  <span className="text-sm font-bold uppercase tracking-wide">Factual</span>
+                </div>
+                <p className="text-xs text-zinc-500 leading-relaxed">
+                  Conteúdo baseado em fatos, pesquisa e conhecimento real.
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setWriterMode('fiction')}
+                className={`rounded-xl border p-4 text-left transition-colors ${
+                  writerMode === 'fiction'
+                    ? 'bg-amber-500/10 border-amber-500/60 text-white'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className={`w-2 h-2 rounded-full ${writerMode === 'fiction' ? 'bg-amber-400' : 'bg-zinc-600'}`} />
+                  <span className="text-sm font-bold uppercase tracking-wide">Fiction</span>
+                </div>
+                <p className="text-xs text-zinc-500 leading-relaxed">
+                  Histórias originais com personagens, conflito e arco narrativo.
+                </p>
+              </button>
+            </div>
+          </div>
+
           {/* Tema */}
           <div>
             <label className={labelClass}>
-              Tema do vídeo
+              {writerMode === 'fiction' ? 'Premissa ou ponto de partida' : 'Tema do vídeo'}
               <span className="text-amber-500 ml-1">*</span>
             </label>
             <textarea
               value={tema}
               onChange={(e) => setTema(e.target.value)}
               rows={4}
-              placeholder="Ex: Por que 0! = 1? A matemática por trás do fatorial zero"
+              placeholder={
+                writerMode === 'fiction'
+                  ? 'Ex: Um pequeno robô acorda sozinho em uma cidade onde todos os humanos desapareceram.'
+                  : 'Ex: Por que 0! = 1? A matemática por trás do fatorial zero'
+              }
               className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition-colors resize-none placeholder:text-zinc-600"
             />
           </div>
@@ -54,6 +104,7 @@ export default function NewProduction({ onStart }) {
                   className={selectClass}
                 >
                   <option value="5">5 minutos</option>
+                  <option value="8">8 minutos</option>
                   <option value="10">10 minutos</option>
                   <option value="15">15 minutos</option>
                 </select>
@@ -112,7 +163,11 @@ export default function NewProduction({ onStart }) {
               value={observacoes}
               onChange={(e) => setObservacoes(e.target.value)}
               rows={2}
-              placeholder="Instruções adicionais, tom desejado, referências..."
+              placeholder={
+                writerMode === 'fiction'
+                  ? 'Público-alvo, tom, personagens existentes, referências de universo...'
+                  : 'Instruções adicionais, tom desejado, referências...'
+              }
               className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition-colors resize-none placeholder:text-zinc-600"
             />
           </div>

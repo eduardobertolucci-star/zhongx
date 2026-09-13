@@ -113,6 +113,11 @@ export default function Studio({ production }) {
             </h1>
             <p className="text-zinc-500 text-xs mt-0.5">
               {production?.duracao} min · {production?.estilo} · Voz {production?.voz}
+              {production?.writerMode && (
+                <span className={`ml-2 font-semibold uppercase ${production.writerMode === 'fiction' ? 'text-violet-400' : 'text-sky-400'}`}>
+                  · {production.writerMode}
+                </span>
+              )}
             </p>
           </div>
         </div>

@@ -1,43 +1,46 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-const SYSTEM_PROMPT = `Você é o Roteirista do ZhongX Studio, um escritório de produção audiovisual especializado em vídeos educativos virais.
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const RUNTIME_DIR = join(__dirname, '../../runtime')
 
-Seu trabalho é criar roteiros longos, envolventes e extremamente virais para vídeos educativos no estilo YouTube/TikTok educacional.
+function loadRuntimeContext(writerMode) {
+  const mode = writerMode || 'factual'
 
-ESTRUTURA OBRIGATÓRIA DO ROTEIRO:
-- GANCHO INICIAL (primeiros 30 segundos): pergunta provocativa ou afirmação surpreendente que prende a atenção
-- DESENVOLVIMENTO em CENAS numeradas (CENA 1, CENA 2, etc.)
-- Cada cena deve ter: título, indicação de narração, indicação visual/animação sugerida
-- CONCLUSÃO com chamada para ação
-- CRÉDITOS/ENCERRAMENTO
+  const core = readFileSync(join(RUNTIME_DIR, 'writer-core.md'), 'utf8')
 
-REGRAS DE ESTILO:
-- Linguagem acessível, sem jargão desnecessário
-- Ritmo dinâmico — frases curtas intercaladas com explicações mais longas
-- Use analogias do cotidiano para explicar conceitos complexos
-- Indique pausas dramáticas com [pausa]
-- Indique tom da narração entre colchetes: [voz grave], [animado], [misterioso]
-- Indique sugestões visuais entre parênteses: (animação mostrando...) (texto aparece na tela...)
-- Cada cena deve ter duração estimada em segundos
+  const modeFile = mode === 'fiction' ? 'writer-fiction.md' : 'writer-factual.md'
+  const modeContext = readFileSync(join(RUNTIME_DIR, modeFile), 'utf8')
 
-Gere o roteiro COMPLETO e LONGO — não resuma, não corte. O roteiro deve cobrir toda a duração solicitada.`
+  return `${core}\n\n---\n\n${modeContext}`
+}
 
-export async function gerarRoteiro({ tema, duracao, estilo, voz, observacoes }, res) {
+export async function gerarRoteiro({ tema, duracao, estilo, voz, observacoes, writerMode }, res) {
+  const mode = writerMode || 'factual'
+  const systemPrompt = loadRuntimeContext(mode)
+
   const duracaoSegundos = parseInt(duracao) * 60
-  const numCenas = Math.ceil(parseInt(duracao) * 1.5)
 
-  const userPrompt = `Faça um roteiro bem forte, acadêmico, extremamente viral para um vídeo no YouTube falando sobre o tema "${tema}". Preciso que o vídeo seja longo, cerca de ${duracao} minutos, então elabore um roteiro cativante, entusiasta e que prenda a atenção das pessoas para aprender o conteúdo.
+  const userPrompt = `
+BRIEF DO CEO:
 
-ESPECIFICAÇÕES TÉCNICAS:
-DURAÇÃO ALVO: ${duracao} minutos (aproximadamente ${duracaoSegundos} segundos)
-ESTILO VISUAL: ${estilo}
-VOZ DO NARRADOR: ${voz}
-NÚMERO DE CENAS: aproximadamente ${numCenas} cenas
-${observacoes ? `ORIENTAÇÕES ADICIONAIS DO CEO: ${observacoes}` : ''}
+Tema: ${tema}
+Duração alvo: ${duracao} minutos (~${duracaoSegundos}s)
+Estilo visual: ${estilo}
+Voz do narrador: ${voz}
+Writer Mode: ${mode.toUpperCase()}
+${observacoes ? `Observações do CEO: ${observacoes}` : ''}
 
-Comece com um gancho irresistível nos primeiros 30 segundos. O roteiro deve ser completo, sem cortes ou resumos.`
+---
+
+Comece pelo CONCEPT PITCH com 3 ângulos narrativos distintos conforme as instruções do seu runtime.
+
+Após o Concept Pitch, inclua sua WRITER RECOMMENDATION e aguarde o CEO DECISION antes de escrever o roteiro completo.
+`.trim()
 
   res.setHeader('Content-Type', 'text/event-stream')
   res.setHeader('Cache-Control', 'no-cache')
@@ -47,7 +50,7 @@ Comece com um gancho irresistível nos primeiros 30 segundos. O roteiro deve ser
     const stream = client.messages.stream({
       model: 'claude-sonnet-4-6',
       max_tokens: 8000,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     })
 

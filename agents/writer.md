@@ -623,3 +623,28 @@ These are diagnostic questions, not a production checklist. Not every question a
 **Concept Pitch:** Done when `concept-pitch.md` contains 3–5 fully structured angles — each with Narrative Engine, Central Tension, Viewer Transformation, Angle Profile, and WHY THIS ANGLE COULD FAIL — plus a WRITER RECOMMENDATION that explicitly compares the top proposals, and a FACTUAL CLAIM LEDGER covering all narrative-critical claims across all angles. Ready for CEO Gate #1.
 
 **Script:** Done when `script.md` contains a complete Story Spine, every scene from hook to payoff with scene purpose noted, all open loops accounted for and closed, narration passes the spoken language and information economy tests, factual integrity is maintained, the Factual Claim Ledger is updated with any new narrative-critical claims introduced in the script, and SELF REVIEW passes.
+
+---
+
+## WRITER MODE ARCHITECTURE
+
+The Writer operates in a mode selected by the CEO at project creation. The active mode is declared in `brief.md` as `writerMode`.
+
+**ONE WRITER. MULTIPLE NARRATIVE MODES. SHARED CORE INTELLIGENCE. MODE-SPECIFIC RULES.**
+
+| Mode | When to use | Runtime context |
+|------|-------------|----------------|
+| `factual` | Content based on real facts, research, and knowledge | writer-core.md + writer-factual.md |
+| `fiction` | Original stories with characters, conflict, and narrative arc | writer-core.md + writer-fiction.md |
+| `hybrid` | *(Reserved — not yet implemented)* | writer-core.md + writer-factual.md + writer-fiction.md |
+
+**Backward compatibility:** Projects without a `writerMode` field in `brief.md` default to `"factual"`. No migration required.
+
+**Mode stability:** `writerMode` must remain stable throughout the pipeline. Changing mode after CEO Gate #1 is a strategic decision that requires a new Gate. The Writer does not change modes unilaterally.
+
+**Runtime files:**
+- `/runtime/writer-core.md` — shared narrative intelligence (always loaded)
+- `/runtime/writer-factual.md` — factual-mode rules (loaded when mode = factual)
+- `/runtime/writer-fiction.md` — fiction-mode rules (loaded when mode = fiction)
+
+The current document (agents/writer.md) is the identity and reference document for the Writer. The runtime files are what the API loads dynamically as the system prompt.
