@@ -300,7 +300,9 @@ export default function Studio({ production }) {
                 {stage === STAGE.DONE          && 'Roteiro — Concluído'}
               </h2>
               <p className="text-xs text-zinc-500 mt-0.5">
-                {stage === STAGE.CONCEPT_PITCH && 'Gerando Registro de Pesquisa + Ângulos + Registro de Claims Factuais'}
+                {stage === STAGE.CONCEPT_PITCH && (production?.writerMode === 'fiction'
+                  ? 'Gerando Story Discovery + Histórias + Approved Story Snapshot'
+                  : 'Gerando Registro de Pesquisa + Ângulos + Registro de Claims Factuais')}
                 {stage === STAGE.GATE_1        && 'Aguardando decisão do CEO para prosseguir'}
                 {stage === STAGE.SCRIPT        && 'Gerando Estrutura Narrativa + Cenas + Passes de revisão'}
                 {stage === STAGE.DONE          && 'Roteiro pronto para revisão do CEO'}

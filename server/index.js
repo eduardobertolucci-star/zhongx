@@ -14,12 +14,13 @@ app.get('/health', (req, res) => {
 })
 
 app.post('/api/writer/concept-pitch', (req, res) => {
-  gerarConceptPitch(req.body, res)
+  const { mode, ...brief } = req.body
+  gerarConceptPitch(brief, mode || 'production', res)
 })
 
 app.post('/api/writer/script', (req, res) => {
-  const { brief, gateDecision } = req.body
-  gerarScript(brief, gateDecision, res)
+  const { brief, gateDecision, approvedAngleSnapshot, mode } = req.body
+  gerarScript(brief, gateDecision, approvedAngleSnapshot || '', mode || 'production', res)
 })
 
 const PORT = process.env.PORT || 3001

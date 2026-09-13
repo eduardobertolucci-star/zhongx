@@ -8,20 +8,26 @@ const ROOT = path.join(__dirname, '../..')
 
 // ─── SYSTEM PROMPT LOADERS ─────────────────────────────────────────────────────
 
-function loadProductionPrompt() {
-  return fs.readFileSync(path.join(ROOT, 'runtime/writer-core.md'), 'utf-8')
+function loadProductionPrompt(writerMode = 'factual') {
+  const core     = fs.readFileSync(path.join(ROOT, 'runtime/writer-core.md'), 'utf-8')
+  const modeFile = writerMode === 'fiction' ? 'writer-fiction.md' : 'writer-factual.md'
+  const modeCtx  = fs.readFileSync(path.join(ROOT, 'runtime', modeFile), 'utf-8')
+  return `${core}\n\n---\n\n${modeCtx}`
 }
 
-function loadDebugPrompt() {
+function loadDebugPrompt(writerMode = 'factual') {
   const claudeMd   = fs.readFileSync(path.join(ROOT, 'CLAUDE.md'), 'utf-8')
   const writerMd   = fs.readFileSync(path.join(ROOT, 'agents/writer.md'), 'utf-8')
   const principles = fs.readFileSync(path.join(ROOT, 'rules/studio-principles.md'), 'utf-8')
   const retention  = fs.readFileSync(path.join(ROOT, 'rules/viral-retention.md'), 'utf-8')
+  const modeFile   = writerMode === 'fiction' ? 'writer-fiction.md' : 'writer-factual.md'
+  const modeCtx    = fs.readFileSync(path.join(ROOT, 'runtime', modeFile), 'utf-8')
   return [
     '# STUDIO OS\n' + claudeMd,
     '# WRITER AGENT\n' + writerMd,
     '# STUDIO PRINCIPLES\n' + principles,
     '# VIRAL RETENTION\n' + retention,
+    `# WRITER MODE — ${writerMode.toUpperCase()}\n` + modeCtx,
   ].join('\n\n---\n\n')
 }
 
@@ -43,9 +49,13 @@ const MAX_TOKENS = {
 // ─── BRIEF SERIALIZER ──────────────────────────────────────────────────────────
 
 function briefToText(brief) {
+  const writerMode = brief.writerMode || 'factual'
   return [
     `Tema: ${brief.tema}`,
-    `Objetivo: ${brief.objetivo || 'Criar um vídeo educacional envolvente sobre o tema.'}`,
+    `Writer Mode: ${writerMode.toUpperCase()}`,
+    `Objetivo: ${brief.objetivo || (writerMode === 'fiction'
+      ? 'Criar uma história original envolvente.'
+      : 'Criar um vídeo educacional envolvente sobre o tema.')}`,
     `Público: ${brief.publico || 'Público geral interessado em ciência, história e curiosidades. Sem conhecimento avançado necessário.'}`,
     `Plataforma: ${brief.plataforma || 'YouTube'}`,
     `Duração alvo: ${brief.duracao} minutos`,
@@ -112,6 +122,8 @@ function extractAngleField(body, field, nextField) {
   return stripMd(raw) || null
 }
 
+// ─── FACTUAL PARSER HELPERS ────────────────────────────────────────────────────
+
 // Known ordered fields for a single angle section.
 // Order matters: each field ends where the next begins.
 const ANGLE_FIELDS = [
@@ -175,8 +187,179 @@ function parseSnapshotText(raw) {
   }
 }
 
-export function parseConceptPitchText(text) {
+// ─── FICTION PARSER HELPERS ────────────────────────────────────────────────────
+
+// Known ordered fields for a single story section in the Fiction CEO Compact View.
+const FICTION_FIELDS = [
+  'IDEIA',
+  'ABERTURA',
+  'JORNADA EMOCIONAL',
+  'POR QUE ESTA HISTÓRIA',
+  'RISCO',
+]
+
+// Fiction fields use "**FIELD**\n content" (bold header, no colon) — different
+// from factual's "FIELD: content". This extractor handles both formats, trying
+// the bold-header form first and falling back to the colon form.
+function extractFictionField(body, field, nextField) {
+  const esc   = escapeRx(field)
+
+  // Try "**FIELD**" or "**FIELD**:" on its own line (the fiction format)
+  const boldRx = new RegExp(
+    `(?:^|\\n)[ \\t]*\\*{1,2}${esc}\\*{1,2}:?[ \\t]*\\n`,
+    'i'
+  )
+  const bm = body.match(boldRx)
+
+  // End boundary: next **FIELD** line or end of body
+  function findEnd(startPos) {
+    let end = body.length
+    if (!nextField) return end
+    const nextEsc  = escapeRx(nextField)
+    // Match next field in bold-header or colon form
+    const nextBold = new RegExp(`(?:^|\\n)[ \\t]*\\*{1,2}${nextEsc}\\*{1,2}:?[ \\t]*\\n`, 'i')
+    const nextColon = new RegExp(`(?:^|\\n)[ \\t]*\\*{0,2}\\s*${nextEsc}\\s*\\*{0,2}:`, 'i')
+    const nb = body.slice(startPos).match(nextBold)
+    const nc = body.slice(startPos).match(nextColon)
+    const nbIdx = nb ? startPos + nb.index : Infinity
+    const ncIdx = nc ? startPos + nc.index : Infinity
+    return Math.min(nbIdx, ncIdx, body.length)
+  }
+
+  if (bm) {
+    const start = bm.index + bm[0].length
+    return stripMd(body.slice(start, findEnd(start))) || null
+  }
+
+  // Fallback: colon format (FIELD: or **FIELD:**)
+  return extractAngleField(body, field, nextField)
+}
+
+function parseStoryBody(body) {
+  const extracted = {}
+  for (let i = 0; i < FICTION_FIELDS.length; i++) {
+    extracted[FICTION_FIELDS[i]] = extractFictionField(
+      body, FICTION_FIELDS[i], FICTION_FIELDS[i + 1] ?? null
+    )
+  }
+  return {
+    idea        : extracted['IDEIA'],
+    hook        : extracted['ABERTURA'],
+    emotionalArc: extracted['JORNADA EMOCIONAL'],
+    whyThisStory: extracted['POR QUE ESTA HISTÓRIA'],
+    mainRisk    : extracted['RISCO'],
+    corePromise : extracted['IDEIA'],  // alias — shared UI uses corePromise for the idea/premise field
+  }
+}
+
+// Parse APPROVED STORY SNAPSHOT JSON block from fiction concept pitch.
+function parseSnapshotJson(raw) {
+  if (!raw) return null
+  const m = raw.match(/```(?:json)?\s*([\s\S]*?)```/i) || raw.match(/(\{[\s\S]*\})/i)
+  if (!m) return { raw }
+  try {
+    const obj = JSON.parse(m[1])
+    return { raw, ...obj }
+  } catch {
+    return { raw }
+  }
+}
+
+function parseFictionConceptPitch(text) {
+  const sections = text.split(/(?=^## )/m)
+  const angles   = []
+
+  for (const sec of sections) {
+    const headerText = sec.replace(/\*\*([^*]*)\*\*/g, '$1')
+
+    // Recommended story: "## HISTÓRIA RECOMENDADA — TITLE" (always id=1)
+    const recMatch = headerText.match(/^## HISTÓRIA RECOMENDADA\s*[—–-]+\s*(.+)/im)
+    if (recMatch) {
+      const firstNl = sec.indexOf('\n')
+      const body    = firstNl >= 0 ? sec.slice(firstNl + 1) : ''
+      angles.push({ id: 1, title: stripMd(recMatch[1].trim()), _isRec: true, ...parseStoryBody(body), snapshot: null })
+      continue
+    }
+
+    // Other stories: "## HISTÓRIA N — TITLE"
+    const storyMatch = headerText.match(/^## HISTÓRIA\s+(\d+)\s*[—–-]+\s*(.+)/im)
+    if (storyMatch) {
+      const n       = +storyMatch[1]
+      const firstNl = sec.indexOf('\n')
+      const body    = firstNl >= 0 ? sec.slice(firstNl + 1) : ''
+      angles.push({ id: n, title: stripMd(storyMatch[2].trim()), ...parseStoryBody(body), snapshot: null })
+    }
+  }
+
+  if (angles.length === 0) return null
+
+  // Parse WRITER RECOMMENDATION (English per runtime format; also handle Portuguese)
+  let recommendation = null
+  const recSec = sections.find(s => {
+    const h = s.replace(/\*\*([^*]*)\*\*/g, '$1')
+    return /^## WRITER RECOMMENDATION/im.test(h) || /^## RECOMENDAÇÃO DO ROTEIRISTA/im.test(h)
+  })
+  if (recSec) {
+    const rb  = stripMd(recSec.replace(/^##[^\n]+\n/m, ''))
+    const why = rb.match(/(?:WHY THIS ONE|POR QUÊ):\s*([\s\S]*?)(?=\n(?:MAIN ADVANTAGE|VANTAGEM|MAIN RISK|RISCO PRINCIPAL|WHY NOT|POR QUE NÃO)|$)/im)
+    const wno = rb.match(/(?:WHY NOT THE RUNNER-UP|POR QUE NÃO):\s*([\s\S]*?)(?=\n##|$)/im)
+    recommendation = {
+      angleId        : null, // set below after sort
+      why            : why ? why[1].trim() : '',
+      runnerUpAngleId: null,
+      whyNotRunnerUp : wno ? wno[1].trim() : '',
+    }
+  } else {
+    // Fallback: use whyThisStory from the recommended card body
+    const recAngle = angles.find(a => a._isRec) || angles[0]
+    recommendation = {
+      angleId        : null,
+      why            : recAngle?.whyThisStory || '',
+      runnerUpAngleId: null,
+      whyNotRunnerUp : '',
+    }
+  }
+
+  // Parse APPROVED STORY SNAPSHOT (JSON block)
+  let snapshot = null
+  const snapSec = sections.find(s =>
+    /^## APPROVED STORY SNAPSHOT/im.test(s.replace(/\*\*([^*]*)\*\*/g, '$1'))
+  )
+  if (snapSec) {
+    snapshot = parseSnapshotJson(snapSec.replace(/^##[^\n]+\n/m, ''))
+  }
+
+  // Sort: recommended first
+  const recAngle = angles.find(a => a._isRec)
+  const sorted   = recAngle
+    ? [recAngle, ...angles.filter(a => !a._isRec)]
+    : angles
+
+  // Clean internal flag, set recommendation.angleId
+  const recId = sorted[0]?.id ?? null
+  sorted.forEach(a => { delete a._isRec })
+  if (recommendation) recommendation.angleId = recId
+
+  // Attach snapshot to recommended angle
+  if (snapshot && sorted.length > 0) sorted[0].snapshot = snapshot
+
+  return {
+    writerMode            : 'fiction',
+    angles                : sorted,
+    recommendation,
+    factualClaims         : [],
+    approvedAngleSnapshots: snapshot && recId != null ? { [recId]: snapshot } : {},
+    artifactMarkdown      : text,
+  }
+}
+
+// ─── MAIN PARSER ──────────────────────────────────────────────────────────────
+
+export function parseConceptPitchText(text, writerMode = 'factual') {
   if (!text || text.length < 50) return null
+  if (writerMode === 'fiction') return parseFictionConceptPitch(text)
+
+  // ── FACTUAL PARSER (unchanged) ──────────────────────────────────────────────
 
   // 1. Extract SNAPSHOT blocks (HTML comments — parsed + raw preserved)
   const snapshots = {}
@@ -271,30 +454,56 @@ export function parseConceptPitchText(text) {
 // ─── USER PROMPTS ──────────────────────────────────────────────────────────────
 
 function conceptPitchPrompt(brief, mode) {
+  const writerMode = brief.writerMode || 'factual'
+  const isFiction  = writerMode === 'fiction'
+
   if (mode === 'debug') {
-    return `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio.
+    return `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio. Modo: ${writerMode.toUpperCase()}.
 
 IMPORTANTE: Escreva todo o output em Português do Brasil. Nenhuma seção, título, label ou conteúdo deve aparecer em inglês — incluindo termos técnicos do pipeline que tenham equivalente natural em português.
 
-O CEO entregou o seguinte brief. Execute as Fases 1–7 do seu método de trabalho:
-leia o brief, conduza a Pesquisa de Material Narrativo, identifique Narrative Engines e Central Tensions,
-gere 3–5 ângulos genuinamente distintos e entregue o concept-pitch.md completo.
+O CEO entregou o seguinte brief. Execute as fases de pesquisa e geração de ângulos/histórias do seu runtime:
 
 BRIEF:
 ${briefToText(brief)}
 
-Deliver the full concept-pitch.md exactly as defined in your DELIVERABLES section:
-- WRITER'S RESEARCH LOG (all 11 Story Material Discovery categories)
-- 3–5 fully structured ANGLES (each with Narrative Engine, Central Tension, Hook, Curiosity Gap,
-  Viewer Transformation, Angle Profile, WHY IT COULD FAIL)
-- WRITER RECOMMENDATION (with explicit runner-up comparison)
-- FACTUAL CLAIM LEDGER (all narrative-critical claims across all angles)
-- CEO DECISION section (leave blank — the CEO will fill it)
-
-Do NOT write the full script. Stop after the concept pitch. This is CEO Gate #1 pending.`
+Deliver the full concept pitch exactly as defined in your runtime DELIVERABLES section.
+Do NOT write the full script. Stop after the concept pitch. CEO Gate #1 pending.`
   }
 
-  // Production
+  // Production — Fiction
+  if (isFiction) {
+    return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION — FICTION.
+
+BRIEF:
+${briefToText(brief)}
+
+Execute internamente Story Discovery — explore possibilidades narrativas genuinamente distintas antes de apresentar. Gere 3 histórias com conflito, protagonista e arco emocional diferentes.
+
+Entregue no formato Production Fiction definido no seu runtime:
+
+## HISTÓRIA RECOMENDADA — TÍTULO
+(campos: IDEIA, ABERTURA, JORNADA EMOCIONAL, POR QUE ESTA HISTÓRIA, RISCO)
+
+## HISTÓRIA 2 — TÍTULO
+(mesmos campos em formato compacto)
+
+## HISTÓRIA 3 — TÍTULO
+(mesmos campos em formato compacto)
+
+## WRITER RECOMMENDATION
+(RECOMMENDED STORY, WHY THIS ONE, MAIN ADVANTAGE, MAIN RISK, WHY NOT THE RUNNER-UP)
+
+## APPROVED STORY SNAPSHOT
+(JSON completo conforme definido no seu runtime para a história recomendada)
+
+## CEO DECISION
+(deixar em branco — o CEO preencherá)
+
+Escreva em Português do Brasil. Não escreva o roteiro completo. CEO Gate #1 pendente.`
+  }
+
+  // Production — Factual
   return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION.
 
 BRIEF:
@@ -312,40 +521,55 @@ Não serializar Research Log. Não incluir análise longa de retenção por âng
 }
 
 function scriptPrompt(brief, gateDecision, approvedAngleSnapshot, mode) {
+  const writerMode = brief.writerMode || 'factual'
+  const isFiction  = writerMode === 'fiction'
+
   if (mode === 'debug') {
-    return `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio.
+    return `Você é o Writer (Head Writer / Roteirista) do ZhongX Studio. Modo: ${writerMode.toUpperCase()}.
 
 IMPORTANTE: Escreva todo o output em Português do Brasil. Nenhuma seção, título, label ou conteúdo deve aparecer em inglês.
 
-O CEO Gate #1 foi aprovado. Execute as Fases 8–14 do seu método de trabalho:
-construa o Story Spine, escreva o script completo cena a cena, e execute todos os passes
-(Economia de Informação, Linguagem Falada, Densidade de Atenção Narrativa, Integridade Factual, Self Review).
+O CEO Gate #1 foi aprovado. Execute as fases de escrita e revisão do roteiro do seu runtime.
 
 BRIEF:
 ${briefToText(brief)}
 
-CEO GATE #1 — APPROVED DIRECTION:
+CEO GATE #1 — DECISÃO APROVADA:
 ${gateDecision}
 
-Deliver the complete script.md exactly as defined in your DELIVERABLES section:
-- Header (Approved angle, Narrative Engine, Central Tension, Viewer Transformation, Target duration, Platform, Tone)
-- STORY SPINE (all 10 beats)
-- HOOK SEQUENCE with scene purpose, narration, loop tags, and Narrative Visual Intent
-- All scenes from hook to CTA — each with SCENE ID, scene purpose, narration, loop tags where applicable,
-  and Narrative Visual Intent where needed
-- FACTUAL CLAIM LEDGER updates (any new narrative-critical claims introduced in the script)
-- CLAIMS MEDIUM/LOW used in the script with framing confirmation
-- SELF REVIEW checklist (all items)
-
-Important: no unresolved narrative placeholders ([RE-HOOK], [TBD], [EXAMPLE], etc.) may remain.
-Do not execute any other agent. Stop after script.md is complete.`
+Deliver the complete script exactly as defined in your runtime DELIVERABLES section.
+Important: no unresolved narrative placeholders may remain. Do not execute any other agent. Stop after the script is complete.`
   }
 
   // Production
+  const snapshotLabel = isFiction ? 'APPROVED STORY SNAPSHOT' : 'APPROVED ANGLE SNAPSHOT'
   const snapshotBlock = approvedAngleSnapshot
-    ? `\nAPPROVED ANGLE SNAPSHOT:\n${approvedAngleSnapshot}\n`
+    ? `\n${snapshotLabel}:\n${approvedAngleSnapshot}\n`
     : ''
 
+  if (isFiction) {
+    return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION — FICTION.
+
+BRIEF:
+${briefToText(brief)}
+
+CEO GATE #1 — HISTÓRIA APROVADA:
+${gateDecision}
+${snapshotBlock}
+Execute planejamento interno (story spine, progressão causal, turning points, setup→payoff, arco do personagem, continuidade). Não serializar planejamento no output.
+
+Escreva o roteiro ficcional no formato Production definido no seu runtime:
+- Header (História aprovada, Protagonista, Conflito Central, Arco Emocional, Duração, Plataforma, Tom)
+- GANCHO — cena de abertura com propósito e NARRAÇÃO
+- Todas as cenas com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA onde necessário
+- PAYOFF + CTA
+- STORY CONTINUITY LEDGER atualizado
+- AUTOAVALIAÇÃO: APROVADO ou REPROVADO com problema específico
+
+Sem placeholders narrativos não resolvidos. Escreva em Português do Brasil.`
+  }
+
+  // Production — Factual
   return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION.
 
 BRIEF:
@@ -367,16 +591,20 @@ Sem Story Spine no output. Sem checklist de Autoavaliação. Escreva em Portugu�
 // ─── PUBLIC API ────────────────────────────────────────────────────────────────
 
 export async function gerarConceptPitch(brief, mode = 'production', res) {
-  const systemPrompt = mode === 'debug' ? loadDebugPrompt() : loadProductionPrompt()
+  const writerMode   = brief.writerMode || 'factual'
+  const systemPrompt = mode === 'debug' ? loadDebugPrompt(writerMode) : loadProductionPrompt(writerMode)
   const userPrompt   = conceptPitchPrompt(brief, mode)
   const maxTokens    = MAX_TOKENS[mode]?.conceptPitch ?? MAX_TOKENS.production.conceptPitch
-  // Parse structured data in production mode only; debug format differs
-  const parseOutput  = mode === 'production' ? parseConceptPitchText : null
+  // Parse structured data in production mode only; bind writerMode for fiction parser
+  const parseOutput  = mode === 'production'
+    ? (text) => parseConceptPitchText(text, writerMode)
+    : null
   await stream(systemPrompt, userPrompt, maxTokens, mode, res, parseOutput)
 }
 
 export async function gerarScript(brief, gateDecision, approvedAngleSnapshot = '', mode = 'production', res) {
-  const systemPrompt = mode === 'debug' ? loadDebugPrompt() : loadProductionPrompt()
+  const writerMode   = brief.writerMode || 'factual'
+  const systemPrompt = mode === 'debug' ? loadDebugPrompt(writerMode) : loadProductionPrompt(writerMode)
   const userPrompt   = scriptPrompt(brief, gateDecision, approvedAngleSnapshot, mode)
   const maxTokens    = MAX_TOKENS[mode]?.script ?? MAX_TOKENS.production.script
   await stream(systemPrompt, userPrompt, maxTokens, mode, res)
@@ -386,7 +614,7 @@ export async function gerarScript(brief, gateDecision, approvedAngleSnapshot = '
 //
 // PROMPT CACHING — Production Mode only.
 //
-// In production, the system prompt (writer-core.md, ~4,200 tokens) is marked
+// In production, the system prompt (writer-core.md + mode file) is marked
 // with cache_control: { type: "ephemeral" }. Anthropic caches the prefix for
 // ~5 minutes. Cache hits reduce input cost from $3.00/MTok to $0.30/MTok (~90%).
 //

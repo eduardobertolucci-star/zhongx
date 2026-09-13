@@ -72,7 +72,32 @@ function FactualAudit({ claims }) {
 // Shown when CEO clicks "Ver detalhes". Uses pre-parsed structured fields —
 // no Markdown present here.
 
-function AngleDetails({ angle, linkedClaims }) {
+function AngleDetails({ angle, linkedClaims, isFiction = false }) {
+  if (isFiction) {
+    return (
+      <div className="mt-3 pt-3 border-t border-zinc-700/40 space-y-3 text-sm">
+        {angle.emotionalArc && (
+          <div>
+            <p className="text-zinc-600 text-xs uppercase tracking-wider font-semibold mb-0.5">Jornada Emocional</p>
+            <p className="text-zinc-300">{angle.emotionalArc}</p>
+          </div>
+        )}
+        {angle.mainRisk && (
+          <div>
+            <p className="text-zinc-600 text-xs uppercase tracking-wider font-semibold mb-0.5">Risco</p>
+            <p className="text-zinc-400">{angle.mainRisk}</p>
+          </div>
+        )}
+        {angle.hook && (
+          <div>
+            <p className="text-zinc-600 text-xs uppercase tracking-wider font-semibold mb-0.5">Abertura</p>
+            <p className="text-zinc-300 italic border-l-2 border-violet-500/40 pl-3">"{angle.hook}"</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="mt-3 pt-3 border-t border-zinc-700/40 space-y-3 text-sm">
       {angle.narrativeEngine && (
@@ -142,15 +167,15 @@ function AngleDetails({ angle, linkedClaims }) {
 
 // ─── CONFIRM PANEL ────────────────────────────────────────────────────────────
 
-function ConfirmPanel({ angle, onConfirm, onCancel, compact = false }) {
+function ConfirmPanel({ angle, onConfirm, onCancel, compact = false, isFiction = false }) {
   const [notes, setNotes] = useState('')
 
   function submit() {
+    const prefix   = isFiction ? 'História aprovada' : 'Ângulo aprovado'
     const decision = [
-      `Ângulo aprovado: ${angle.id} — ${angle.title}`,
+      `${prefix}: ${angle.id} — ${angle.title}`,
       notes.trim() ? `\n\nAjustes do CEO:\n${notes.trim()}` : '',
     ].join('')
-    // Pass snapshot.raw (original text) to the Script call — no re-serialization needed
     onConfirm(decision, angle.snapshot?.raw || '')
   }
 
@@ -185,7 +210,7 @@ function ConfirmPanel({ angle, onConfirm, onCancel, compact = false }) {
 
 // ─── RECOMMENDED ANGLE CARD ───────────────────────────────────────────────────
 
-function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
+function RecommendedCard({ angle, recommendation, factualClaims, onApprove, isFiction = false }) {
   const [showDetails, setShowDetails] = useState(false)
   const [confirming,  setConfirming]  = useState(false)
 
@@ -193,11 +218,14 @@ function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
     angle.snapshot?.claims?.includes(c.id)
   )
 
+  const hookLabel = isFiction ? 'Abertura' : 'Gancho'
+  const approveLabel = isFiction ? 'Aprovar esta história' : 'Aprovar este ângulo'
+
   return (
-    <div className="rounded-2xl bg-zinc-800 border border-amber-500/40 overflow-hidden">
+    <div className={`rounded-2xl bg-zinc-800 border overflow-hidden ${isFiction ? 'border-violet-500/40' : 'border-amber-500/40'}`}>
       <div className="px-5 pt-4">
-        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-          ⭐ Recomendado
+        <span className={`text-xs font-bold uppercase tracking-widest ${isFiction ? 'text-violet-400' : 'text-amber-400'}`}>
+          {isFiction ? '✦ Recomendada' : '⭐ Recomendado'}
         </span>
       </div>
 
@@ -211,10 +239,17 @@ function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
           </div>
         )}
 
+        {isFiction && angle.emotionalArc && (
+          <div className="mt-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">Jornada Emocional</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{angle.emotionalArc}</p>
+          </div>
+        )}
+
         {angle.hook && (
           <div className="mt-4">
-            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">Gancho</p>
-            <p className="text-zinc-100 text-sm leading-relaxed italic border-l-2 border-amber-500/40 pl-3">
+            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">{hookLabel}</p>
+            <p className={`text-zinc-100 text-sm leading-relaxed italic border-l-2 pl-3 ${isFiction ? 'border-violet-500/40' : 'border-amber-500/40'}`}>
               "{angle.hook}"
             </p>
           </div>
@@ -222,25 +257,28 @@ function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
 
         {recommendation?.why && (
           <div className="mt-4">
-            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">Por que o Roteirista escolheu este</p>
+            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">
+              {isFiction ? 'Por que esta história' : 'Por que o Roteirista escolheu este'}
+            </p>
             <p className="text-zinc-300 text-sm leading-relaxed">{recommendation.why}</p>
           </div>
         )}
 
         {angle.mainRisk && (
           <div className="mt-4">
-            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">Risco principal</p>
+            <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold mb-1">Risco {isFiction ? '' : 'principal'}</p>
             <p className="text-zinc-400 text-sm">{angle.mainRisk}</p>
           </div>
         )}
 
-        {showDetails && <AngleDetails angle={angle} linkedClaims={linkedClaims} />}
+        {showDetails && <AngleDetails angle={angle} linkedClaims={linkedClaims} isFiction={isFiction} />}
 
         {confirming ? (
           <ConfirmPanel
             angle={angle}
             onConfirm={onApprove}
             onCancel={() => setConfirming(false)}
+            isFiction={isFiction}
           />
         ) : (
           <div className="mt-5 flex items-center gap-3 flex-wrap">
@@ -248,7 +286,7 @@ function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
               onClick={() => setConfirming(true)}
               className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
             >
-              Aprovar este ângulo
+              {approveLabel}
             </button>
             <button
               onClick={() => setShowDetails(v => !v)}
@@ -265,13 +303,15 @@ function RecommendedCard({ angle, recommendation, factualClaims, onApprove }) {
 
 // ─── OTHER ANGLE CARD ─────────────────────────────────────────────────────────
 
-function OtherAngleCard({ angle, factualClaims, onApprove }) {
+function OtherAngleCard({ angle, factualClaims, onApprove, isFiction = false }) {
   const [showDetails, setShowDetails] = useState(false)
   const [confirming,  setConfirming]  = useState(false)
 
   const linkedClaims = (factualClaims || []).filter(c =>
     angle.snapshot?.claims?.includes(c.id)
   )
+
+  const chooseLabel = isFiction ? 'Escolher esta' : 'Escolher este'
 
   return (
     <div className="rounded-2xl bg-zinc-800/50 border border-zinc-700/50 overflow-hidden">
@@ -288,7 +328,7 @@ function OtherAngleCard({ angle, factualClaims, onApprove }) {
           <p className="text-zinc-500 text-xs mt-2 italic line-clamp-2">"{angle.hook}"</p>
         )}
 
-        {showDetails && <AngleDetails angle={angle} linkedClaims={linkedClaims} />}
+        {showDetails && <AngleDetails angle={angle} linkedClaims={linkedClaims} isFiction={isFiction} />}
 
         {confirming ? (
           <ConfirmPanel
@@ -296,6 +336,7 @@ function OtherAngleCard({ angle, factualClaims, onApprove }) {
             onConfirm={onApprove}
             onCancel={() => setConfirming(false)}
             compact
+            isFiction={isFiction}
           />
         ) : (
           <div className="mt-3 flex gap-2 items-center">
@@ -303,7 +344,7 @@ function OtherAngleCard({ angle, factualClaims, onApprove }) {
               onClick={() => setConfirming(true)}
               className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-200 text-xs font-semibold py-2 rounded-lg transition-colors"
             >
-              Escolher este
+              {chooseLabel}
             </button>
             <button
               onClick={() => setShowDetails(v => !v)}
@@ -339,26 +380,28 @@ export default function ConceptPitchView({ structured, rawOutput, onApprove, onR
     )
   }
 
-  const { angles, recommendation, factualClaims, artifactMarkdown } = structured
+  const { angles, recommendation, factualClaims, artifactMarkdown, writerMode } = structured
+  const isFiction   = writerMode === 'fiction'
   const recommended = angles[0]
   const others      = angles.slice(1)
 
   return (
     <div className="space-y-5 pb-6">
 
-      {/* Recommended angle */}
+      {/* Recommended angle/story */}
       <RecommendedCard
         angle={recommended}
         recommendation={recommendation}
         factualClaims={factualClaims}
         onApprove={onApprove}
+        isFiction={isFiction}
       />
 
-      {/* Other angles */}
+      {/* Other angles/stories */}
       {others.length > 0 && (
         <div>
           <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-3 px-1">
-            Outras direções
+            {isFiction ? 'Outras histórias' : 'Outras direções'}
           </p>
           <div className={`grid gap-3 ${others.length >= 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
             {others.map(angle => (
@@ -367,6 +410,7 @@ export default function ConceptPitchView({ structured, rawOutput, onApprove, onR
                 angle={angle}
                 factualClaims={factualClaims}
                 onApprove={onApprove}
+                isFiction={isFiction}
               />
             ))}
           </div>
@@ -386,7 +430,7 @@ export default function ConceptPitchView({ structured, rawOutput, onApprove, onR
             onClick={onRequestNewAngles}
             className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors ml-auto"
           >
-            ↺ Pedir novos ângulos
+            {isFiction ? '↺ Pedir novas histórias' : '↺ Pedir novos ângulos'}
           </button>
         )}
       </div>
