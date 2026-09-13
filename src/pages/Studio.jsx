@@ -15,6 +15,7 @@ const SCRIPT_SKIP_RX = [
   /AUTOAVALIAÇÃO/i,
   /CONTINUITY LEDGER/i,
   /NOTA DO ROTEIRISTA/i,
+  /^HEADER$/i,
 ]
 
 function clientParseScript(text, brief = {}) {

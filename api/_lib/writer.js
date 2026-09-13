@@ -577,15 +577,35 @@ ${gateDecision}
 ${snapshotBlock}
 Execute planejamento interno (story spine, progressão causal, turning points, setup→payoff, arco do personagem, continuidade). Não serializar planejamento no output.
 
-Escreva o roteiro ficcional no formato Production definido no seu runtime:
-- Header (História aprovada, Protagonista, Conflito Central, Arco Emocional, Duração, Plataforma, Tom)
-- GANCHO — cena de abertura com propósito e NARRAÇÃO
-- Todas as cenas com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA onde necessário
-- PAYOFF + CTA
-- STORY CONTINUITY LEDGER atualizado
-- AUTOAVALIAÇÃO: APROVADO ou REPROVADO com problema específico
+FORMATO OBRIGATÓRIO DE SEÇÕES (use exatamente ## para cada seção):
 
-Sem placeholders narrativos não resolvidos. Escreva em Português do Brasil.`
+## GANCHO — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+**INTENÇÃO VISUAL NARRATIVA**
+[descrição visual, se necessário]
+
+## CENA [N] — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+**INTENÇÃO VISUAL NARRATIVA**
+[descrição visual, se necessário]
+
+## PAYOFF — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+
+## CTA
+**NARRAÇÃO**
+[texto]
+
+## STORY CONTINUITY LEDGER
+[atualizações de continuidade]
+
+## AUTOAVALIAÇÃO
+APROVADO ou REPROVADO com problema específico
+
+Cada cena DEVE começar com ## seguido do tipo e título. Sempre inclua **NARRAÇÃO** como label explícito. Sem placeholders narrativos não resolvidos. Escreva em Português do Brasil.`
   }
 
   // Production — Factual
@@ -597,14 +617,37 @@ ${briefToText(brief)}
 CEO GATE #1 — DIREÇÃO APROVADA:
 ${gateDecision}
 ${snapshotBlock}
-Execute Story Spine internamente como planejamento obrigatório — não serializar no output. Escreva o roteiro no formato Production definido no seu runtime:
-- GANCHO com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA
-- CENAS com NARRAÇÃO e INTENÇÃO VISUAL NARRATIVA (quando a cena depende de comunicação visual)
-- PAYOFF + CTA
-- REGISTRO FACTUAL — ATUALIZAÇÕES (novos claims narrativo-críticos não cobertos no Concept Pitch)
-- AUTOAVALIAÇÃO: APROVADO ou REPROVADO com problema específico
+Execute Story Spine internamente como planejamento obrigatório — não serializar no output. Escreva o roteiro no formato Production definido no seu runtime.
 
-Sem Story Spine no output. Sem checklist de Autoavaliação. Escreva em Português do Brasil.`
+FORMATO OBRIGATÓRIO DE SEÇÕES (use exatamente ## para cada seção):
+
+## GANCHO — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+**INTENÇÃO VISUAL NARRATIVA**
+[descrição visual, se necessário]
+
+## CENA [N] — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+**INTENÇÃO VISUAL NARRATIVA**
+[descrição visual, se necessário]
+
+## PAYOFF — [TÍTULO]
+**NARRAÇÃO**
+[texto]
+
+## CTA
+**NARRAÇÃO**
+[texto]
+
+## REGISTRO FACTUAL — ATUALIZAÇÕES
+[claims narrativo-críticos novos, se houver]
+
+## AUTOAVALIAÇÃO
+APROVADO ou REPROVADO com problema específico
+
+Cada cena DEVE começar com ## seguido do tipo e título. Sempre inclua **NARRAÇÃO** como label explícito. Sem Story Spine no output. Escreva em Português do Brasil.`
 }
 
 // ─── PUBLIC API ────────────────────────────────────────────────────────────────
@@ -651,6 +694,7 @@ const SCRIPT_SKIP_PATTERNS = [
   /AUTOAVALIAÇÃO/i,
   /CONTINUITY LEDGER/i,
   /NOTA DO ROTEIRISTA/i,
+  /^HEADER$/i,
 ]
 
 function isScriptSkipSection(title) {
