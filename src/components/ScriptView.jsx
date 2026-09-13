@@ -289,49 +289,100 @@ function GlobalSummary({ summary, revisedScenes, originalScenes, onAccept, onDis
 // ─── SCENE CARD ────────────────────────────────────────────────────────────────
 
 function SceneCard({ scene, index, onEdit, onRevise, onRegenerate }) {
-  const [showVisual, setShowVisual] = useState(false)
+  const [expanded,    setExpanded]    = useState(index < 3)
+  const [showVisual,  setShowVisual]  = useState(false)
+
+  const preview = scene.narration.slice(0, 100) + (scene.narration.length > 100 ? '…' : '')
 
   return (
-    <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl overflow-hidden hover:border-zinc-600/60 transition-colors">
-      <div className="px-4 pt-3 pb-2 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <span className="text-zinc-600 text-xs font-mono shrink-0 w-5">{String(index + 1).padStart(2, '0')}</span>
-          <span className="text-zinc-500 text-xs font-semibold uppercase tracking-widest shrink-0">{scene.type}</span>
+    <div className={`border rounded-xl overflow-hidden transition-colors ${
+      expanded
+        ? 'bg-zinc-800/60 border-zinc-700/70'
+        : 'bg-zinc-900/40 border-zinc-800/60 hover:border-zinc-700/60'
+    }`}>
+
+      {/* ── Header — always visible ── */}
+      <div
+        className="flex items-center gap-3 px-4 py-3 cursor-pointer select-none"
+        onClick={() => setExpanded(v => !v)}
+      >
+        {/* Number */}
+        <span className="text-zinc-600 text-xs font-mono shrink-0 w-5 text-right">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        {/* Type + title */}
+        <div className="flex-1 min-w-0 flex items-center gap-2">
+          <span className={`text-xs font-bold uppercase tracking-widest shrink-0 ${expanded ? 'text-amber-400' : 'text-zinc-500'}`}>
+            {scene.type}
+          </span>
           {scene.title !== scene.type && (
             <span className="text-zinc-500 text-xs truncate">— {scene.title}</span>
           )}
+          {!expanded && (
+            <span className="text-zinc-600 text-xs truncate hidden sm:block ml-1">{preview}</span>
+          )}
         </div>
-        <div className="flex items-center gap-0.5 shrink-0">
-          <button onClick={() => onEdit(scene)} className="text-xs text-zinc-600 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-700/60 transition-colors">
+
+        {/* Action buttons — stop propagation so they don't toggle */}
+        <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
+          <button
+            onClick={() => onEdit(scene)}
+            className="text-xs text-zinc-600 hover:text-white px-2.5 py-1 rounded-lg hover:bg-zinc-700 transition-colors"
+            title="Editar manualmente"
+          >
             Editar
           </button>
-          <button onClick={() => onRevise(scene)} className="text-xs text-zinc-600 hover:text-zinc-300 px-2 py-1 rounded hover:bg-zinc-700/60 transition-colors">
-            Pedir alteração
+          <button
+            onClick={() => onRevise(scene)}
+            className="text-xs text-zinc-600 hover:text-blue-400 px-2.5 py-1 rounded-lg hover:bg-zinc-700 transition-colors"
+            title="Pedir alteração ao Writer"
+          >
+            Alterar
           </button>
-          <button onClick={() => onRegenerate(scene)} className="text-xs text-zinc-600 hover:text-amber-400 px-2 py-1 rounded hover:bg-zinc-700/60 transition-colors">
-            Regenerar
+          <button
+            onClick={() => onRegenerate(scene)}
+            className="text-xs text-zinc-600 hover:text-amber-400 px-2.5 py-1 rounded-lg hover:bg-zinc-700 transition-colors"
+            title="Regenerar cena completa"
+          >
+            Refazer
           </button>
         </div>
+
+        {/* Chevron */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`w-4 h-4 text-zinc-600 shrink-0 transition-transform duration-150 ${expanded ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
 
-      <div className="px-4 pb-4">
-        <p className="text-zinc-300 text-sm leading-relaxed">{scene.narration}</p>
-        {scene.visualIntent && (
-          <div className="mt-2">
-            {showVisual ? (
-              <div>
-                <p className="text-zinc-600 text-xs font-semibold uppercase tracking-wider mb-1">Intenção Visual</p>
-                <p className="text-zinc-500 text-xs leading-relaxed">{scene.visualIntent}</p>
-                <button onClick={() => setShowVisual(false)} className="text-zinc-600 hover:text-zinc-400 text-xs mt-1.5 transition-colors">Ocultar</button>
-              </div>
-            ) : (
-              <button onClick={() => setShowVisual(true)} className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors">
-                + Intenção visual
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+      {/* ── Body — collapsible ── */}
+      {expanded && (
+        <div className="px-4 pb-4 pt-1 border-t border-zinc-700/40">
+          <p className="text-zinc-200 text-sm leading-relaxed">{scene.narration}</p>
+          {scene.visualIntent && (
+            <div className="mt-3">
+              {showVisual ? (
+                <div className="bg-zinc-900/60 border border-zinc-700/40 rounded-lg px-3 py-2.5">
+                  <p className="text-zinc-600 text-xs font-semibold uppercase tracking-wider mb-1">Intenção Visual</p>
+                  <p className="text-zinc-500 text-xs leading-relaxed">{scene.visualIntent}</p>
+                  <button onClick={() => setShowVisual(false)} className="text-zinc-600 hover:text-zinc-400 text-xs mt-1.5 transition-colors">Ocultar</button>
+                </div>
+              ) : (
+                <button onClick={() => setShowVisual(true)} className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.069A1 1 0 0121 8.82V15a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                  </svg>
+                  Intenção visual
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
