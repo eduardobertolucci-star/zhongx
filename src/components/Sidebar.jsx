@@ -31,7 +31,7 @@ const navItems = [
   },
 ]
 
-export default function Sidebar({ currentPage, onNavigate }) {
+export default function Sidebar({ currentPage, onNavigate, user, onSignOut }) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -86,11 +86,11 @@ export default function Sidebar({ currentPage, onNavigate }) {
       </nav>
 
       {/* Nova Produção */}
-      <div className="px-3 py-5 border-t border-zinc-800">
+      <div className="px-3 pt-4 pb-3 border-t border-zinc-800">
         <button
           onClick={() => onNavigate('new')}
           title={collapsed ? 'Nova Produção' : undefined}
-          className={`w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-sm py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2`}
+          className="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-sm py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -98,6 +98,26 @@ export default function Sidebar({ currentPage, onNavigate }) {
           {!collapsed && 'Nova Produção'}
         </button>
       </div>
+
+      {/* Usuário */}
+      {user && (
+        <div className={`px-3 pb-4 flex items-center gap-2 ${collapsed ? 'justify-center' : ''}`}>
+          {user.photoURL
+            ? <img src={user.photoURL} alt="" className="w-7 h-7 rounded-full shrink-0" referrerPolicy="no-referrer" />
+            : <div className="w-7 h-7 rounded-full bg-zinc-700 flex items-center justify-center text-xs text-zinc-300 font-semibold shrink-0">
+                {user.displayName?.[0] || '?'}
+              </div>
+          }
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-zinc-300 text-xs font-medium truncate">{user.displayName || user.email}</p>
+              <button onClick={onSignOut} className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors">
+                Sair
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </aside>
   )
 }
