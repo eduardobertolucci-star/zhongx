@@ -253,6 +253,14 @@ export default function Studio({ production }) {
                   · {production.writerMode}
                 </span>
               )}
+              {production?.audienceMode && production.audienceMode !== 'general' && (
+                <span className="ml-2 font-semibold text-emerald-400">
+                  · Infantil{production.targetAge ? ` · ${production.targetAge}` : ''}
+                </span>
+              )}
+              {(!production?.audienceMode || production.audienceMode === 'general') && (
+                <span className="ml-2 font-semibold text-zinc-500">· Geral</span>
+              )}
             </p>
           </div>
           {isStreaming && (

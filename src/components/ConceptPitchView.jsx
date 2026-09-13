@@ -380,13 +380,42 @@ export default function ConceptPitchView({ structured, rawOutput, onApprove, onR
     )
   }
 
-  const { angles, recommendation, factualClaims, artifactMarkdown, writerMode } = structured
+  const { angles, recommendation, factualClaims, artifactMarkdown, writerMode, audienceMode, targetAge } = structured
   const isFiction   = writerMode === 'fiction'
   const recommended = angles[0]
   const others      = angles.slice(1)
 
+  // Build contextual mode indicator: e.g. "Ficção · Infantil · 6–8 anos" or "Factual · Geral"
+  const modeParts = [
+    isFiction ? 'Ficção' : 'Factual',
+    audienceMode === 'children'
+      ? `Infantil${targetAge ? ` · ${targetAge} anos` : ''}`
+      : 'Geral',
+  ]
+  const modeIndicator = modeParts.join(' · ')
+
   return (
     <div className="space-y-5 pb-6">
+
+      {/* Mode indicator */}
+      <div className="flex items-center gap-1.5">
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+          isFiction
+            ? 'bg-violet-500/10 text-violet-400 border-violet-500/30'
+            : 'bg-sky-500/10 text-sky-400 border-sky-500/30'
+        }`}>
+          {isFiction ? 'Ficção' : 'Factual'}
+        </span>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+          audienceMode === 'children'
+            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+            : 'bg-zinc-700/50 text-zinc-500 border-zinc-700'
+        }`}>
+          {audienceMode === 'children'
+            ? `Infantil${targetAge ? ` · ${targetAge}` : ''}`
+            : 'Geral'}
+        </span>
+      </div>
 
       {/* Recommended angle/story */}
       <RecommendedCard

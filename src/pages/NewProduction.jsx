@@ -3,6 +3,8 @@ import { useState } from 'react'
 export default function NewProduction({ onStart }) {
   const [tema, setTema] = useState('')
   const [writerMode, setWriterMode] = useState('factual')
+  const [audienceMode, setAudienceMode] = useState('general')
+  const [targetAge, setTargetAge] = useState('')
   const [duracao, setDuracao] = useState('10')
   const [tom, setTom] = useState('')
   const [restricoes, setRestriccoes] = useState('')
@@ -10,7 +12,9 @@ export default function NewProduction({ onStart }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!tema.trim()) return
-    onStart({ tema, writerMode, duracao, tom, restricoes })
+    const brief = { tema, writerMode, audienceMode, duracao, tom, restricoes }
+    if (audienceMode === 'children' && targetAge.trim()) brief.targetAge = targetAge.trim()
+    onStart(brief)
   }
 
   const selectClass =
@@ -54,6 +58,41 @@ export default function NewProduction({ onStart }) {
               ))}
             </div>
           </div>
+
+          {/* Público */}
+          <div>
+            <label className={labelClass}>Público</label>
+            <div className="relative">
+              <select
+                value={audienceMode}
+                onChange={(e) => { setAudienceMode(e.target.value); if (e.target.value !== 'children') setTargetAge('') }}
+                className={selectClass}
+              >
+                <option value="general">Geral</option>
+                <option value="children">Infantil</option>
+              </select>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-zinc-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Faixa etária — only visible when audienceMode = children */}
+          {audienceMode === 'children' && (
+            <div>
+              <label className={labelClass}>
+                Faixa etária
+                <span className="text-zinc-600 font-normal ml-1.5">(opcional)</span>
+              </label>
+              <input
+                type="text"
+                value={targetAge}
+                onChange={(e) => setTargetAge(e.target.value)}
+                placeholder="Ex: 6–8"
+                className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition-colors placeholder:text-zinc-600"
+              />
+            </div>
+          )}
 
           {/* Tema */}
           <div>

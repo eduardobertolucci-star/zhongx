@@ -8,27 +8,37 @@ const ROOT = path.join(__dirname, '../..')
 
 // ─── SYSTEM PROMPT LOADERS ─────────────────────────────────────────────────────
 
-function loadProductionPrompt(writerMode = 'factual') {
+function loadProductionPrompt(writerMode = 'factual', audienceMode = 'general') {
   const core     = fs.readFileSync(path.join(ROOT, 'runtime/writer-core.md'), 'utf-8')
   const modeFile = writerMode === 'fiction' ? 'writer-fiction.md' : 'writer-factual.md'
   const modeCtx  = fs.readFileSync(path.join(ROOT, 'runtime', modeFile), 'utf-8')
-  return `${core}\n\n---\n\n${modeCtx}`
+  const parts    = [core, modeCtx]
+  if (audienceMode === 'children') {
+    const childrenCtx = fs.readFileSync(path.join(ROOT, 'runtime/writer-children.md'), 'utf-8')
+    parts.push(childrenCtx)
+  }
+  return parts.join('\n\n---\n\n')
 }
 
-function loadDebugPrompt(writerMode = 'factual') {
+function loadDebugPrompt(writerMode = 'factual', audienceMode = 'general') {
   const claudeMd   = fs.readFileSync(path.join(ROOT, 'CLAUDE.md'), 'utf-8')
   const writerMd   = fs.readFileSync(path.join(ROOT, 'agents/writer.md'), 'utf-8')
   const principles = fs.readFileSync(path.join(ROOT, 'rules/studio-principles.md'), 'utf-8')
   const retention  = fs.readFileSync(path.join(ROOT, 'rules/viral-retention.md'), 'utf-8')
   const modeFile   = writerMode === 'fiction' ? 'writer-fiction.md' : 'writer-factual.md'
   const modeCtx    = fs.readFileSync(path.join(ROOT, 'runtime', modeFile), 'utf-8')
-  return [
+  const sections   = [
     '# STUDIO OS\n' + claudeMd,
     '# WRITER AGENT\n' + writerMd,
     '# STUDIO PRINCIPLES\n' + principles,
     '# VIRAL RETENTION\n' + retention,
     `# WRITER MODE — ${writerMode.toUpperCase()}\n` + modeCtx,
-  ].join('\n\n---\n\n')
+  ]
+  if (audienceMode === 'children') {
+    const childrenCtx = fs.readFileSync(path.join(ROOT, 'runtime/writer-children.md'), 'utf-8')
+    sections.push('# WRITER AUDIENCE — CHILDREN\n' + childrenCtx)
+  }
+  return sections.join('\n\n---\n\n')
 }
 
 // ─── MAX TOKENS ────────────────────────────────────────────────────────────────
@@ -49,10 +59,14 @@ const MAX_TOKENS = {
 // ─── BRIEF SERIALIZER ──────────────────────────────────────────────────────────
 
 function briefToText(brief) {
-  const writerMode = brief.writerMode || 'factual'
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const targetAge    = brief.targetAge    || ''
   return [
     `Tema: ${brief.tema}`,
     `Writer Mode: ${writerMode.toUpperCase()}`,
+    `Audience Mode: ${audienceMode.toUpperCase()}`,
+    targetAge ? `Target Age: ${targetAge}` : '',
     `Objetivo: ${brief.objetivo || (writerMode === 'fiction'
       ? 'Criar uma história original envolvente.'
       : 'Criar um vídeo educacional envolvente sobre o tema.')}`,
@@ -265,7 +279,7 @@ function parseSnapshotJson(raw) {
   }
 }
 
-function parseFictionConceptPitch(text) {
+function parseFictionConceptPitch(text, audienceMode = 'general', targetAge = '') {
   const sections = text.split(/(?=^## )/m)
   const angles   = []
 
@@ -345,6 +359,8 @@ function parseFictionConceptPitch(text) {
 
   return {
     writerMode            : 'fiction',
+    audienceMode,
+    ...(targetAge ? { targetAge } : {}),
     angles                : sorted,
     recommendation,
     factualClaims         : [],
@@ -355,9 +371,9 @@ function parseFictionConceptPitch(text) {
 
 // ─── MAIN PARSER ──────────────────────────────────────────────────────────────
 
-export function parseConceptPitchText(text, writerMode = 'factual') {
+export function parseConceptPitchText(text, writerMode = 'factual', audienceMode = 'general', targetAge = '') {
   if (!text || text.length < 50) return null
-  if (writerMode === 'fiction') return parseFictionConceptPitch(text)
+  if (writerMode === 'fiction') return parseFictionConceptPitch(text, audienceMode, targetAge)
 
   // ── FACTUAL PARSER (unchanged) ──────────────────────────────────────────────
 
@@ -443,6 +459,9 @@ export function parseConceptPitchText(text, writerMode = 'factual') {
     : angles
 
   return {
+    writerMode            : 'factual',
+    audienceMode,
+    ...(targetAge ? { targetAge } : {}),
     angles                : sorted,
     recommendation,
     factualClaims,
@@ -591,20 +610,27 @@ Sem Story Spine no output. Sem checklist de Autoavaliação. Escreva em Portugu�
 // ─── PUBLIC API ────────────────────────────────────────────────────────────────
 
 export async function gerarConceptPitch(brief, mode = 'production', res) {
-  const writerMode   = brief.writerMode || 'factual'
-  const systemPrompt = mode === 'debug' ? loadDebugPrompt(writerMode) : loadProductionPrompt(writerMode)
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const targetAge    = brief.targetAge    || ''
+  const systemPrompt = mode === 'debug'
+    ? loadDebugPrompt(writerMode, audienceMode)
+    : loadProductionPrompt(writerMode, audienceMode)
   const userPrompt   = conceptPitchPrompt(brief, mode)
   const maxTokens    = MAX_TOKENS[mode]?.conceptPitch ?? MAX_TOKENS.production.conceptPitch
-  // Parse structured data in production mode only; bind writerMode for fiction parser
+  // Parse structured data in production mode only; bind writerMode + audienceMode for parsers
   const parseOutput  = mode === 'production'
-    ? (text) => parseConceptPitchText(text, writerMode)
+    ? (text) => parseConceptPitchText(text, writerMode, audienceMode, targetAge)
     : null
   await stream(systemPrompt, userPrompt, maxTokens, mode, res, parseOutput)
 }
 
 export async function gerarScript(brief, gateDecision, approvedAngleSnapshot = '', mode = 'production', res) {
-  const writerMode   = brief.writerMode || 'factual'
-  const systemPrompt = mode === 'debug' ? loadDebugPrompt(writerMode) : loadProductionPrompt(writerMode)
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const systemPrompt = mode === 'debug'
+    ? loadDebugPrompt(writerMode, audienceMode)
+    : loadProductionPrompt(writerMode, audienceMode)
   const userPrompt   = scriptPrompt(brief, gateDecision, approvedAngleSnapshot, mode)
   const maxTokens    = MAX_TOKENS[mode]?.script ?? MAX_TOKENS.production.script
   await stream(systemPrompt, userPrompt, maxTokens, mode, res)
