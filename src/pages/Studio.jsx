@@ -6,6 +6,85 @@ import ScriptView from '../components/ScriptView.jsx'
 
 const API_URL = ''
 
+// ─── CLIENT-SIDE SCRIPT PARSER ─────────────────────────────────────────────────
+// Mirror of api/_lib/writer.js parseScriptToScenes — runs in the browser so
+// legacy scripts (rawText only, no structured) can be rendered as scene cards.
+
+const SCRIPT_SKIP_RX = [
+  /REGISTRO FACTUAL/i,
+  /AUTOAVALIAÇÃO/i,
+  /CONTINUITY LEDGER/i,
+  /NOTA DO ROTEIRISTA/i,
+]
+
+function clientParseScript(text, brief = {}) {
+  if (!text || text.length < 50) return null
+  const writerMode   = brief.writerMode   || 'factual'
+  const audienceMode = brief.audienceMode || 'general'
+  const targetAge    = brief.targetAge    || ''
+
+  const sections = text.split(/(?=^## )/m)
+  const scenes   = []
+  let continuity = ''
+  let idx        = 1
+
+  for (const sec of sections) {
+    const hm = sec.match(/^## (.+)/m)
+    if (!hm) continue
+    const rawTitle = hm[1].replace(/\*{1,2}/g, '').trim()
+    if (SCRIPT_SKIP_RX.some(p => p.test(rawTitle))) {
+      if (/CONTINUITY LEDGER/i.test(rawTitle))
+        continuity = sec.replace(/^##[^\n]+\n/m, '').replace(/\*{1,2}/g, '').trim()
+      continue
+    }
+
+    const body   = sec.replace(/^##[^\n]+\n/m, '')
+    const narRx  = /\*{0,2}NARRAÇÃO\*{0,2}[^:\n]*:?[ \t]*\n/i
+    const visRx  = /\*{0,2}INTENÇÃO VISUAL(?:\s+NARRATIVA)?\*{0,2}[^:\n]*:?[ \t]*\n/i
+    const narM   = body.match(narRx)
+    const visM   = body.match(visRx)
+    const narStart    = narM ? narM.index : -1
+    const narLabelEnd = narM ? narM.index + narM[0].length : -1
+    const visStart    = visM ? visM.index : -1
+    const visLabelEnd = visM ? visM.index + visM[0].length : -1
+
+    let narration = '', visualIntent = ''
+    if (narStart >= 0 && visStart > narStart) {
+      narration    = body.slice(narLabelEnd, visStart)
+      visualIntent = body.slice(visLabelEnd)
+    } else if (narStart >= 0 && visStart >= 0) {
+      visualIntent = body.slice(visLabelEnd, narStart)
+      narration    = body.slice(narLabelEnd)
+    } else if (narStart >= 0) {
+      narration = body.slice(narLabelEnd)
+    } else if (visStart >= 0) {
+      narration    = body.slice(0, visStart)
+      visualIntent = body.slice(visLabelEnd)
+    } else {
+      narration = body
+    }
+
+    narration    = narration.trim().replace(/\*{1,2}/g, '')
+    visualIntent = visualIntent.trim().replace(/\*{1,2}/g, '')
+    if (!narration) continue
+
+    const dashM    = rawTitle.match(/^(.+?)\s*[—–]\s*(.+)$/)
+    const sceneType = (dashM ? dashM[1] : rawTitle).trim()
+    const subtitle  = dashM ? dashM[2].trim() : ''
+
+    scenes.push({ id: `scene-${idx}`, type: sceneType, title: subtitle || sceneType, fullTitle: rawTitle, narration, visualIntent })
+    idx++
+  }
+
+  if (scenes.length === 0) return null
+  return {
+    scriptVersion: 1, writerMode, audienceMode,
+    ...(targetAge ? { targetAge } : {}),
+    status: 'generated', scenes, continuity, versions: [],
+    artifactMarkdown: text,
+  }
+}
+
 async function saveOutput(productionId, type, data) {
   try {
     const ref     = doc(db, 'outputs', productionId)
@@ -123,10 +202,12 @@ export default function Studio({ production }) {
     // Reabrir produção existente: restaurar estado salvo do Firestore
     loadOutputs(production.id).then(saved => {
       if (saved?.script) {
-        outputText.current = saved.script.rawText
-        setOutput(saved.script.rawText)
+        const rawText = saved.script.rawText
+        outputText.current = rawText
+        setOutput(rawText)
         setConceptPitchData(saved.conceptPitch?.structured ?? null)
-        setScriptData(saved.script.structured ?? null)
+        const structured = saved.script.structured ?? clientParseScript(rawText, production)
+        setScriptData(structured)
         setStage(STAGE.DONE)
       } else if (saved?.conceptPitch) {
         outputText.current = saved.conceptPitch.rawText
