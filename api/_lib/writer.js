@@ -493,7 +493,7 @@ Do NOT write the full script. Stop after the concept pitch. CEO Gate #1 pending.
   // Production — Fiction
   if (isFiction) {
     return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION — FICTION.
-
+${audienceBlock(brief)}
 BRIEF:
 ${briefToText(brief)}
 
@@ -524,7 +524,7 @@ Escreva em Português do Brasil. Não escreva o roteiro completo. CEO Gate #1 pe
 
   // Production — Factual
   return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION.
-
+${audienceBlock(brief)}
 BRIEF:
 ${briefToText(brief)}
 
@@ -537,6 +537,20 @@ Entregue no formato Production definido no seu runtime:
 - SNAPSHOTS DE ÂNGULOS
 
 Não serializar Research Log. Não incluir análise longa de retenção por ângulo. Escreva em Português do Brasil.`
+}
+
+function audienceBlock(brief) {
+  const audienceMode = brief.audienceMode || 'general'
+  if (audienceMode !== 'children') return ''
+  const targetAge = brief.targetAge || ''
+  const ageNote = targetAge
+    ? `Target age: ${targetAge}. This is a BINDING constraint — the entire script vocabulary, sentence length, information density, humor style, and pacing must be calibrated to this specific age group. A script for 3-year-olds must sound fundamentally different from a script for 10-year-olds.`
+    : `Audience: children (age not specified). Apply children's register throughout.`
+  return `
+⚠️ CHILDREN AUDIENCE — APPLY CHILDREN RUNTIME FULLY
+${ageNote}
+Do NOT produce an adult script with slightly simpler words. Prioritize: playfulness, small surprises, participation, concrete language, age-appropriate vocabulary, information economy.
+`
 }
 
 function scriptPrompt(brief, gateDecision, approvedAngleSnapshot, mode) {
@@ -568,7 +582,7 @@ Important: no unresolved narrative placeholders may remain. Do not execute any o
 
   if (isFiction) {
     return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION — FICTION.
-
+${audienceBlock(brief)}
 BRIEF:
 ${briefToText(brief)}
 
@@ -610,7 +624,7 @@ Cada cena DEVE começar com ## seguido do tipo e título. Sempre inclua **NARRA�
 
   // Production — Factual
   return `Você é o Writer do ZhongX Studio. Modo: PRODUCTION.
-
+${audienceBlock(brief)}
 BRIEF:
 ${briefToText(brief)}
 
