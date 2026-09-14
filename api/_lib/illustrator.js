@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { put } from '@vercel/blob'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -71,7 +72,8 @@ async function generateStoryboardImage(storyboardData, brief) {
 
   const prompt = buildImagePrompt(storyboardData, brief)
 
-  const res = await fetch('https://api.openai.com/v1/images/generations', {
+  // 1. Generate image via DALL-E 3
+  const dalleRes = await fetch('https://api.openai.com/v1/images/generations', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
@@ -86,13 +88,27 @@ async function generateStoryboardImage(storyboardData, brief) {
     }),
   })
 
-  if (!res.ok) {
-    const err = await res.json()
-    throw new Error(err.error?.message || `DALL-E error ${res.status}`)
+  if (!dalleRes.ok) {
+    const err = await dalleRes.json()
+    throw new Error(err.error?.message || `DALL-E error ${dalleRes.status}`)
   }
 
-  const data = await res.json()
-  return data.data[0].url
+  const dalleData = await dalleRes.json()
+  const tempUrl   = dalleData.data[0].url
+
+  // 2. Fetch image bytes from the temporary DALL-E URL
+  const imgRes = await fetch(tempUrl)
+  if (!imgRes.ok) throw new Error('Failed to fetch generated image')
+  const imgBuffer = await imgRes.arrayBuffer()
+
+  // 3. Upload permanently to Vercel Blob
+  const filename  = `storyboards/${Date.now()}.png`
+  const { url }   = await put(filename, imgBuffer, {
+    access:      'public',
+    contentType: 'image/png',
+  })
+
+  return url
 }
 
 // ─── STORYBOARD PARSER ────────────────────────────────────────────────────────
