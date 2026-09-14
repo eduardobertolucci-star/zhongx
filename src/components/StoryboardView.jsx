@@ -138,7 +138,7 @@ function BeatCard({ beat, defaultExpanded }) {
 
 export default function StoryboardView({ storyboardData }) {
   const [allCopied, setAllCopied] = useState(false)
-  const { artDirection, colorPalette, visualStyle, typography, beats = [] } = storyboardData
+  const { artDirection, colorPalette, visualStyle, typography, beats = [], imageUrl } = storyboardData
 
   const copyAll = () => {
     const text = beats
@@ -152,6 +152,28 @@ export default function StoryboardView({ storyboardData }) {
 
   return (
     <div className="space-y-4">
+      {/* Storyboard image */}
+      {imageUrl && (
+        <div className="rounded-2xl overflow-hidden border border-zinc-800">
+          <img
+            src={imageUrl}
+            alt="Storyboard gerado pelo Ilustrador"
+            className="w-full object-cover"
+          />
+          <div className="bg-zinc-900 px-4 py-2 flex items-center justify-between">
+            <span className="text-xs text-zinc-500">Storyboard · gerado por DALL-E 3</span>
+            <a
+              href={imageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Abrir original ↗
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Art direction header */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-3">
         <div className="flex items-center justify-between">

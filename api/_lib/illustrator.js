@@ -13,7 +13,7 @@ function loadIllustratorPrompt() {
   return fs.readFileSync(path.join(ROOT, 'runtime/illustrator.md'), 'utf-8')
 }
 
-// ─── PROMPT BUILDER ───────────────────────────────────────────────────────────
+// ─── STORYBOARD TEXT PROMPT ───────────────────────────────────────────────────
 
 function briefContext(brief) {
   return [
@@ -39,7 +39,63 @@ function buildUserPrompt(brief, scenes) {
   return `BRIEF:\n${briefContext(brief)}\n\nROTEIRO — ${scenes.length} cenas:\n\n${scenesToText(scenes)}\n\nAnalise cada cena. Decida quantos beats cada uma precisa. Gere o storyboard completo no formato definido no seu runtime.`
 }
 
-// ─── PARSER ───────────────────────────────────────────────────────────────────
+// ─── STORYBOARD IMAGE GENERATION ──────────────────────────────────────────────
+
+function buildImagePrompt(storyboardData, brief) {
+  const { visualStyle, beats } = storyboardData
+
+  // Select one beat per scene (skip sub-beats like beat-2a, beat-2b)
+  // Primary beats have IDs like beat-1, beat-2, beat-3
+  const primaryBeats = beats.filter(b => /^beat-\d+$/.test(b.id))
+  const keyBeats = (primaryBeats.length >= 3 ? primaryBeats : beats).slice(0, 8)
+
+  const cols = keyBeats.length <= 4 ? 2 : 3
+  const rows = Math.ceil(keyBeats.length / cols)
+
+  const panels = keyBeats.map((b, i) => {
+    const label = b.sceneRef?.split(/[—–]/)[0]?.trim() || `Beat ${i + 1}`
+    // Keep concept very short (≤10 words) so the prompt stays concise
+    const concept = b.visualConcept?.split('.')[0]?.split(',')[0]?.trim() || ''
+    return `Panel ${i + 1} "${label}": ${concept}`
+  }).join('; ')
+
+  const style = visualStyle || 'flat vector illustration'
+  const topic = brief.tema || 'educational video'
+
+  return `A professional storyboard sheet for an educational video about "${topic}". ${rows} rows × ${cols} columns grid of hand-drawn panels, each with a thin black border and a small label below. ${style}. Simple, clean sketches. ${panels}. No written words or text inside the panels themselves. Storyboard layout, sequential panels, sketch aesthetic.`
+}
+
+async function generateStoryboardImage(storyboardData, brief) {
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) throw new Error('OPENAI_API_KEY not configured')
+
+  const prompt = buildImagePrompt(storyboardData, brief)
+
+  const res = await fetch('https://api.openai.com/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model:   'dall-e-3',
+      prompt:  prompt.slice(0, 4000),
+      size:    '1792x1024',
+      quality: 'standard',
+      n:       1,
+    }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error?.message || `DALL-E error ${res.status}`)
+  }
+
+  const data = await res.json()
+  return data.data[0].url
+}
+
+// ─── STORYBOARD PARSER ────────────────────────────────────────────────────────
 
 function parseStoryboard(text) {
   const getHeader = (label) => {
@@ -52,7 +108,6 @@ function parseStoryboard(text) {
   const visualStyle  = getHeader('Estilo Visual')
   const typography   = getHeader('Tipografia')
 
-  // Split on ## BEAT headings
   const parts = text.split(/(?=^## BEAT \S)/m).filter(p => /^## BEAT \S/.test(p))
 
   const beats = parts.map((part, i) => {
@@ -65,7 +120,6 @@ function parseStoryboard(text) {
       return m ? m[1].trim() : ''
     }
 
-    // Multi-line prompt: everything between **Prompt:** and **Negativo:** or section end
     const promptM   = part.match(/\*\*Prompt:\*\*\s*\n([\s\S]+?)(?=\n\*\*Negativo:|^---|\n---\s*$)/im)
     const negativoM = part.match(/\*\*Negativo:\*\*\s*([^\n]+)/i)
 
@@ -101,6 +155,7 @@ export async function generateStoryboard(brief, scenes, res) {
   let fullText = ''
 
   try {
+    // Phase 1: stream storyboard text
     const stream = await client.messages.stream({
       model:      'claude-sonnet-4-6',
       max_tokens: 16000,
@@ -117,7 +172,19 @@ export async function generateStoryboard(brief, scenes, res) {
     }
 
     const structured = parseStoryboard(fullText)
-    res.write(`data: ${JSON.stringify({ done: true, structured })}\n\n`)
+
+    // Phase 2: generate storyboard image
+    res.write(`data: ${JSON.stringify({ text: '\n\n⏳ Gerando imagem do storyboard...' })}\n\n`)
+
+    let imageUrl = null
+    try {
+      imageUrl = await generateStoryboardImage(structured, brief)
+    } catch (imgErr) {
+      console.error('Storyboard image generation failed:', imgErr.message)
+      // Non-fatal — storyboard text is still delivered
+    }
+
+    res.write(`data: ${JSON.stringify({ done: true, structured: { ...structured, imageUrl } })}\n\n`)
   } catch (err) {
     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`)
   }
