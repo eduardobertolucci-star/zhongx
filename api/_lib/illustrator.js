@@ -66,7 +66,7 @@ function buildImagePrompt(storyboardData, brief) {
   return `A professional storyboard sheet for an educational video about "${topic}". ${rows} rows × ${cols} columns grid of hand-drawn panels, each with a thin black border and a small label below. ${style}. Simple, clean sketches. ${panels}. No written words or text inside the panels themselves. Storyboard layout, sequential panels, sketch aesthetic.`
 }
 
-async function generateStoryboardImage(storyboardData, brief) {
+export async function generateStoryboardImage(storyboardData, brief) {
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) throw new Error('OPENAI_API_KEY not configured')
 
@@ -188,19 +188,7 @@ export async function generateStoryboard(brief, scenes, res) {
     }
 
     const structured = parseStoryboard(fullText)
-
-    // Phase 2: generate storyboard image
-    res.write(`data: ${JSON.stringify({ text: '\n\n⏳ Gerando imagem do storyboard...' })}\n\n`)
-
-    let imageUrl = null
-    try {
-      imageUrl = await generateStoryboardImage(structured, brief)
-    } catch (imgErr) {
-      console.error('Storyboard image generation failed:', imgErr.message)
-      // Non-fatal — storyboard text is still delivered
-    }
-
-    res.write(`data: ${JSON.stringify({ done: true, structured: { ...structured, imageUrl } })}\n\n`)
+    res.write(`data: ${JSON.stringify({ done: true, structured })}\n\n`)
   } catch (err) {
     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`)
   }

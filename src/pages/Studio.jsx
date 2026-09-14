@@ -337,10 +337,30 @@ export default function Studio({ production }) {
         const rawText = outputText.current
         await saveOutput(production.id, 'storyboard', { rawText, structured: structured ?? null })
         setStoryboardData(structured ?? null)
+        // Generate image separately (non-blocking)
+        if (structured) fetchStoryboardImage(structured, rawText)
       })
     } catch (err) {
       setError(err.message)
       setStreaming(false)
+    }
+  }
+
+  async function fetchStoryboardImage(storyboardStructured, rawText) {
+    try {
+      const res = await fetch(`${API_URL}/api/illustrator/image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brief: production, storyboard: storyboardStructured }),
+      })
+      const { imageUrl } = await res.json()
+      if (imageUrl) {
+        const updated = { ...storyboardStructured, imageUrl }
+        setStoryboardData(updated)
+        await saveOutput(production.id, 'storyboard', { rawText, structured: updated })
+      }
+    } catch (err) {
+      console.error('Storyboard image generation failed:', err)
     }
   }
 

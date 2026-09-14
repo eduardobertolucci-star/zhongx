@@ -153,7 +153,7 @@ export default function StoryboardView({ storyboardData }) {
   return (
     <div className="space-y-4">
       {/* Storyboard image */}
-      {imageUrl && (
+      {imageUrl ? (
         <div className="rounded-2xl overflow-hidden border border-zinc-800">
           <img
             src={imageUrl}
@@ -171,6 +171,11 @@ export default function StoryboardView({ storyboardData }) {
               Abrir original ↗
             </a>
           </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 flex items-center justify-center gap-3 py-10">
+          <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+          <span className="text-sm text-zinc-500">Gerando imagem do storyboard...</span>
         </div>
       )}
 
