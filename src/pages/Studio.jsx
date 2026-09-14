@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import ConceptPitchView from '../components/ConceptPitchView.jsx'
 import ScriptView from '../components/ScriptView.jsx'
+import StoryboardView from '../components/StoryboardView.jsx'
 
 const API_URL = ''
 
@@ -111,13 +112,18 @@ const STAGE = {
   GATE_1: 'gate_1',
   SCRIPT: 'script',
   DONE: 'done',
+  STORYBOARD: 'storyboard',
 }
+
+const BADGE_STAGES = [STAGE.CONCEPT_PITCH, STAGE.GATE_1, STAGE.SCRIPT]
+const STAGE_ORDER  = [STAGE.CONCEPT_PITCH, STAGE.GATE_1, STAGE.SCRIPT, STAGE.DONE, STAGE.STORYBOARD]
 
 const stageLabel = {
   [STAGE.CONCEPT_PITCH]: 'Proposta de Ângulos',
   [STAGE.GATE_1]:        'Aprovação do CEO',
   [STAGE.SCRIPT]:        'Roteiro',
   [STAGE.DONE]:          'Roteiro Completo',
+  [STAGE.STORYBOARD]:    'Storyboard',
 }
 
 const agents = [
@@ -128,11 +134,17 @@ const agents = [
   { id: 'reviewer',   name: 'Revisor',     role: 'Controle de Qualidade' },
 ]
 
-function agentStatus(stage, id) {
-  if (id !== 'writer') return 'waiting'
-  if (stage === STAGE.DONE) return 'done'
-  if (stage === STAGE.GATE_1) return 'reviewing'
-  return 'active'
+function agentStatus(stage, id, streaming) {
+  if (id === 'writer') {
+    if ([STAGE.DONE, STAGE.STORYBOARD].includes(stage)) return 'done'
+    if (stage === STAGE.GATE_1) return 'reviewing'
+    return 'active'
+  }
+  if (id === 'illustrator') {
+    if (stage !== STAGE.STORYBOARD) return 'waiting'
+    return streaming ? 'active' : 'done'
+  }
+  return 'waiting'
 }
 
 const statusConfig = {
@@ -190,6 +202,8 @@ export default function Studio({ production }) {
   const [streaming, setStreaming]     = useState(false)
   const [conceptPitchData, setConceptPitchData] = useState(null)
   const [scriptData, setScriptData]   = useState(null)
+  const [storyboardData, setStoryboardData] = useState(null)
+  const [viewMode, setViewMode]       = useState('script')   // 'script' | 'storyboard'
   const [error, setError]             = useState(null)
   const outputRef  = useRef(null)
   const outputText = useRef('')
@@ -209,7 +223,13 @@ export default function Studio({ production }) {
         setConceptPitchData(saved.conceptPitch?.structured ?? null)
         const structured = saved.script.structured ?? clientParseScript(rawText, production)
         setScriptData(structured)
-        setStage(STAGE.DONE)
+        if (saved?.storyboard) {
+          setStoryboardData(saved.storyboard.structured ?? null)
+          setStage(STAGE.STORYBOARD)
+          setViewMode('storyboard')
+        } else {
+          setStage(STAGE.DONE)
+        }
       } else if (saved?.conceptPitch) {
         outputText.current = saved.conceptPitch.rawText
         setOutput(saved.conceptPitch.rawText)
@@ -298,8 +318,34 @@ export default function Studio({ production }) {
     await saveOutput(production.id, 'script', { rawText: output, structured: newScriptData })
   }
 
+  async function runStoryboard() {
+    if (!scriptData?.scenes) return
+    setStage(STAGE.STORYBOARD)
+    setStreaming(true)
+    setOutput('')
+    setStoryboardData(null)
+    setViewMode('storyboard')
+    outputText.current = ''
+
+    try {
+      const res = await fetch(`${API_URL}/api/illustrator/storyboard`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brief: production, scenes: scriptData.scenes }),
+      })
+      await readStream(res, async (structured) => {
+        const rawText = outputText.current
+        await saveOutput(production.id, 'storyboard', { rawText, structured: structured ?? null })
+        setStoryboardData(structured ?? null)
+      })
+    } catch (err) {
+      setError(err.message)
+      setStreaming(false)
+    }
+  }
+
   const isStreaming = streaming
-  const isDone      = stage === STAGE.DONE
+  const isDone      = [STAGE.DONE, STAGE.STORYBOARD].includes(stage)
 
   return (
     <div className="flex flex-col h-screen">
@@ -308,10 +354,12 @@ export default function Studio({ production }) {
         <div className="flex items-start justify-between gap-4 mb-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              {/* Stage badges */}
-              {Object.values(STAGE).slice(0, -1).map((s, i) => {
-                const isCurrent = stage === s
-                const isPast    = Object.values(STAGE).indexOf(stage) > i
+              {/* Pipeline stage badges */}
+              {BADGE_STAGES.map((s) => {
+                const currentIdx = STAGE_ORDER.indexOf(stage)
+                const sIdx       = STAGE_ORDER.indexOf(s)
+                const isCurrent  = stage === s
+                const isPast     = currentIdx > sIdx
                 return (
                   <span
                     key={s}
@@ -332,6 +380,15 @@ export default function Studio({ production }) {
               {isDone && (
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full border bg-emerald-500/15 text-emerald-400 border-emerald-500/30">
                   ✓ {stageLabel[STAGE.DONE]}
+                </span>
+              )}
+              {stage === STAGE.STORYBOARD && (
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+                  isStreaming
+                    ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
+                    : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                }`}>
+                  {isStreaming ? '● ' : '✓ '}{stageLabel[STAGE.STORYBOARD]}
                 </span>
               )}
             </div>
@@ -370,7 +427,7 @@ export default function Studio({ production }) {
         <div className="w-64 bg-zinc-900/50 border-r border-zinc-800 p-4 space-y-3 overflow-y-auto shrink-0">
           <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest px-1 mb-4">Equipe</p>
           {agents.map((agent) => {
-            const status     = agentStatus(stage, agent.id)
+            const status     = agentStatus(stage, agent.id, isStreaming)
             const cfg        = statusConfig[status]
             const active     = status === 'active' || status === 'reviewing'
             const isWriter   = agent.id === 'writer'
@@ -411,6 +468,7 @@ export default function Studio({ production }) {
                 {stage === STAGE.GATE_1        && 'Proposta de Ângulos — Concluída'}
                 {stage === STAGE.SCRIPT        && 'Roteiro — Roteirista'}
                 {stage === STAGE.DONE          && 'Roteiro — Concluído'}
+                {stage === STAGE.STORYBOARD    && (isStreaming ? 'Storyboard — Ilustrador' : 'Storyboard — Concluído')}
               </h2>
               <p className="text-xs text-zinc-500 mt-0.5">
                 {stage === STAGE.CONCEPT_PITCH && (production?.writerMode === 'fiction'
@@ -419,8 +477,46 @@ export default function Studio({ production }) {
                 {stage === STAGE.GATE_1        && 'Aguardando decisão do CEO para prosseguir'}
                 {stage === STAGE.SCRIPT        && 'Gerando Estrutura Narrativa + Cenas + Passes de revisão'}
                 {stage === STAGE.DONE          && 'Roteiro pronto para revisão do CEO'}
+                {stage === STAGE.STORYBOARD    && (isStreaming ? 'Gerando beats visuais e prompts de geração...' : 'Storyboard pronto para o CEO')}
               </p>
             </div>
+            {/* View toggle / Storyboard trigger */}
+            {isDone && !isStreaming && (
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setViewMode('script')}
+                  className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                    viewMode === 'script'
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300'
+                  }`}
+                >
+                  Roteiro
+                </button>
+                {storyboardData ? (
+                  <button
+                    onClick={() => setViewMode('storyboard')}
+                    className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                      viewMode === 'storyboard'
+                        ? 'bg-zinc-700 text-white'
+                        : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    Storyboard
+                  </button>
+                ) : (
+                  <button
+                    onClick={runStoryboard}
+                    className="text-xs px-3 py-1.5 rounded-lg font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Gerar Storyboard
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {error && (
@@ -439,7 +535,9 @@ export default function Studio({ production }) {
               />
             ) : stage === STAGE.CONCEPT_PITCH && !isStreaming && !output ? (
               <BriefingScreen production={production} onStart={runConceptPitch} />
-            ) : isDone && scriptData ? (
+            ) : stage === STAGE.STORYBOARD && !isStreaming && storyboardData && viewMode === 'storyboard' ? (
+              <StoryboardView storyboardData={storyboardData} />
+            ) : isDone && scriptData && !isStreaming ? (
               <ScriptView
                 scriptData={scriptData}
                 brief={production}
@@ -447,7 +545,12 @@ export default function Studio({ production }) {
               />
             ) : (
               <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
-                {output || (isStreaming ? '▌ Conectando ao Roteirista...' : '')}
+                {output || (isStreaming
+                  ? stage === STAGE.STORYBOARD
+                    ? '▌ Conectando ao Ilustrador...'
+                    : '▌ Conectando ao Roteirista...'
+                  : ''
+                )}
                 {isStreaming && output && <span className="animate-pulse">▌</span>}
               </pre>
             )}
