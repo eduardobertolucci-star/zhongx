@@ -367,12 +367,69 @@ function OtherAngleCard({ angle, factualClaims, onApprove, isFiction = false }) 
 //   onApprove       — called with (decision: string, snapshotRaw: string) when CEO confirms
 //   onRequestNewAngles — called when CEO clicks "Pedir novos ângulos"
 
+function FallbackApprovalPanel({ rawOutput, onApprove, onRequestNewAngles }) {
+  const [notes, setNotes] = useState('')
+
+  function submit() {
+    const decision = [
+      'Aprovado pelo CEO.',
+      notes.trim() ? `\n\nInstruções do CEO:\n${notes.trim()}` : '',
+    ].join('')
+    onApprove(decision, '')
+  }
+
+  return (
+    <div className="space-y-4">
+      <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 max-h-[60vh] overflow-auto">
+        {rawOutput}
+      </pre>
+      <div className="bg-zinc-900/70 rounded-xl border border-zinc-700 p-4 space-y-3">
+        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Decisão do CEO</p>
+        <textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          rows={3}
+          placeholder="Indique qual ângulo aprovar e ajustes opcionais para o Writer..."
+          className="w-full bg-zinc-950 border border-zinc-600 focus:border-blue-500 text-white rounded-lg px-3 py-2 text-sm resize-none placeholder:text-zinc-600 outline-none transition-colors"
+          autoFocus
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={submit}
+            className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm py-2.5 rounded-lg transition-colors"
+          >
+            Confirmar — Gerar Roteiro
+          </button>
+          {onRequestNewAngles && (
+            <button
+              onClick={onRequestNewAngles}
+              className="px-4 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-sm py-2.5 rounded-lg transition-colors"
+            >
+              Pedir novos ângulos
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ConceptPitchView({ structured, rawOutput, onApprove, onRequestNewAngles }) {
   const [showFullAnalysis, setShowFullAnalysis] = useState(false)
 
-  // No structured data yet: streaming still in progress or parsing failed.
-  // Show raw Markdown text (live preview or fallback).
+  // No structured data: streaming in progress (no rawOutput yet) or parsing failed.
+  // During streaming, show live text. After streaming (rawOutput + onApprove present),
+  // show fallback approval panel so the CEO can always proceed.
   if (!structured) {
+    if (onApprove && rawOutput) {
+      return (
+        <FallbackApprovalPanel
+          rawOutput={rawOutput}
+          onApprove={onApprove}
+          onRequestNewAngles={onRequestNewAngles}
+        />
+      )
+    }
     return (
       <pre className="font-mono text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-900 rounded-xl p-6 border border-zinc-800 min-h-full">
         {rawOutput}
