@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { collection, addDoc, getDocs, orderBy, query } from 'firebase/firestore'
+import { collection, addDoc, getDocs, orderBy, query, deleteDoc, doc } from 'firebase/firestore'
 import { auth, db } from './firebase'
 import Login from './components/Login'
 import Sidebar from './components/Sidebar'
@@ -46,6 +46,17 @@ export default function App() {
     setPage('studio')
   }
 
+  async function handleDeleteProduction(id) {
+    try {
+      await deleteDoc(doc(db, 'productions', id))
+      // Remove outputs associated with this production (non-fatal if missing)
+      try { await deleteDoc(doc(db, 'outputs', id)) } catch {}
+      setProductions(prev => prev.filter(p => p.id !== id))
+    } catch (err) {
+      console.error('Erro ao excluir produção:', err)
+    }
+  }
+
   function handleOpenProduction(record) {
     setProduction({ ...record, _autoStart: false })
     setPage('studio')
@@ -74,6 +85,7 @@ export default function App() {
             productions={productions}
             loading={loading}
             onOpen={handleOpenProduction}
+            onDelete={handleDeleteProduction}
             onNavigate={setPage}
           />
         )}

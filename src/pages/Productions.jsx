@@ -19,7 +19,10 @@ function formatDate(iso) {
   })
 }
 
-export default function Productions({ productions, loading, onOpen, onNavigate }) {
+import { useState } from 'react'
+
+export default function Productions({ productions, loading, onOpen, onDelete, onNavigate }) {
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
   if (loading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-full">
@@ -67,31 +70,67 @@ export default function Productions({ productions, loading, onOpen, onNavigate }
       </div>
 
       <div className="space-y-3">
-        {productions.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => onOpen(p)}
-            className="w-full text-left bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/50 hover:border-zinc-600 rounded-2xl p-5 transition-all group"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-semibold text-base leading-snug group-hover:text-amber-100 transition-colors line-clamp-2">
-                  {p.tema}
-                </p>
-                <div className="flex items-center gap-3 mt-2 flex-wrap">
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${statusStyle[p.stage] || statusStyle.concept_pitch}`}>
-                    {statusLabel[p.stage] || 'Iniciado'}
-                  </span>
-                  <span className="text-zinc-500 text-xs">{p.duracao} min</span>
-                  <span className="text-zinc-600 text-xs">{formatDate(p.createdAt)}</span>
+        {productions.map((p) => {
+          const isConfirming = confirmDeleteId === p.id
+          return (
+            <div
+              key={p.id}
+              className="w-full bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/50 hover:border-zinc-600 rounded-2xl p-5 transition-all group"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <button
+                  onClick={() => onOpen(p)}
+                  className="flex-1 min-w-0 text-left"
+                >
+                  <p className="text-white font-semibold text-base leading-snug group-hover:text-amber-100 transition-colors line-clamp-2">
+                    {p.tema}
+                  </p>
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${statusStyle[p.stage] || statusStyle.concept_pitch}`}>
+                      {statusLabel[p.stage] || 'Iniciado'}
+                    </span>
+                    <span className="text-zinc-500 text-xs">{p.duracao} min</span>
+                    <span className="text-zinc-600 text-xs">{formatDate(p.createdAt)}</span>
+                  </div>
+                </button>
+
+                <div className="flex items-center gap-2 shrink-0 mt-0.5">
+                  {isConfirming ? (
+                    <>
+                      <button
+                        onClick={() => { onDelete(p.id); setConfirmDeleteId(null) }}
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white transition-colors"
+                      >
+                        Excluir
+                      </button>
+                      <button
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-zinc-300 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setConfirmDeleteId(p.id)}
+                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-zinc-600 hover:text-red-400 hover:bg-red-950/40 transition-all"
+                        title="Excluir produção"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </>
+                  )}
                 </div>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
             </div>
-          </button>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
